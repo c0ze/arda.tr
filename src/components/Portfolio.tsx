@@ -2,8 +2,47 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Gamepad2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Define an interface for the items to keep TypeScript happy
+interface PortfolioItem {
+  title: string;
+  description: string;
+  image: string;
+  link?: string;
+  tags: string[];
+  playable?: boolean;
+  containImage?: boolean;
+}
+
 const Portfolio = () => {
-  const projects = [
+  const projects: PortfolioItem[] = [
+    {
+      title: "Slop Machine",
+      description: "A custom story building engine featuring a Flask API, Cloud Run jobs, and a React studio.",
+      image: "/slop-machine.png",
+      link: "https://slop-machine.arda.tr",
+      tags: ["React", "Flask", "AI", "Cloud Run"],
+      playable: false,
+      containImage: true,
+    },
+    {
+      title: "Skriv.ist",
+      description: "Multiplatform ebook reader.",
+      image: "/skrivist_logo_3.png",
+      link: "https://skriv.ist",
+      tags: ["Ebook", "Reader", "Multiplatform"],
+      playable: false,
+    },
+    {
+      title: "Fablecast.kids",
+      description: "AI generated children books.",
+      image: "/fablecast.png",
+      link: "https://fablecast.kids",
+      tags: ["AI", "Children Books", "Storytelling"],
+      playable: false,
+    },
+  ];
+
+  const games: PortfolioItem[] = [
     {
       title: "Domino Game",
       description: "A classic Domino game built with Love2D and Lua. Play against the computer in this web-based version.",
@@ -28,92 +67,105 @@ const Portfolio = () => {
       tags: ["Action", "Retro", "Web Game"],
       playable: true,
     },
-    {
-      title: "Skriv.ist",
-      description: "Multiplatform ebook reader.",
-      image: "/skrivist_logo_3.png",
-      link: "https://skriv.ist",
-      tags: ["Ebook", "Reader", "Multiplatform"],
-      playable: false,
-    },
-    {
-      title: "Fablecast.kids",
-      description: "AI generated children books.",
-      image: "/fablecast.png",
-      link: "https://fablecast.kids",
-      tags: ["AI", "Children Books", "Storytelling"],
-      playable: false,
-    },
   ];
+
+  const tools: PortfolioItem[] = [
+    {
+      title: "Git Roast",
+      description: "A CLI tool that roasts your git commits. Make your version control a little more entertaining.",
+      image: "/git-roast.png",
+      link: "https://github.com/c0ze/git-roast",
+      tags: ["CLI", "Go", "Tool"],
+      playable: false,
+    }
+  ];
+
+  const renderCard = (item: PortfolioItem, index: number) => (
+    <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 transition-colors group">
+      <div className="aspect-video w-full overflow-hidden bg-muted relative">
+        <a href={item.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer">
+          <img
+            src={item.image}
+            alt={item.title}
+            className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${item.containImage ? 'object-contain' : 'object-cover'}`}
+          />
+        </a>
+        {item.playable && (
+          <div className="absolute inset-0 bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <Button variant="default" size="sm" className="gap-2 pointer-events-auto" asChild>
+              <a href={item.link} target="_blank" rel="noopener noreferrer">
+                <Gamepad2 className="w-4 h-4" />
+                Play Now
+              </a>
+            </Button>
+          </div>
+        )}
+      </div>
+      <CardHeader className="pb-2">
+        <div className="flex flex-wrap gap-2 mb-2">
+          {item.tags.map((tag: string, tagIndex: number) => (
+            <span
+              key={tagIndex}
+              className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <CardTitle className="flex items-center justify-between text-base">
+          {item.title}
+          {item.link && (
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="text-sm">
+          {item.description}
+        </CardDescription>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <section className="py-24 px-6 bg-background">
       <div className="max-w-5xl mx-auto space-y-16">
-        {/* Games section */}
+        {/* Projects section */}
         <div className="space-y-8">
           <div className="text-center space-y-4">
             <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
               Projects
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              A collection of digital products, games, and interactive experiences I've built.
+              A collection of digital products and interactive experiences I've built.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
-              <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 transition-colors group">
-                <div className="aspect-video w-full overflow-hidden bg-muted relative">
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </a>
-                  {project.playable && (
-                    <div className="absolute inset-0 bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                      <Button variant="default" size="sm" className="gap-2 pointer-events-auto" asChild>
-                        <a href={project.link} target="_blank" rel="noopener noreferrer">
-                          <Gamepad2 className="w-4 h-4" />
-                          Play Now
-                        </a>
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {project.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <CardTitle className="flex items-center justify-between text-base">
-                    {project.title}
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm">
-                    {project.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+            {projects.map(renderCard)}
+          </div>
+        </div>
+
+        {/* Games section */}
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+              Games
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              A collection of web-based games I've developed.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {games.map(renderCard)}
           </div>
         </div>
 
@@ -129,55 +181,7 @@ const Portfolio = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Git Roast",
-                description: "A CLI tool that roasts your git commits. Make your version control a little more entertaining.",
-                image: "/git-roast.png",
-                link: "https://github.com/c0ze/git-roast",
-                tags: ["CLI", "Go", "Tool"],
-              }
-            ].map((tool, index) => (
-              <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 transition-colors group">
-                <div className="aspect-video w-full overflow-hidden bg-muted relative">
-                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer">
-                    <img
-                      src={tool.image}
-                      alt={tool.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </a>
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {tool.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <CardTitle className="flex items-center justify-between text-base">
-                    {tool.title}
-                    <a
-                      href={tool.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm">
-                    {tool.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+            {tools.map(renderCard)}
           </div>
         </div>
       </div>
