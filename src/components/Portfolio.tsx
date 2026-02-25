@@ -16,6 +16,14 @@ interface PortfolioItem {
 const Portfolio = () => {
   const projects: PortfolioItem[] = [
     {
+      title: "Fablecast.kids",
+      description: "AI generated children books.",
+      image: "/fablecast.png",
+      link: "https://fablecast.kids",
+      tags: ["AI", "Children Books", "Storytelling"],
+      playable: false,
+    },
+    {
       title: "Slop Machine",
       description: "A custom story building engine featuring a Flask API, Cloud Run jobs, and a React studio.",
       image: "/slop-machine.png",
@@ -33,12 +41,13 @@ const Portfolio = () => {
       playable: false,
     },
     {
-      title: "Fablecast.kids",
-      description: "AI generated children books.",
-      image: "/fablecast.png",
-      link: "https://fablecast.kids",
-      tags: ["AI", "Children Books", "Storytelling"],
+      title: "Vigil.today",
+      description: "Smart reminder widget PWA that keeps you on track with recurring tasks.",
+      image: "/vigil-today.png",
+      link: "https://vigil.today",
+      tags: ["SvelteKit", "PWA", "Firebase"],
       playable: false,
+      containImage: true,
     },
   ];
 
