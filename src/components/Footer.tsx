@@ -1,5 +1,21 @@
 import { Github, Mail, Linkedin, Guitar } from "lucide-react";
 
+const MastodonIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M21.36 8.52c-.12-3.15-2.58-4.75-5.91-5.18l-.13-.02C13.62 3.12 12.01 3 12 3s-1.62.12-3.32.32c-3.46.42-5.92 2.03-6.04 5.34C2.5 12.35 2.5 16.27 3.51 18c1.33 2.32 4.09 2.51 6.51 2.5.6 0 1.2-.05 1.77-.14 1.25-.19 2.1-.53 2.1-.53l-.15-1.93s-.84.28-1.92.35c-1.42.09-2.8-.07-3.08-1.46-.24-.46-.35-1.04-.37-1.68 1.45.36 3.06.49 4.71.49 1.76 0 3.39-.12 4.79-.42 2.82-.62 3.5-2.22 3.5-4.48 0-1.45 0-2.31 0-2.31Z" />
+    <path d="M17.15 15.22V9.01C17.15 7.42 16.03 6.4 14.53 6.4c-1.35 0-2.25.96-2.25 2.6V11H11.7V9c0-1.64-.9-2.6-2.25-2.6-1.5 0-2.62 1.02-2.62 2.61v6.21h2.24V9.82c0-.66.28-1.12.81-1.12.55 0 .82.5.82 1.25v3.66h2.22V9.95c0-.75.27-1.25.82-1.25.53 0 .81.46.81 1.12v5.4h2.6Z" />
+  </svg>
+);
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -58,6 +74,15 @@ const Footer = () => {
               aria-label="Pagan"
             >
               <Guitar className="w-4 h-4" />
+            </a>
+            <a
+              href="https://mastodon.world/@arda"
+              target="_blank"
+              rel="me noopener noreferrer"
+              className="w-9 h-9 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors flex items-center justify-center"
+              aria-label="Mastodon"
+            >
+              <MastodonIcon className="w-4 h-4" />
             </a>
           </div>
         </div>
