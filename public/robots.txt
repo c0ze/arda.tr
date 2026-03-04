@@ -23,3 +23,9 @@ Allow: /
 
 User-agent: anthropic-ai
 Allow: /
+
+User-agent: Mastodon
+Allow: /
+
+User-agent: http.rb
+Allow: /
