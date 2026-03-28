@@ -32,7 +32,7 @@ Themes: 7 Dracula Pro variants
     --secondary-foreground: 60 30% 96%;
 
     --muted: 252 18% 22%;
-    --muted-foreground: 252 15% 55%;
+    --muted-foreground: 252 15% 61%;
 
     --accent: 265 89% 75%;
     --accent-foreground: 252 18% 15%;
@@ -123,7 +123,7 @@ Themes: 7 Dracula Pro variants
     --secondary-foreground: 60 30% 96%;
 
     --muted: 168 15% 22%;
-    --muted-foreground: 168 15% 55%;
+    --muted-foreground: 168 15% 57%;
 
     --accent: 170 100% 75%;
     --accent-foreground: 168 15% 15%;
@@ -167,7 +167,7 @@ Themes: 7 Dracula Pro variants
     --secondary-foreground: 60 30% 96%;
 
     --muted: 292 15% 22%;
-    --muted-foreground: 292 15% 55%;
+    --muted-foreground: 292 15% 61%;
 
     --accent: 326 100% 75%;
     --accent-foreground: 292 15% 15%;
@@ -211,7 +211,7 @@ Themes: 7 Dracula Pro variants
     --secondary-foreground: 60 30% 96%;
 
     --muted: 48 15% 22%;
-    --muted-foreground: 48 15% 55%;
+    --muted-foreground: 48 15% 57%;
 
     --accent: 60 100% 75%;
     --accent-foreground: 48 15% 15%;
@@ -255,7 +255,7 @@ Themes: 7 Dracula Pro variants
     --secondary-foreground: 60 30% 96%;
 
     --muted: 355 15% 22%;
-    --muted-foreground: 355 15% 55%;
+    --muted-foreground: 355 15% 61%;
 
     --accent: 10 100% 75%;
     --accent-foreground: 355 15% 15%;
@@ -293,13 +293,13 @@ Themes: 7 Dracula Pro variants
     --popover-foreground: 60 30% 96%;
 
     --primary: 210 50% 55%;
-    --primary-foreground: 60 30% 96%;
+    --primary-foreground: 210 15% 4%;
 
     --secondary: 210 15% 14%;
     --secondary-foreground: 60 30% 96%;
 
     --muted: 210 15% 14%;
-    --muted-foreground: 210 15% 45%;
+    --muted-foreground: 210 15% 51%;
 
     --accent: 170 100% 75%;
     --accent-foreground: 210 15% 4%;
