@@ -92,7 +92,7 @@ const Portfolio = () => {
   ];
 
   const renderCard = (item: PortfolioItem, index: number) => (
-    <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 transition-colors group">
+    <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 hover:shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)] transition-all group">
       <div className="aspect-video w-full overflow-hidden bg-muted relative">
         <a href={item.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer">
           <img
@@ -151,8 +151,9 @@ const Portfolio = () => {
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Projects section */}
         <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <div className="text-center space-y-3">
+            <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">02 — Projects</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
               Projects
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -167,8 +168,9 @@ const Portfolio = () => {
 
         {/* Games section */}
         <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <div className="text-center space-y-3">
+            <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">03 — Games</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
               Games
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -183,8 +185,9 @@ const Portfolio = () => {
 
         {/* Tools section */}
         <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <div className="text-center space-y-3">
+            <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">04 — Tools</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
               Tools
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">

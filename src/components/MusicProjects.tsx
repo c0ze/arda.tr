@@ -47,8 +47,9 @@ const MusicProjects = () => {
       <div className="absolute inset-0 bg-gradient-subtle opacity-40 pointer-events-none" />
 
       <div className="max-w-5xl mx-auto space-y-16 relative z-10">
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+        <div className="text-center space-y-3">
+          <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">05 — Music</span>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
             Music Projects
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
@@ -58,7 +59,7 @@ const MusicProjects = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           {musicProjects.map((project, index) => (
-            <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 transition-colors group">
+            <Card key={index} className="overflow-hidden border-border bg-card hover:border-primary/30 hover:shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)] transition-all group">
               <div className="aspect-video w-full overflow-hidden bg-muted relative">
                 <a href={project.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer">
                   <img

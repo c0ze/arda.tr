@@ -25,8 +25,9 @@ const About = () => {
     <section id={sectionIds.about} className="py-24 px-6 bg-card/30">
       <div className="max-w-4xl mx-auto space-y-16">
         {/* Section header */}
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+        <div className="text-center space-y-3">
+          <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">01 — About</span>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
             About
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
@@ -35,7 +36,7 @@ const About = () => {
         </div>
 
         {/* Bio */}
-        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+        <div className="bg-card border border-border border-l-[3px] border-l-primary/40 rounded-xl p-8 space-y-4">
           <p className="text-foreground/90 leading-relaxed">
             I've been living in <span className="text-primary font-medium">Japan since 2004</span>, where I earned my Master's degree in Computer Science from Keio University (2006-2008). I also pursued PhD studies in Embedded Processor Design and Optimization from 2008-2011.
           </p>
@@ -52,7 +53,7 @@ const About = () => {
           {highlights.map((item, index) => (
             <Card
               key={index}
-              className="p-6 space-y-4 bg-card border-border hover:border-primary/30 transition-colors"
+              className="p-6 space-y-4 bg-card border-border hover:border-primary/30 hover:shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)] transition-all"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <item.icon className="w-5 h-5 text-primary" />

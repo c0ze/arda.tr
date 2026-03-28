@@ -37,7 +37,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left space-y-2">
             <p className="text-sm text-muted-foreground">
-              {currentYear} Arda Karaduman
+              © {currentYear} Arda Karaduman
             </p>
             <p className="text-xs text-muted-foreground/60">
               Themes by{" "}
