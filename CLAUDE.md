@@ -4,13 +4,14 @@ This file provides guidance to Claude Code when working with this repository.
 
 ## Project Overview
 
-Personal portfolio hub at arda.tr - a landing page featuring links to various sites (AI chatbot, blog, band, resume) and showcasing games and developer tools.
+Personal portfolio hub at arda.tr. It is a single-page landing site that combines a personal profile, project showcase, music section, and social/profile links.
 
 ## Architecture
 
-- **Framework**: Vite 5 + React 18 + TypeScript
+- **Framework**: Vite 8 + React 18 + TypeScript
 - **Styling**: TailwindCSS with a small local UI layer
-- **Theme Management**: next-themes with 7 Dracula Pro themes
+- **Typography**: Lora for headings, DM Sans for body copy, JetBrains Mono for labels
+- **Theme Management**: next-themes with 7 renamed palette variants
 - **Routing**: Single-page render without client-side routing
 - **Deployment**: GitHub Pages
 
@@ -24,7 +25,7 @@ Personal portfolio hub at arda.tr - a landing page featuring links to various si
 ├── src/
 │   ├── App.tsx              # Main app shell
 │   ├── config/site.ts       # Shared site metadata and theme config
-│   ├── components/          # Portfolio sections and local UI
+│   ├── components/          # Hero, about, portfolio, music, footer, and local UI
 │   ├── pages/Index.tsx      # Main landing page
 │   └── lib/utils.ts         # Utility functions
 ├── index.html               # HTML template with SEO meta tags
@@ -54,7 +55,7 @@ npm run generate:sitemap
 
 ### Theming
 
-- 7 Dracula Pro themes: Pro (default), Alucard, Blade, Buffy, Lincoln, Morbius, Van Helsing
+- 7 palette variants: Void, Ivory, Abyss, Sakura, Amber, Ember, Steel
 - CSS variables defined in `src/index.css` using HSL format
 - Tailwind configured to use CSS variables via `config/tailwind.config.ts`
 - `next-themes` package for theme switching
@@ -63,10 +64,10 @@ npm run generate:sitemap
 
 ### Design Style
 
-- Anthropic-inspired minimal design
-- Clean typography with generous spacing
-- Subtle backgrounds and soft shadows
-- Smooth transitions on interactions
+- Editorial, high-contrast personal-brand aesthetic
+- Serif/sans/mono type pairing with restrained motion
+- Soft grid and blur treatments in the hero
+- Card-based section layout for projects and music
 
 ### Sections
 
@@ -74,7 +75,7 @@ npm run generate:sitemap
 2. **About**: Bio and professional highlights cards
 3. **Portfolio**: Products, games, and tools
 4. **Music Projects**: Music-related projects and profile links
-5. **Footer**: Social links (GitHub, LinkedIn, Email, Pagan)
+5. **Footer**: Social links (GitHub, LinkedIn, Email, Pagan, Mastodon, Bluesky)
 
 ### SEO
 
@@ -82,3 +83,4 @@ npm run generate:sitemap
 - OpenGraph and Twitter card meta tags
 - Semantic HTML5 tags
 - Sitemap auto-generated at build time from `config/site.config.json`
+- Primary social image currently points to `public/og-image.jpg`
