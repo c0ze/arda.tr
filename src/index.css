@@ -10,6 +10,7 @@ Themes: 7 Dracula Pro variants
 @layer base {
   html {
     font-size: 125%;
+    scroll-behavior: smooth;
   }
 
   /* Dracula Pro (Default) - Purple/violet theme */
@@ -332,10 +333,11 @@ Themes: 7 Dracula Pro variants
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-feature-settings: "kern" 1, "liga" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
   }
 }
 

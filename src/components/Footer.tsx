@@ -16,6 +16,18 @@ const MastodonIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const BlueskyIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M5.46 4.38c2.08 1.56 4.31 4.72 5.13 6.42.82-1.7 3.05-4.86 5.13-6.42 1.5-1.13 3.93-2 3.93.77 0 .55-.32 4.65-.5 5.31-.63 2.3-2.91 2.89-4.94 2.54 3.55.61 4.45 2.61 2.5 4.61-3.7 3.79-5.32-.95-5.73-2.16-.08-.22-.11-.32-.39-.32s-.31.1-.39.32c-.41 1.21-2.03 5.95-5.73 2.16-1.95-2-1.05-4 2.5-4.61-2.03.35-4.31-.24-4.94-2.54-.18-.66-.5-4.76-.5-5.31 0-2.77 2.43-1.9 3.93-.77Z" />
+  </svg>
+);
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -83,6 +95,15 @@ const Footer = () => {
               aria-label="Mastodon"
             >
               <MastodonIcon className="w-4 h-4" />
+            </a>
+            <a
+              href="https://bsky.app/profile/arda-karaduman.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors flex items-center justify-center"
+              aria-label="Bluesky"
+            >
+              <BlueskyIcon className="w-4 h-4" />
             </a>
           </div>
         </div>

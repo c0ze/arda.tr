@@ -1,73 +1,55 @@
-# Welcome to your Lovable project
+# arda.tr
 
-## Project info
+Personal portfolio site for Arda Karaduman.
 
-**URL**: https://lovable.dev/projects/f408bd8f-6579-444a-aabe-41e3ab00a3bf
+## Stack
 
-## How can I edit this code?
+- Vite 5
+- React 18
+- TypeScript
+- Tailwind CSS
+- npm only
 
-There are several ways of editing your application.
+## Requirements
 
-**Use Lovable**
+- Node.js `24.x`
+- npm `11.x`
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f408bd8f-6579-444a-aabe-41e3ab00a3bf) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+The repo is configured for:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+node -v
+# v24.x
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm -v
+# 11.x
 ```
 
-**Edit a file directly in GitHub**
+## Commands
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+npm ci
+npm run dev
+npm run verify
+npm run build
+npm run preview
+```
 
-**Use GitHub Codespaces**
+## Project Layout
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```text
+config/    build, lint, tailwind, and site config
+public/    static assets, including og-image.png
+scripts/   build-time helpers such as sitemap generation
+src/       app code and UI
+```
 
-## What technologies are used for this project?
+## SEO Notes
 
-This project is built with:
+- `public/og-image.png` is the social preview image.
+- `scripts/generate-sitemap.mjs` generates `dist/sitemap.xml` on every build.
+- `config/site.config.json` is the canonical source for site URL, themes, and indexed pages.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/f408bd8f-6579-444a-aabe-41e3ab00a3bf) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+GitHub Actions builds and deploys the site to GitHub Pages on pushes to `main`.

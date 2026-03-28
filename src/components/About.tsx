@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { sectionIds } from "@/config/site";
 import { Code2, Globe, Lightbulb } from "lucide-react";
 
 const About = () => {
@@ -21,7 +22,7 @@ const About = () => {
   ];
 
   return (
-    <section className="py-24 px-6 bg-card/30">
+    <section id={sectionIds.about} className="py-24 px-6 bg-card/30">
       <div className="max-w-4xl mx-auto space-y-16">
         {/* Section header */}
         <div className="text-center space-y-4">
@@ -39,7 +40,7 @@ const About = () => {
             I've been living in <span className="text-primary font-medium">Japan since 2004</span>, where I earned my Master's degree in Computer Science from Keio University (2006-2008). I also pursued PhD studies in Embedded Processor Design and Optimization from 2008-2011.
           </p>
           <p className="text-foreground/90 leading-relaxed">
-            With over <span className="text-primary font-medium">20 years of professional experience</span>, I've worked across the full technology stack - from embedded systems to cloud architecture. Currently serving as a Systems Architect at Veltra since 2024, I specialize in migrating monolithic applications to microservices and building scalable infrastructure solutions.
+            With over <span className="text-primary font-medium">15 years of professional experience</span>, I've worked across the full technology stack - from embedded systems to cloud architecture. Currently serving as a Systems Architect at Veltra since 2024, I specialize in integrating legacy applications with AI using MCP and building scalable infrastructure solutions.
           </p>
           <p className="text-foreground/90 leading-relaxed">
             My journey has taken me through various roles at companies like Gaussy, Robotfund, and Mobilous, always focusing on pragmatic solutions and continuous learning.

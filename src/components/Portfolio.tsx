@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sectionIds } from "@/config/site";
 
 // Define an interface for the items to keep TypeScript happy
 interface PortfolioItem {
@@ -96,6 +97,7 @@ const Portfolio = () => {
           <img
             src={item.image}
             alt={item.title}
+            loading="lazy"
             className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${item.containImage ? 'object-contain' : 'object-cover'}`}
           />
         </a>
@@ -144,7 +146,7 @@ const Portfolio = () => {
   );
 
   return (
-    <section className="py-24 px-6 bg-background">
+    <section id={sectionIds.portfolio} className="py-24 px-6 bg-background">
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Projects section */}
         <div className="space-y-8">

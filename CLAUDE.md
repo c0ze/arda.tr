@@ -9,37 +9,26 @@ Personal portfolio hub at arda.tr - a landing page featuring links to various si
 ## Architecture
 
 - **Framework**: Vite 5 + React 18 + TypeScript
-- **Styling**: TailwindCSS + shadcn/ui components
+- **Styling**: TailwindCSS with a small local UI layer
 - **Theme Management**: next-themes with 7 Dracula Pro themes
-- **Routing**: React Router DOM
-- **State**: TanStack React Query
+- **Routing**: Single-page render without client-side routing
 - **Deployment**: GitHub Pages
 
 ## Project Structure
 
 ```
 .
+├── config/                  # Build, lint, Tailwind, and site config
+├── public/                  # Static assets (portfolio images, favicon, OG image)
+├── scripts/                 # Build scripts (sitemap generation)
 ├── src/
-│   ├── App.tsx              # Main app with providers
-│   ├── main.tsx             # Entry point
-│   ├── index.css            # Global styles and theme CSS variables (HSL)
-│   ├── components/
-│   │   ├── Hero.tsx         # Hero section with CTAs
-│   │   ├── About.tsx        # About section with highlights
-│   │   ├── Portfolio.tsx    # Games and tools showcase
-│   │   ├── Footer.tsx       # Social links footer
-│   │   ├── ThemeToggle.tsx  # Theme switcher (7 Dracula Pro themes)
-│   │   └── ui/              # shadcn/ui components
-│   ├── pages/
-│   │   ├── Index.tsx        # Main landing page
-│   │   └── NotFound.tsx     # 404 page
-│   ├── hooks/               # Custom React hooks
-│   └── lib/                 # Utility functions
-├── public/                  # Static assets (game images, favicon)
-├── scripts/                 # Build scripts (sitemap generator)
-├── tailwind.config.ts       # Tailwind configuration
-├── dracula-pro*.json        # Theme color definitions
-└── index.html               # HTML template with SEO meta tags
+│   ├── App.tsx              # Main app shell
+│   ├── config/site.ts       # Shared site metadata and theme config
+│   ├── components/          # Portfolio sections and local UI
+│   ├── pages/Index.tsx      # Main landing page
+│   └── lib/utils.ts         # Utility functions
+├── index.html               # HTML template with SEO meta tags
+└── tsconfig.json            # Root TypeScript reference file
 ```
 
 ## Common Commands
@@ -51,11 +40,14 @@ npm run dev
 # Production build (includes sitemap generation)
 npm run build
 
+# Typecheck + lint
+npm run verify
+
 # Preview production build
 npm run preview
 
-# Lint
-npm run lint
+# Sitemap only
+npm run generate:sitemap
 ```
 
 ## Key Implementation Details
@@ -64,7 +56,7 @@ npm run lint
 
 - 7 Dracula Pro themes: Pro (default), Alucard, Blade, Buffy, Lincoln, Morbius, Van Helsing
 - CSS variables defined in `src/index.css` using HSL format
-- Tailwind configured to use CSS variables via `tailwind.config.ts`
+- Tailwind configured to use CSS variables via `config/tailwind.config.ts`
 - `next-themes` package for theme switching
 - `darkMode: ["class"]` configured in Tailwind
 - Theme names stored in localStorage
@@ -80,12 +72,13 @@ npm run lint
 
 1. **Hero**: Name, title, location, CTA buttons (Resume, Blog, AI Chat)
 2. **About**: Bio and professional highlights cards
-3. **Portfolio**: Games (Domino, Hackerman, Commando) and Tools (Git Roast)
-4. **Footer**: Social links (GitHub, LinkedIn, Email, Pagan)
+3. **Portfolio**: Products, games, and tools
+4. **Music Projects**: Music-related projects and profile links
+5. **Footer**: Social links (GitHub, LinkedIn, Email, Pagan)
 
 ### SEO
 
 - JSON-LD structured data (Person schema)
 - OpenGraph and Twitter card meta tags
 - Semantic HTML5 tags
-- Sitemap auto-generated at build time
+- Sitemap auto-generated at build time from `config/site.config.json`

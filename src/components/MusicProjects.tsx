@@ -1,7 +1,7 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, Music, Disc } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sectionIds } from "@/config/site";
 
 const MusicProjects = () => {
     const musicProjects = [
@@ -42,7 +42,7 @@ const MusicProjects = () => {
     ];
 
     return (
-        <section className="py-24 px-6 bg-background relative overflow-hidden">
+        <section id={sectionIds.music} className="py-24 px-6 bg-background relative overflow-hidden">
             {/* Background gradient for section separation */}
             <div className="absolute inset-0 bg-gradient-subtle opacity-40 pointer-events-none" />
 
@@ -64,6 +64,7 @@ const MusicProjects = () => {
                                     <img
                                         src={project.image}
                                         alt={project.title}
+                                        loading="lazy"
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />

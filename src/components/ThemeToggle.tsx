@@ -1,22 +1,13 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Palette } from "lucide-react";
+import { themes } from "@/config/site";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const themes = [
-  { id: "dracula-pro", name: "Dracula Pro", color: "#9580FF" },
-  { id: "alucard", name: "Alucard", color: "#644AC9" },
-  { id: "blade", name: "Blade", color: "#80FFEA" },
-  { id: "buffy", name: "Buffy", color: "#FF80BF" },
-  { id: "lincoln", name: "Lincoln", color: "#FFFF80" },
-  { id: "morbius", name: "Morbius", color: "#FF9580" },
-  { id: "van-helsing", name: "Van Helsing", color: "#708CA9" },
-] as const;
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -28,12 +19,12 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button
-        className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary border border-border text-muted-foreground"
-        aria-label="Toggle theme"
-      >
-        <Palette className="w-4 h-4" />
-      </button>
+        <button
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary border border-border text-muted-foreground"
+          aria-label="Select theme"
+        >
+          <Palette className="w-4 h-4" />
+        </button>
     );
   }
 
@@ -44,7 +35,7 @@ export function ThemeToggle() {
       <DropdownMenuTrigger asChild>
         <button
           className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary border border-border text-muted-foreground hover:bg-primary/20 hover:text-primary hover:border-primary/50 transition-all"
-          aria-label="Toggle theme"
+          aria-label="Select theme"
           title={`Theme: ${currentTheme.name}`}
         >
           <div

@@ -2,30 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://arda.tr/sitemap.xml
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: Mastodon
-Allow: /
-
-User-agent: http.rb
-Allow: /
+Host: arda.tr

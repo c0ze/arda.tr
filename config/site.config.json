@@ -1,0 +1,61 @@
+{
+  "site": {
+    "name": "Arda Karaduman",
+    "title": "Arda Karaduman - Systems Architect & Developer",
+    "description": "Personal hub of Arda Karaduman, a systems architect and pragmatic programmer based in Japan.",
+    "url": "https://arda.tr",
+    "ogImagePath": "/og-image.png",
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630
+  },
+  "pages": [
+    {
+      "path": "/",
+      "priority": "1.0",
+      "changefreq": "monthly"
+    }
+  ],
+  "sections": {
+    "about": "about",
+    "portfolio": "portfolio",
+    "music": "music"
+  },
+  "themes": [
+    {
+      "id": "dracula-pro",
+      "name": "Dracula Pro",
+      "color": "#9580FF"
+    },
+    {
+      "id": "alucard",
+      "name": "Alucard",
+      "color": "#644AC9"
+    },
+    {
+      "id": "blade",
+      "name": "Blade",
+      "color": "#80FFEA"
+    },
+    {
+      "id": "buffy",
+      "name": "Buffy",
+      "color": "#FF80BF"
+    },
+    {
+      "id": "lincoln",
+      "name": "Lincoln",
+      "color": "#FFFF80"
+    },
+    {
+      "id": "morbius",
+      "name": "Morbius",
+      "color": "#FF9580"
+    },
+    {
+      "id": "van-helsing",
+      "name": "Van Helsing",
+      "color": "#708CA9"
+    }
+  ]
+}
+
