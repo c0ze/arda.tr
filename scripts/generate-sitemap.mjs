@@ -76,4 +76,7 @@ async function main() {
   console.log(`Indexed ${siteConfig.pages.length} canonical page(s).`);
 }
 
-await main();
+main().catch((err) => {
+  console.error("Sitemap generation failed:", err);
+  process.exit(1);
+});

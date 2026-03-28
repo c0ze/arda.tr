@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Gamepad2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sectionIds } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 // Define an interface for the items to keep TypeScript happy
 interface PortfolioItem {
@@ -98,7 +99,7 @@ const Portfolio = () => {
             src={item.image}
             alt={item.title}
             loading="lazy"
-            className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${item.containImage ? 'object-contain' : 'object-cover'}`}
+            className={cn("w-full h-full transition-transform duration-500 group-hover:scale-105", item.containImage ? "object-contain" : "object-cover")}
           />
         </a>
         {item.playable && (
@@ -114,7 +115,7 @@ const Portfolio = () => {
       </div>
       <CardHeader className="pb-2">
         <div className="flex flex-wrap gap-2 mb-2">
-          {item.tags.map((tag: string, tagIndex: number) => (
+          {item.tags.map((tag, tagIndex) => (
             <span
               key={tagIndex}
               className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
