@@ -2,10 +2,308 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
-All colors MUST be HSL.
-Themes: 7 Dracula Pro variants
+/*
+  Theme CSS variables — defined outside @layer so Tailwind never purges them.
+  All colors in HSL format (no hsl() wrapper — consumed as hsl(var(--x))).
 */
+
+/* Void — dark purple (default) */
+:root,
+.dracula-pro {
+  --background: 252 18% 15%;
+  --foreground: 60 30% 96%;
+
+  --card: 252 18% 18%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 252 18% 18%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 265 89% 75%;
+  --primary-foreground: 252 18% 15%;
+
+  --secondary: 252 18% 22%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 252 18% 22%;
+  --muted-foreground: 252 15% 61%;
+
+  --accent: 265 89% 75%;
+  --accent-foreground: 252 18% 15%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 252 18% 15%;
+
+  --border: 252 18% 28%;
+  --input: 252 18% 28%;
+  --ring: 265 89% 75%;
+
+  --radius: 0.75rem;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(252 18% 15%), hsl(252 18% 17%));
+  --gradient-accent: linear-gradient(135deg, hsl(265 89% 75%), hsl(326 100% 74%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
+
+/* Ivory — light purple */
+.alucard {
+  --background: 0 0% 96%;
+  --foreground: 0 0% 12%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 12%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 12%;
+
+  --primary: 253 53% 54%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 240 18% 90%;
+  --secondary-foreground: 0 0% 12%;
+
+  --muted: 240 18% 90%;
+  --muted-foreground: 0 0% 40%;
+
+  --accent: 253 53% 54%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 6 67% 48%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 240 18% 84%;
+  --input: 240 18% 84%;
+  --ring: 253 53% 54%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(0 0% 96%), hsl(240 18% 96%));
+  --gradient-accent: linear-gradient(135deg, hsl(253 53% 54%), hsl(253 53% 64%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.08);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.12);
+
+  --theme-cyan: 199 97% 30%;
+  --theme-green: 113 83% 24%;
+  --theme-pink: 338 79% 36%;
+  --theme-yellow: 46 71% 35%;
+  --theme-red: 6 67% 48%;
+}
+
+/* Abyss — dark teal */
+.blade {
+  --background: 168 15% 15%;
+  --foreground: 60 30% 96%;
+
+  --card: 168 15% 18%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 168 15% 18%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 170 100% 75%;
+  --primary-foreground: 168 15% 15%;
+
+  --secondary: 168 15% 22%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 168 15% 22%;
+  --muted-foreground: 168 15% 57%;
+
+  --accent: 170 100% 75%;
+  --accent-foreground: 168 15% 15%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 168 15% 15%;
+
+  --border: 168 15% 28%;
+  --input: 168 15% 28%;
+  --ring: 170 100% 75%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(168 15% 15%), hsl(168 15% 17%));
+  --gradient-accent: linear-gradient(135deg, hsl(170 100% 75%), hsl(115 100% 75%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
+
+/* Sakura — dark magenta */
+.buffy {
+  --background: 292 15% 15%;
+  --foreground: 60 30% 96%;
+
+  --card: 292 15% 18%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 292 15% 18%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 326 100% 75%;
+  --primary-foreground: 292 15% 15%;
+
+  --secondary: 292 15% 22%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 292 15% 22%;
+  --muted-foreground: 292 15% 61%;
+
+  --accent: 326 100% 75%;
+  --accent-foreground: 292 15% 15%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 292 15% 15%;
+
+  --border: 292 15% 28%;
+  --input: 292 15% 28%;
+  --ring: 326 100% 75%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(292 15% 15%), hsl(292 15% 17%));
+  --gradient-accent: linear-gradient(135deg, hsl(326 100% 75%), hsl(265 89% 75%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
+
+/* Amber — dark gold */
+.lincoln {
+  --background: 48 15% 15%;
+  --foreground: 60 30% 96%;
+
+  --card: 48 15% 18%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 48 15% 18%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 60 100% 75%;
+  --primary-foreground: 48 15% 15%;
+
+  --secondary: 48 15% 22%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 48 15% 22%;
+  --muted-foreground: 48 15% 57%;
+
+  --accent: 60 100% 75%;
+  --accent-foreground: 48 15% 15%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 48 15% 15%;
+
+  --border: 48 15% 28%;
+  --input: 48 15% 28%;
+  --ring: 60 100% 75%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(48 15% 15%), hsl(48 15% 17%));
+  --gradient-accent: linear-gradient(135deg, hsl(60 100% 75%), hsl(115 100% 75%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
+
+/* Ember — dark red */
+.morbius {
+  --background: 355 15% 15%;
+  --foreground: 60 30% 96%;
+
+  --card: 355 15% 18%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 355 15% 18%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 10 100% 75%;
+  --primary-foreground: 355 15% 15%;
+
+  --secondary: 355 15% 22%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 355 15% 22%;
+  --muted-foreground: 355 15% 61%;
+
+  --accent: 10 100% 75%;
+  --accent-foreground: 355 15% 15%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 355 15% 15%;
+
+  --border: 355 15% 28%;
+  --input: 355 15% 28%;
+  --ring: 10 100% 75%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(355 15% 15%), hsl(355 15% 17%));
+  --gradient-accent: linear-gradient(135deg, hsl(10 100% 75%), hsl(326 100% 75%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
+
+/* Steel — very dark blue */
+.van-helsing {
+  --background: 210 15% 4%;
+  --foreground: 60 30% 96%;
+
+  --card: 210 15% 8%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 210 15% 8%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 210 50% 55%;
+  --primary-foreground: 210 15% 4%;
+
+  --secondary: 210 15% 14%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 210 15% 14%;
+  --muted-foreground: 210 15% 51%;
+
+  --accent: 170 100% 75%;
+  --accent-foreground: 210 15% 4%;
+
+  --destructive: 10 100% 75%;
+  --destructive-foreground: 210 15% 4%;
+
+  --border: 210 15% 18%;
+  --input: 210 15% 18%;
+  --ring: 210 50% 55%;
+
+  --gradient-subtle: linear-gradient(135deg, hsl(210 15% 4%), hsl(210 15% 7%));
+  --gradient-accent: linear-gradient(135deg, hsl(210 50% 55%), hsl(170 100% 75%));
+  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.4);
+  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.5);
+
+  --theme-cyan: 170 100% 75%;
+  --theme-green: 115 100% 75%;
+  --theme-pink: 326 100% 75%;
+  --theme-yellow: 60 100% 75%;
+  --theme-red: 10 100% 75%;
+}
 
 @layer base {
   html {
@@ -13,320 +311,6 @@ Themes: 7 Dracula Pro variants
     scroll-behavior: smooth;
   }
 
-  /* Dracula Pro (Default) - Purple/violet theme */
-  :root,
-  .dracula-pro {
-    --background: 252 18% 15%;
-    --foreground: 60 30% 96%;
-
-    --card: 252 18% 18%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 252 18% 18%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 265 89% 75%;
-    --primary-foreground: 252 18% 15%;
-
-    --secondary: 252 18% 22%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 252 18% 22%;
-    --muted-foreground: 252 15% 61%;
-
-    --accent: 265 89% 75%;
-    --accent-foreground: 252 18% 15%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 252 18% 15%;
-
-    --border: 252 18% 28%;
-    --input: 252 18% 28%;
-    --ring: 265 89% 75%;
-
-    --radius: 0.75rem;
-
-    /* Custom design tokens */
-    --gradient-subtle: linear-gradient(135deg, hsl(252 18% 15%), hsl(252 18% 17%));
-    --gradient-accent: linear-gradient(135deg, hsl(265 89% 75%), hsl(326 100% 74%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-
-  /* Dracula Pro Alucard - Light theme with purple accent */
-  .alucard {
-    --background: 0 0% 96%;
-    --foreground: 0 0% 12%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 12%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 12%;
-
-    --primary: 253 53% 54%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 240 18% 90%;
-    --secondary-foreground: 0 0% 12%;
-
-    --muted: 240 18% 90%;
-    --muted-foreground: 0 0% 40%;
-
-    --accent: 253 53% 54%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 6 67% 48%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 240 18% 84%;
-    --input: 240 18% 84%;
-    --ring: 253 53% 54%;
-
-    /* Custom design tokens - Alucard */
-    --gradient-subtle: linear-gradient(135deg, hsl(0 0% 96%), hsl(240 18% 96%));
-    --gradient-accent: linear-gradient(135deg, hsl(253 53% 54%), hsl(253 53% 64%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.08);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.12);
-
-    /* Theme palette extras */
-    --theme-cyan: 199 97% 30%;
-    --theme-green: 113 83% 24%;
-    --theme-pink: 338 79% 36%;
-    --theme-yellow: 46 71% 35%;
-    --theme-red: 6 67% 48%;
-  }
-
-  /* Dracula Pro Blade - Dark teal/green theme */
-  .blade {
-    --background: 168 15% 15%;
-    --foreground: 60 30% 96%;
-
-    --card: 168 15% 18%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 168 15% 18%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 170 100% 75%;
-    --primary-foreground: 168 15% 15%;
-
-    --secondary: 168 15% 22%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 168 15% 22%;
-    --muted-foreground: 168 15% 57%;
-
-    --accent: 170 100% 75%;
-    --accent-foreground: 168 15% 15%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 168 15% 15%;
-
-    --border: 168 15% 28%;
-    --input: 168 15% 28%;
-    --ring: 170 100% 75%;
-
-    /* Custom design tokens - Blade */
-    --gradient-subtle: linear-gradient(135deg, hsl(168 15% 15%), hsl(168 15% 17%));
-    --gradient-accent: linear-gradient(135deg, hsl(170 100% 75%), hsl(115 100% 75%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-
-  /* Dracula Pro Buffy - Dark magenta/pink theme */
-  .buffy {
-    --background: 292 15% 15%;
-    --foreground: 60 30% 96%;
-
-    --card: 292 15% 18%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 292 15% 18%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 326 100% 75%;
-    --primary-foreground: 292 15% 15%;
-
-    --secondary: 292 15% 22%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 292 15% 22%;
-    --muted-foreground: 292 15% 61%;
-
-    --accent: 326 100% 75%;
-    --accent-foreground: 292 15% 15%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 292 15% 15%;
-
-    --border: 292 15% 28%;
-    --input: 292 15% 28%;
-    --ring: 326 100% 75%;
-
-    /* Custom design tokens - Buffy */
-    --gradient-subtle: linear-gradient(135deg, hsl(292 15% 15%), hsl(292 15% 17%));
-    --gradient-accent: linear-gradient(135deg, hsl(326 100% 75%), hsl(265 89% 75%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-
-  /* Dracula Pro Lincoln - Dark yellow/gold theme */
-  .lincoln {
-    --background: 48 15% 15%;
-    --foreground: 60 30% 96%;
-
-    --card: 48 15% 18%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 48 15% 18%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 60 100% 75%;
-    --primary-foreground: 48 15% 15%;
-
-    --secondary: 48 15% 22%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 48 15% 22%;
-    --muted-foreground: 48 15% 57%;
-
-    --accent: 60 100% 75%;
-    --accent-foreground: 48 15% 15%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 48 15% 15%;
-
-    --border: 48 15% 28%;
-    --input: 48 15% 28%;
-    --ring: 60 100% 75%;
-
-    /* Custom design tokens - Lincoln */
-    --gradient-subtle: linear-gradient(135deg, hsl(48 15% 15%), hsl(48 15% 17%));
-    --gradient-accent: linear-gradient(135deg, hsl(60 100% 75%), hsl(115 100% 75%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-
-  /* Dracula Pro Morbius - Dark red/blood theme */
-  .morbius {
-    --background: 355 15% 15%;
-    --foreground: 60 30% 96%;
-
-    --card: 355 15% 18%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 355 15% 18%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 10 100% 75%;
-    --primary-foreground: 355 15% 15%;
-
-    --secondary: 355 15% 22%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 355 15% 22%;
-    --muted-foreground: 355 15% 61%;
-
-    --accent: 10 100% 75%;
-    --accent-foreground: 355 15% 15%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 355 15% 15%;
-
-    --border: 355 15% 28%;
-    --input: 355 15% 28%;
-    --ring: 10 100% 75%;
-
-    /* Custom design tokens - Morbius */
-    --gradient-subtle: linear-gradient(135deg, hsl(355 15% 15%), hsl(355 15% 17%));
-    --gradient-accent: linear-gradient(135deg, hsl(10 100% 75%), hsl(326 100% 75%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-
-  /* Dracula Pro Van Helsing - Very dark blue/steel theme */
-  .van-helsing {
-    --background: 210 15% 4%;
-    --foreground: 60 30% 96%;
-
-    --card: 210 15% 8%;
-    --card-foreground: 60 30% 96%;
-
-    --popover: 210 15% 8%;
-    --popover-foreground: 60 30% 96%;
-
-    --primary: 210 50% 55%;
-    --primary-foreground: 210 15% 4%;
-
-    --secondary: 210 15% 14%;
-    --secondary-foreground: 60 30% 96%;
-
-    --muted: 210 15% 14%;
-    --muted-foreground: 210 15% 51%;
-
-    --accent: 170 100% 75%;
-    --accent-foreground: 210 15% 4%;
-
-    --destructive: 10 100% 75%;
-    --destructive-foreground: 210 15% 4%;
-
-    --border: 210 15% 18%;
-    --input: 210 15% 18%;
-    --ring: 210 50% 55%;
-
-    /* Custom design tokens - Van Helsing */
-    --gradient-subtle: linear-gradient(135deg, hsl(210 15% 4%), hsl(210 15% 7%));
-    --gradient-accent: linear-gradient(135deg, hsl(210 50% 55%), hsl(170 100% 75%));
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.4);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.5);
-
-    /* Theme palette extras */
-    --theme-cyan: 170 100% 75%;
-    --theme-green: 115 100% 75%;
-    --theme-pink: 326 100% 75%;
-    --theme-yellow: 60 100% 75%;
-    --theme-red: 10 100% 75%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
