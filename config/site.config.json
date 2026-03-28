@@ -23,37 +23,37 @@
   "themes": [
     {
       "id": "dracula-pro",
-      "name": "Dracula Pro",
+      "name": "Void",
       "color": "#9580FF"
     },
     {
       "id": "alucard",
-      "name": "Alucard",
+      "name": "Ivory",
       "color": "#644AC9"
     },
     {
       "id": "blade",
-      "name": "Blade",
+      "name": "Abyss",
       "color": "#80FFEA"
     },
     {
       "id": "buffy",
-      "name": "Buffy",
+      "name": "Sakura",
       "color": "#FF80BF"
     },
     {
       "id": "lincoln",
-      "name": "Lincoln",
+      "name": "Amber",
       "color": "#FFFF80"
     },
     {
       "id": "morbius",
-      "name": "Morbius",
+      "name": "Ember",
       "color": "#FF9580"
     },
     {
       "id": "van-helsing",
-      "name": "Van Helsing",
+      "name": "Steel",
       "color": "#708CA9"
     }
   ]

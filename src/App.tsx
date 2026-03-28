@@ -5,7 +5,7 @@ import Index from "./pages/Index";
 const App = () => (
   <ThemeProvider
     attribute="class"
-    defaultTheme="system"
+    defaultTheme={themes[0].id}
     disableTransitionOnChange
     themes={themes.map((theme) => theme.id)}
   >
