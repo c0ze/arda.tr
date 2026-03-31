@@ -1,0 +1,21 @@
+{
+  "name": "arda.tr",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "esmodule",
+      "in-source": true
+    }
+  ],
+  "suffix": ".res.mjs",
+  "dependencies": ["@rescript/core", "@rescript/react"],
+  "compiler-flags": ["-open", "RescriptCore"],
+  "jsx": {
+    "version": 4
+  }
+}

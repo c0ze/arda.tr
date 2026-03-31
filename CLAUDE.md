@@ -8,7 +8,7 @@ Personal portfolio hub at arda.tr. It is a single-page landing site that combine
 
 ## Architecture
 
-- **Framework**: Vite 8 + React 18 + TypeScript
+- **Framework**: Vite 8 + React 18 + ReScript
 - **Styling**: TailwindCSS with a small local UI layer
 - **Typography**: Lora for headings, DM Sans for body copy, JetBrains Mono for labels
 - **Theme Management**: next-themes with 7 renamed palette variants
@@ -21,14 +21,17 @@ Personal portfolio hub at arda.tr. It is a single-page landing site that combine
 .
 ├── config/                  # Build, lint, Tailwind, and site config
 ├── public/                  # Static assets (portfolio images, favicon, OG image)
-├── scripts/                 # Build scripts (sitemap generation)
+├── scripts/                 # Build scripts (sitemap + generated config bridge)
 ├── src/
-│   ├── App.tsx              # Main app shell
-│   ├── config/site.ts       # Shared site metadata and theme config
-│   ├── components/          # Hero, about, portfolio, music, footer, and local UI
-│   ├── pages/Index.tsx      # Main landing page
-│   └── lib/utils.ts         # Utility functions
+│   ├── App.res              # Main ReScript page composition
+│   ├── App.tsx              # Thin TS theme-provider wrapper around the ReScript app
+│   ├── bindings/           # ReScript bindings to existing TS/JS React modules
+│   ├── config/site.ts       # Shared site metadata bridge
+│   ├── config/site.generated.ts # Generated from config/site.config.json
+│   ├── components/          # ReScript page sections plus TS bridge components
+│   └── lib/utils.ts         # Utility functions used by TS bridge UI primitives
 ├── index.html               # HTML template with SEO meta tags
+├── rescript.json            # ReScript compiler configuration
 └── tsconfig.json            # Root TypeScript reference file
 ```
 
@@ -38,10 +41,13 @@ Personal portfolio hub at arda.tr. It is a single-page landing site that combine
 # Development server
 npm run dev
 
+# Regression test
+npm run test
+
 # Production build (includes sitemap generation)
 npm run build
 
-# Typecheck + lint
+# Lint + typecheck + regression test
 npm run verify
 
 # Preview production build
@@ -59,6 +65,7 @@ npm run generate:sitemap
 - CSS variables defined in `src/index.css` using HSL format
 - Tailwind configured to use CSS variables via `config/tailwind.config.ts`
 - `next-themes` package for theme switching
+- `src/config/site.generated.ts` is generated from `config/site.config.json` and consumed by the client app
 - `darkMode: ["class"]` configured in Tailwind
 - Theme names stored in localStorage
 

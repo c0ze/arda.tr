@@ -9,15 +9,22 @@
     "npm": "11.x"
   },
   "scripts": {
-    "dev": "vite --config config/vite.config.ts",
-    "build": "vite build --config config/vite.config.ts && npm run generate:sitemap",
+    "generate:site-config": "node scripts/generate-site-config-module.mjs",
+    "res:build": "npm run generate:site-config && rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript -w",
+    "dev": "npm run generate:site-config && concurrently -k -n rescript,vite \"npm run res:dev\" \"vite --config config/vite.config.ts\"",
+    "build": "npm run res:build && vite build --config config/vite.config.ts && npm run generate:sitemap",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint src config scripts --config config/eslint.config.js",
     "typecheck": "tsc -b tsconfig.json",
-    "verify": "npm run lint && npm run typecheck",
+    "test": "npm run res:build && vitest run --config config/vitest.config.ts",
+    "verify": "npm run lint && npm run typecheck && npm run test",
     "preview": "vite preview --config config/vite.config.ts"
   },
   "dependencies": {
+    "@rescript/core": "^1.6.1",
+    "@rescript/react": "^0.13.1",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
@@ -33,17 +40,23 @@
     "@types/node": "^24.0.0",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.27",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^17.4.0",
+    "jsdom": "^27.0.1",
     "postcss": "^8.5.8",
+    "rescript": "^12.0.0",
     "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.3",
+    "vitest": "^3.2.4"
   }
 }

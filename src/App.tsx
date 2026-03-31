@@ -1,6 +1,8 @@
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { themes } from "@/config/site";
-import Index from "./pages/Index";
+import * as RescriptApp from "./App.res.mjs";
+
+const LandingPage = RescriptApp.make;
 
 const App = () => (
   <ThemeProvider
@@ -9,7 +11,7 @@ const App = () => (
     disableTransitionOnChange
     themes={themes.map((theme) => theme.id)}
   >
-    <Index />
+    <LandingPage />
   </ThemeProvider>
 );
 

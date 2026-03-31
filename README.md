@@ -14,7 +14,8 @@ The app is a single-page personal hub with:
 
 - Vite 8
 - React 18
-- TypeScript
+- ReScript
+- TypeScript bridge files for config, theme/error wrappers, and tests
 - Tailwind CSS
 - `next-themes`
 - npm only
@@ -39,6 +40,7 @@ npm -v
 ```sh
 npm ci
 npm run dev
+npm run test
 npm run verify
 npm run build
 npm run preview
@@ -46,9 +48,12 @@ npm run preview
 
 Command notes:
 
-- `npm run verify` runs lint + typecheck
+- `npm run dev` generates the site config bridge, starts the ReScript compiler in watch mode, and runs Vite
+- `npm run test` runs a small regression test against the app shell
+- `npm run verify` runs lint + typecheck + test
 - `npm run build` creates the production bundle and regenerates `dist/sitemap.xml`
 - `npm run generate:sitemap` can be run separately if only metadata changed
+- `npm run generate:site-config` regenerates the TypeScript site-config bridge from `config/site.config.json`
 
 ## Project Layout
 
@@ -56,7 +61,7 @@ Command notes:
 config/    build, lint, Tailwind, TypeScript, and site metadata config
 public/    static assets, including social preview images
 scripts/   build-time helpers such as sitemap generation
-src/       app code, sections, and local UI primitives
+src/       app code, ReScript sections, local UI primitives, and generated config bridge
 ```
 
 ## Frontend Notes
@@ -66,6 +71,7 @@ src/       app code, sections, and local UI primitives
   - `DM Sans` for body copy
   - `JetBrains Mono` for labels and technical accents
 - Theme state is handled by `next-themes`
+- The page sections are authored in ReScript and compiled in-source to ignored `.res.mjs` artifacts
 - The current theme palette names live in `config/site.config.json`:
   - `Void`
   - `Ivory`
@@ -84,7 +90,9 @@ src/       app code, sections, and local UI primitives
   - indexed pages
   - section IDs
   - theme metadata
+- `src/config/site.generated.ts` is generated from `config/site.config.json` for the client app
 - `scripts/generate-sitemap.mjs` generates `dist/sitemap.xml` on every build
+- `scripts/generate-site-config-module.mjs` syncs the client-side config bridge from the canonical JSON file
 - `index.html` contains:
   - canonical URL
   - Open Graph tags
