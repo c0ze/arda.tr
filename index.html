@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dracula-pro" data-theme="dracula-pro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,6 +14,26 @@
     <meta name="keywords" content="Arda Karaduman, Systems Architect, Ruby developer, Go developer, Python, AWS, Kubernetes, pragmatic programmer, Japan, Tokyo, Keio University" />
 
     <link rel="me" href="https://mastodon.world/@arda" />
+
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const storedTheme = window.localStorage.getItem("theme");
+
+        if (!storedTheme || storedTheme === root.dataset.theme) {
+          return;
+        }
+
+        const previousTheme = root.dataset.theme;
+
+        if (previousTheme) {
+          root.classList.remove(previousTheme);
+        }
+
+        root.classList.add(storedTheme);
+        root.dataset.theme = storedTheme;
+      })();
+    </script>
 
     <meta property="og:title" content="Arda Karaduman - Systems Architect & Developer" />
     <meta property="og:description" content="Personal hub of Arda Karaduman - Systems Architect and Pragmatic Programmer based in Japan." />
@@ -68,6 +88,6 @@
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
