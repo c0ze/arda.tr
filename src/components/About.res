@@ -9,6 +9,24 @@ type highlight = {
   description: string,
 }
 
+let highlights: array<highlight> = [
+  {
+    icon: Code2,
+    title: "Technical Excellence",
+    description: "Proficient in Ruby, Go, Python, and modern web technologies. Hands-on with AWS, Kubernetes, and microservices.",
+  },
+  {
+    icon: Globe,
+    title: "Multilingual",
+    description: "Native Turkish speaker with near-native English and business-level Japanese proficiency.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Pragmatic Approach",
+    description: "Early adopter of CI/CD, TDD, and Agile methodologies. Always exploring new frameworks and ideas.",
+  },
+]
+
 let renderHighlightIcon = icon =>
   switch icon {
   | Code2 => Icons.code2(~className="w-5 h-5 text-primary", ())
@@ -18,37 +36,13 @@ let renderHighlightIcon = icon =>
 
 @react.component
 let make = () => {
-  let highlights: array<highlight> = [
-    {
-      icon: Code2,
-      title: "Technical Excellence",
-      description: "Proficient in Ruby, Go, Python, and modern web technologies. Hands-on with AWS, Kubernetes, and microservices.",
-    },
-    {
-      icon: Globe,
-      title: "Multilingual",
-      description: "Native Turkish speaker with near-native English and business-level Japanese proficiency.",
-    },
-    {
-      icon: Lightbulb,
-      title: "Pragmatic Approach",
-      description: "Early adopter of CI/CD, TDD, and Agile methodologies. Always exploring new frameworks and ideas.",
-    },
-  ]
-
   <section id={SiteConfig.about} className="py-24 px-6 bg-card/30">
     <div className="max-w-4xl mx-auto space-y-16">
-      <div className="text-center space-y-3">
-        <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">
-          {"01 — About"->React.string}
-        </span>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-          {"About"->React.string}
-        </h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          {"A pragmatic programmer who enjoys tinkering, hacking, and exploring new languages and frameworks."->React.string}
-        </p>
-      </div>
+      <SectionHeader
+        eyebrow="01 — About"
+        title="About"
+        description="A pragmatic programmer who enjoys tinkering, hacking, and exploring new languages and frameworks."
+      />
 
       <div className="bg-card border border-border border-l-[3px] border-l-primary/40 rounded-xl p-8 space-y-4">
         <p className="text-foreground/90 leading-relaxed">
