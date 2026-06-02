@@ -22,7 +22,7 @@ let projects: array<project> = [
   {
     title: "Pagan",
     description: "Atmospheric Black Metal from Turkey. Dark, melodic, and aggressive.",
-    image: "/pagan.jpg",
+    image: "/pagan.webp",
     link: "https://pagan.tr",
     tags: ["Black Metal", "Atmospheric", "Turkish Metal"],
     kind: #Band,
@@ -31,7 +31,7 @@ let projects: array<project> = [
   {
     title: "The Seventh Shadow",
     description: "AI Generated Gothic Metal exploring themes of alienation and artificiality.",
-    image: "/7th-shadow.jpg",
+    image: "/7th-shadow.webp",
     link: "https://distrokid.com/hyperfollow/the7thshadow/alienation-by-design-2",
     tags: ["Gothic Metal", "AI Music", "Experimental"],
     kind: #Project,

@@ -18,9 +18,10 @@
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint src config scripts --config config/eslint.config.js",
     "typecheck": "tsc -b tsconfig.json",
-    "test": "npm run res:build && vitest run --config config/vitest.config.ts",
+    "test": "vitest run --config config/vitest.config.ts",
     "verify": "npm run lint && npm run typecheck && npm run test",
-    "preview": "vite preview --config config/vite.config.ts"
+    "preview": "vite preview --config config/vite.config.ts",
+    "prepare": "npm run res:build"
   },
   "dependencies": {
     "@rescript/core": "^1.6.1",

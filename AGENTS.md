@@ -17,11 +17,29 @@ The site should stay:
 ## Stack
 
 - Vite 8
-- React 18
-- TypeScript
+- **ReScript** (page sections + content) compiled to JS, rendered by React 18
+- TypeScript (thin interop layer only)
 - Tailwind CSS
 - `next-themes`
 - npm only
+
+## Architecture
+
+The site is written in **ReScript**, with a deliberately small TypeScript interop
+boundary. Stay inside this split:
+
+- **ReScript (`.res`)** — all page sections (`src/components/*.res`), their
+  bindings (`src/bindings/*.res`), and all copy/data (`src/content/*Content.res`).
+- **TypeScript (`.tsx`/`.ts`)** — only the interop shell: the entry/provider
+  (`main.tsx`, `App.tsx`, `ThemeProvider.tsx`, `ThemeToggle.tsx`), the React
+  `ErrorBoundary`, the shadcn primitives in `components/ui/` (wrapped by `.res`
+  bindings), and `lib/utils.ts`. Don't grow this layer without a real reason.
+- **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
+  Each section (`Hero`, `About`, `Portfolio`, `Music`, `Footer`) reads its copy
+  and data from its matching `*Content.res`. Keep it that way when editing text.
+- `src/config/site.generated.ts` is generated from `config/site.config.json` by
+  `scripts/generate-site-config-module.mjs` (run via the `prepare` hook and the
+  build); it is gitignored — edit the JSON, not the generated file.
 
 ## Useful Commands
 

@@ -25,7 +25,7 @@ let sections: array<section> = [
       {
         title: "Vigil.today",
         description: "Smart reminder widget PWA that keeps you on track with recurring tasks.",
-        image: "/vigil-today.png",
+        image: "/vigil-today.webp",
         link: "https://vigil.today",
         tags: ["SvelteKit", "PWA", "Firebase"],
         playable: false,
@@ -35,7 +35,7 @@ let sections: array<section> = [
       {
         title: "Skriv.ist",
         description: "Multiplatform ebook reader.",
-        image: "/skrivist_logo_3.png",
+        image: "/skrivist_logo_3.webp",
         link: "https://skriv.ist",
         tags: ["Ebook", "Reader", "Multiplatform"],
         playable: false,
@@ -45,7 +45,7 @@ let sections: array<section> = [
       {
         title: "Fablespun",
         description: "AI-spun fables — illustrated tales for kids, at fable.tr.",
-        image: "/fablespun.png",
+        image: "/fablespun.webp",
         link: "https://fable.tr",
         tags: ["AI", "Storytelling", "Children Books"],
         playable: false,
@@ -62,7 +62,7 @@ let sections: array<section> = [
       {
         title: "Domino Game",
         description: "A classic Domino game built with Love2D and Lua. Play against the computer in this web-based version.",
-        image: "/domino.png",
+        image: "/domino.webp",
         link: "https://domino.arda.tr",
         tags: ["Lua", "Love2D", "Game Dev"],
         playable: true,
@@ -72,7 +72,7 @@ let sections: array<section> = [
       {
         title: "Hackerman",
         description: "Dive into the digital realm with this hacking simulation. Test your skills and breach the system.",
-        image: "/hackerman.png",
+        image: "/hackerman.webp",
         link: "https://hackerman.arda.tr",
         tags: ["Simulation", "Puzzle", "Web Game"],
         playable: true,
@@ -82,7 +82,7 @@ let sections: array<section> = [
       {
         title: "TankFury",
         description: "A retro-style action game. Take control and fight your way through enemy lines.",
-        image: "/commando.png",
+        image: "/commando.webp",
         link: "https://tankfury.arda.tr",
         tags: ["Action", "Retro", "Web Game"],
         playable: true,
@@ -99,7 +99,7 @@ let sections: array<section> = [
       {
         title: "ai.arda.tr",
         description: "AI chatbot that answers questions about my résumé.",
-        image: "/ai-arda.png",
+        image: "/ai-arda.webp",
         link: "https://ai.arda.tr/",
         tags: ["AI", "Chatbot", "Resume"],
         playable: false,
@@ -109,7 +109,7 @@ let sections: array<section> = [
       {
         title: "Süper Lig",
         description: "Süper Lig fixtures, results, and live match flow.",
-        image: "/super-lig.png",
+        image: "/super-lig.webp",
         link: "https://super-lig.arda.tr/",
         tags: ["Football", "Live Scores", "Web"],
         playable: false,
@@ -119,7 +119,7 @@ let sections: array<section> = [
       {
         title: "Local AI",
         description: "AI agents running entirely in your browser.",
-        image: "/local-ai.png",
+        image: "/local-ai.webp",
         link: "https://local-ai.arda.tr/",
         tags: ["AI", "Browser", "Agents"],
         playable: false,
@@ -129,7 +129,7 @@ let sections: array<section> = [
       {
         title: "Reliquary",
         description: "Qdrant-backed long-term memory for AIs, served over MCP.",
-        image: "/reliquary.png",
+        image: "/reliquary.webp",
         link: "",
         tags: ["MCP", "Mem0", "Qdrant"],
         playable: false,
@@ -139,7 +139,7 @@ let sections: array<section> = [
       {
         title: "Chrome Downloader",
         description: "A simple Chrome extension to download videos.",
-        image: "/chrome-dl.png",
+        image: "/chrome-dl.webp",
         link: "",
         tags: ["Chrome", "Extension", "Video"],
         playable: false,
@@ -149,7 +149,7 @@ let sections: array<section> = [
       {
         title: "Music Video Upscaler",
         description: "Scripts to build high-quality, upscaled music videos.",
-        image: "/music-upscaler.png",
+        image: "/music-upscaler.webp",
         link: "",
         tags: ["Video", "Upscaling", "Scripts"],
         playable: false,

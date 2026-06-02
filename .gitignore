@@ -16,6 +16,7 @@ build
 *.tsbuildinfo
 Gemini_Generated_Image_*.png
 src/**/*.res.mjs
+src/config/site.generated.ts
 lib/
 .bsb.lock
 .merlin
