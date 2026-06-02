@@ -35,6 +35,7 @@ let make = () => {
                 description={item.description}
                 image={item.image}
                 link={item.link}
+                repo={item.repo}
                 containImage={item.containImage}
                 badgeContent={item.tags->Array.map(tagBadge)->React.array}
                 imageOverlay={if item.playable { playableOverlay(item.link) } else { React.null }}
