@@ -38,6 +38,7 @@ let make = () => {
             description={project.description}
             image={project.image}
             link={project.link}
+            invertOnLight={project.invertOnLight}
             titleClassName="text-xl"
             descriptionClassName="text-base"
             linkIconClassName="w-5 h-5"

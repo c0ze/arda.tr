@@ -14,17 +14,21 @@ let make = (
   ~repo=None,
   ~badgeContent=React.null,
   ~containImage=false,
+  ~invertOnLight=false,
   ~titleClassName="text-base",
   ~descriptionClassName="text-sm",
   ~linkIconClassName="w-4 h-4",
   ~imageOverlay=React.null,
 ) => {
+  let imgClassName =
+    imageClassName(containImage) ++ (invertOnLight ? " theme-invert-logo" : "")
+
   let imageEl =
     <img
       src={image}
       alt={title}
       loading=#lazy
-      className={imageClassName(containImage)}
+      className={imgClassName}
     />
 
   // The image links to the deployed site in a new tab. When there is no site

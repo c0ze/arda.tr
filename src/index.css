@@ -356,3 +356,9 @@
     50%       { transform: translateY(7px); opacity: 0.7; }
   }
 }
+
+/* Light-on-transparent logos (e.g. the Pagan wordmark) vanish on the light
+   theme. Invert them to dark there so they read against the light card. */
+.alucard .theme-invert-logo {
+  filter: invert(1);
+}

@@ -5,6 +5,7 @@ type project = {
   link: string,
   tags: array<string>,
   kind: [#Band | #Project],
+  invertOnLight: bool,
 }
 
 type socialLink = {
@@ -25,6 +26,7 @@ let projects: array<project> = [
     link: "https://pagan.tr",
     tags: ["Black Metal", "Atmospheric", "Turkish Metal"],
     kind: #Band,
+    invertOnLight: true,
   },
   {
     title: "The Seventh Shadow",
@@ -33,6 +35,7 @@ let projects: array<project> = [
     link: "https://distrokid.com/hyperfollow/the7thshadow/alienation-by-design-2",
     tags: ["Gothic Metal", "AI Music", "Experimental"],
     kind: #Project,
+    invertOnLight: false,
   },
 ]
 

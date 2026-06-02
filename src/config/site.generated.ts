@@ -30,7 +30,7 @@ export const siteConfig = {
     {
       "id": "alucard",
       "name": "Ivory",
-      "color": "#644AC9"
+      "color": "#F0EAD6"
     },
     {
       "id": "blade",
