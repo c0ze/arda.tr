@@ -1,71 +1,77 @@
 let renderSocialIcon = icon =>
   switch icon {
-  | #Disc => Icons.disc(~className="w-5 h-5", ())
-  | #Music => Icons.music(~className="w-5 h-5", ())
+  | #Disc => Icons.disc(~className="w-4 h-4", ())
+  | #Music => Icons.music(~className="w-4 h-4", ())
   }
 
 let tagBadge = tag =>
-  <span key={tag} className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium">
+  <span
+    key={tag}
+    className="rounded-full bg-primary/10 px-2.5 py-0.5 font-mono text-[0.65rem] font-medium tracking-wide text-primary">
     {tag->React.string}
   </span>
 
 let kindBadge = kind =>
-  <span className="px-2 py-0.5 text-xs rounded-full bg-accent/10 text-accent font-medium">
+  <span className="rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[0.65rem] font-medium tracking-wide text-accent">
     {MusicContent.kindLabel(kind)->React.string}
   </span>
 
 let imageOverlay =
-  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+  <div className="pointer-events-none absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/5" />
 
 @react.component
 let make = () => {
-  <section id={SiteConfig.music} className="py-24 px-6 bg-background relative overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-subtle opacity-40 pointer-events-none" />
+  <section id={SiteConfig.music} className="relative scroll-mt-24 px-6 py-24 sm:py-32">
+    <div className="mx-auto max-w-5xl space-y-14">
+      <Reveal>
+        <SectionHeader
+          eyebrow={MusicContent.eyebrow}
+          title={MusicContent.title}
+          description={MusicContent.description}
+        />
+      </Reveal>
 
-    <div className="max-w-5xl mx-auto space-y-16 relative z-10">
-      <SectionHeader
-        eyebrow={MusicContent.eyebrow}
-        title={MusicContent.title}
-        description={MusicContent.description}
-      />
-
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid gap-6 md:grid-cols-2">
         {MusicContent.projects
-        ->Array.map(project =>
-          <ProjectCard
-            key={project.title}
-            title={project.title}
-            description={project.description}
-            image={project.image}
-            link={project.link}
-            invertOnLight={project.invertOnLight}
-            titleClassName="text-xl"
-            descriptionClassName="text-base"
-            linkIconClassName="w-5 h-5"
-            imageOverlay=imageOverlay
-            badgeContent={
-              <>
+        ->Array.mapWithIndex((project, i) =>
+          <Reveal key={project.title} delay={i * 120}>
+            <ProjectCard
+              title={project.title}
+              description={project.description}
+              image={project.image}
+              link={project.link}
+              invertOnLight={project.invertOnLight}
+              titleClassName="text-xl"
+              descriptionClassName="text-base"
+              linkIconClassName="w-5 h-5"
+              imageOverlay
+              badgeContent={<>
                 {kindBadge(project.kind)}
                 {project.tags->Array.map(tagBadge)->React.array}
-              </>
-            }
-          />
+              </>}
+            />
+          </Reveal>
         )
         ->React.array}
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4">
-        {MusicContent.socialLinks
-        ->Array.map(link =>
-          <Button key={link.name} variant="outline" className="gap-2" asChild=true>
-            <a href={link.url} target="_blank" rel="noopener noreferrer">
+      <Reveal>
+        <div className="flex flex-wrap justify-center gap-3">
+          {MusicContent.socialLinks
+          ->Array.map(link =>
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm text-foreground/80 transition-all duration-200 hover:scale-[1.03] hover:text-primary hover:shadow-glow">
               {renderSocialIcon(link.icon)}
               <span> {link.name->React.string} </span>
             </a>
-          </Button>
-        )
-        ->React.array}
-      </div>
+          )
+          ->React.array}
+        </div>
+      </Reveal>
     </div>
   </section>
 }

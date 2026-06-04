@@ -8,7 +8,8 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "Arda Karaduman" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Select theme" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Resume" })).toBeInTheDocument();
+    // "Resume" appears in both the sticky nav and the hero, so assert at least one.
+    expect(screen.getAllByRole("link", { name: "Resume" }).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "AI Chat" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2, name: "About" })).toBeInTheDocument();

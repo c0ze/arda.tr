@@ -1,10 +1,14 @@
 @react.component
 let make = () => {
-  <main className="min-h-screen">
-    <Hero />
-    <About />
-    <Portfolio />
-    <MusicProjects />
-    <Footer />
-  </main>
+  <div className="relative min-h-screen">
+    <AuroraBackground />
+    <Navbar />
+    <main>
+      <Hero />
+      <About />
+      <Portfolio />
+      <MusicProjects />
+      <Footer />
+    </main>
+  </div>
 }

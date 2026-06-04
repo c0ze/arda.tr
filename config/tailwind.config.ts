@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Lora', 'Georgia', 'serif'],
-        sans: ['"DM Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+        display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Manrope"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
@@ -52,14 +52,25 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Theme-aware accent palette (re-tints per theme). Namespaced with
+        // `glow-` so it never clobbers Tailwind's built-in color scales.
+        "glow-cyan": "hsl(var(--theme-cyan) / <alpha-value>)",
+        "glow-green": "hsl(var(--theme-green) / <alpha-value>)",
+        "glow-pink": "hsl(var(--theme-pink) / <alpha-value>)",
+        "glow-yellow": "hsl(var(--theme-yellow) / <alpha-value>)",
+        "glow-red": "hsl(var(--theme-red) / <alpha-value>)",
       },
       backgroundImage: {
         "gradient-subtle": "var(--gradient-subtle)",
         "gradient-accent": "var(--gradient-accent)",
+        "gradient-aurora": "var(--gradient-aurora)",
+        "gradient-text": "var(--gradient-text)",
       },
       boxShadow: {
         soft: "var(--shadow-soft)",
         medium: "var(--shadow-medium)",
+        glow: "var(--shadow-glow)",
+        "glow-strong": "var(--shadow-glow-strong)",
       },
       transitionTimingFunction: {
         smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -71,25 +82,44 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        aurora: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
+          "33%": { transform: "translate3d(6%, -7%, 0) scale(1.18)" },
+          "66%": { transform: "translate3d(-5%, 6%, 0) scale(0.92)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        gradient: {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { opacity: "1", boxShadow: "0 0 0 0 hsl(var(--theme-green) / 0.5)" },
+          "70%": { opacity: "0.85", boxShadow: "0 0 0 7px hsl(var(--theme-green) / 0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        aurora: "aurora 19s ease-in-out infinite",
+        "aurora-slow": "aurora 28s ease-in-out infinite",
+        float: "float 5s ease-in-out infinite",
+        marquee: "marquee 38s linear infinite",
+        gradient: "gradient 9s ease infinite",
+        "glow-pulse": "glow-pulse 2.4s ease-in-out infinite",
       },
     },
   },

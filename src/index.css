@@ -305,9 +305,25 @@
   --theme-red: 10 100% 75%;
 }
 
+/*
+  Derived atmosphere tokens. These reference the *active* theme's
+  --primary / --accent / --theme-* vars above, so they automatically re-tint
+  for every theme without per-theme duplication.
+*/
+:root {
+  --gradient-text: linear-gradient(110deg, hsl(var(--foreground)) 0%, hsl(var(--primary)) 48%, hsl(var(--theme-pink)) 100%);
+  --gradient-aurora: linear-gradient(130deg, hsl(var(--primary)) 0%, hsl(var(--theme-pink)) 45%, hsl(var(--theme-cyan)) 100%);
+  --shadow-glow: 0 0 0 1px hsl(var(--primary) / 0.12), 0 18px 50px -12px hsl(var(--primary) / 0.5);
+  --shadow-glow-strong: 0 0 70px -12px hsl(var(--primary) / 0.7);
+  --glass-bg: hsl(var(--card) / 0.5);
+  --glass-border: hsl(var(--foreground) / 0.08);
+}
+
 @layer base {
   html {
-    font-size: 125%;
+    /* Fluid rem base: ~16px on phones → 20px on large screens. Keeps the
+       editorial type big on desktop without overflowing mobile. */
+    font-size: clamp(100%, 0.92rem + 0.55vw, 125%);
     scroll-behavior: smooth;
   }
 
@@ -317,16 +333,41 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
-    line-height: 1.25;
+    line-height: 1.2;
     font-weight: 600;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.32);
+    color: hsl(var(--foreground));
+  }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.4);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.6);
+    background-clip: content-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+    border-radius: 6px;
   }
 }
 
@@ -354,6 +395,90 @@
   @keyframes bounce-slow {
     0%, 100% { transform: translateY(0);   opacity: 0.35; }
     50%       { transform: translateY(7px); opacity: 0.7; }
+  }
+}
+
+@layer utilities {
+  /* Gradient text filled with the active theme's color story */
+  .text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .text-gradient-aurora {
+    background: var(--gradient-aurora);
+    background-size: 220% 220%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradient 9s ease infinite;
+  }
+
+  /* Frosted-glass surface for nav, cards and pills */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-strong {
+    background: hsl(var(--card) / 0.72);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Gradient hairline border, revealed on hover for work cards */
+  .border-gradient {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+      var(--gradient-aurora) border-box;
+  }
+
+  /* Fade the left/right edges of horizontally-scrolling content (marquee) */
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+
+  /* Scroll-reveal: hidden until the Reveal component adds .is-visible */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect users who prefer reduced motion: freeze ambient animation and make
+   sure revealed content is always shown. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

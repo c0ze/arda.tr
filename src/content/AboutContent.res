@@ -61,3 +61,36 @@ let highlights: array<highlight> = [
     description: "Early adopter of CI/CD, TDD, and Agile methodologies. Always exploring new frameworks and ideas.",
   },
 ]
+
+// Quick-facts panel shown alongside the bio.
+type fact = {
+  label: string,
+  value: string,
+}
+
+let facts: array<fact> = [
+  {label: "Now", value: "Systems Architect @ Veltra"},
+  {label: "Based", value: "Tokyo, Japan"},
+  {label: "Studied", value: "Keio University · CS"},
+  {label: "Past", value: "Gaussy · Robotfund · Mobilous"},
+]
+
+// Scrolling tech ribbon (decorative — same skills are described above).
+let tech = [
+  "Ruby",
+  "Go",
+  "Python",
+  "TypeScript",
+  "React",
+  "AWS",
+  "Kubernetes",
+  "Docker",
+  "PostgreSQL",
+  "Terraform",
+  "Microservices",
+  "MCP",
+  "gRPC",
+  "Redis",
+  "CI/CD",
+  "Linux",
+]

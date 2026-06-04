@@ -20,10 +20,10 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
         <button
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary border border-border text-muted-foreground"
+          className="glass flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground"
           aria-label="Select theme"
         >
-          <Palette className="w-4 h-4" />
+          <Palette className="h-4 w-4" />
         </button>
     );
   }
@@ -34,17 +34,17 @@ export function ThemeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary border border-border text-muted-foreground hover:bg-primary/20 hover:text-primary hover:border-primary/50 transition-all"
+          className="glass group flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all hover:shadow-glow"
           aria-label="Select theme"
           title={`Theme: ${currentTheme.name}`}
         >
           <div
-            className="w-4 h-4 rounded-full border border-current"
+            className="h-4 w-4 rounded-full ring-1 ring-foreground/20 transition-transform duration-300 group-hover:scale-110"
             style={{ backgroundColor: currentTheme.color }}
           />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="glass-strong w-52">
         {themes.map((t) => (
           <DropdownMenuItem
             key={t.id}

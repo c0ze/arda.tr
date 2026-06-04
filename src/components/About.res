@@ -7,53 +7,92 @@ let renderHighlightIcon = (icon: AboutContent.highlightIcon) =>
 
 let renderSegment = (index, segment: AboutContent.segment) =>
   if segment.emphasis {
-    <span key={Int.toString(index)} className="text-primary font-medium">
-      {segment.text->React.string}
-    </span>
+    <span key={Int.toString(index)} className="font-medium text-primary"> {segment.text->React.string} </span>
   } else {
     <React.Fragment key={Int.toString(index)}> {segment.text->React.string} </React.Fragment>
   }
 
 let renderParagraph = (index, paragraph: array<AboutContent.segment>) =>
-  <p key={Int.toString(index)} className="text-foreground/90 leading-relaxed">
+  <p key={Int.toString(index)} className="leading-relaxed text-foreground/90">
     {paragraph->Array.mapWithIndex((segment, i) => renderSegment(i, segment))->React.array}
   </p>
 
+let factItem = (fact: AboutContent.fact) =>
+  <div
+    key={fact.label}
+    className="flex flex-col gap-1 border-b border-border/60 pb-4 last:border-0 last:pb-0">
+    <span className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-primary/80">
+      {fact.label->React.string}
+    </span>
+    <span className="font-display text-base font-medium text-foreground"> {fact.value->React.string} </span>
+  </div>
+
+let techChip = (i, tech) =>
+  <span
+    key={Int.toString(i)}
+    className="glass shrink-0 rounded-full px-4 py-2 font-mono text-sm text-foreground/80">
+    {tech->React.string}
+  </span>
+
+let highlightCard = (i, item: AboutContent.highlight) =>
+  <Reveal key={item.title} delay={i * 110}>
+    <div
+      className="group glass flex h-full flex-col gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-glow">
+      <div className="flex items-center justify-between">
+        <div
+          className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 ring-1 ring-primary/20 transition-colors group-hover:bg-primary/20">
+          {renderHighlightIcon(item.icon)}
+        </div>
+        <span className="font-mono text-xs text-muted-foreground/50">
+          {(i + 1)->Int.toString->String.padStart(2, "0")->React.string}
+        </span>
+      </div>
+      <h3 className="font-display text-lg font-semibold text-foreground"> {item.title->React.string} </h3>
+      <p className="text-sm leading-relaxed text-muted-foreground"> {item.description->React.string} </p>
+    </div>
+  </Reveal>
+
 @react.component
 let make = () => {
-  <section id={SiteConfig.about} className="py-24 px-6 bg-card/30">
-    <div className="max-w-4xl mx-auto space-y-16">
-      <SectionHeader
-        eyebrow={AboutContent.eyebrow}
-        title={AboutContent.title}
-        description={AboutContent.description}
-      />
+  <section id={SiteConfig.about} className="relative scroll-mt-24 px-6 py-24 sm:py-32">
+    <div className="mx-auto max-w-5xl">
+      <Reveal>
+        <SectionHeader
+          eyebrow={AboutContent.eyebrow}
+          title={AboutContent.title}
+          description={AboutContent.description}
+        />
+      </Reveal>
 
-      <div className="bg-card border border-border border-l-[3px] border-l-primary/40 rounded-xl p-8 space-y-4">
-        {AboutContent.bio
-        ->Array.mapWithIndex((paragraph, index) => renderParagraph(index, paragraph))
-        ->React.array}
+      <div className="mt-14 grid gap-6 md:grid-cols-12">
+        <Reveal className="md:col-span-7">
+          <div className="glass flex h-full flex-col gap-4 rounded-2xl p-7 sm:p-8">
+            {AboutContent.bio
+            ->Array.mapWithIndex((paragraph, index) => renderParagraph(index, paragraph))
+            ->React.array}
+          </div>
+        </Reveal>
+
+        <Reveal className="md:col-span-5" delay=120>
+          <div className="glass flex h-full flex-col justify-center gap-5 rounded-2xl p-7 sm:p-8">
+            {AboutContent.facts->Array.map(factItem)->React.array}
+          </div>
+        </Reveal>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {AboutContent.highlights
-        ->Array.map((item: AboutContent.highlight) =>
-          <Card
-            key={item.title}
-            className="p-6 space-y-4 bg-card border-border hover:border-primary/30 hover:shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)] transition-all">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              {renderHighlightIcon(item.icon)}
-            </div>
-            <h3 className="text-lg font-medium text-card-foreground">
-              {item.title->React.string}
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {item.description->React.string}
-            </p>
-          </Card>
-        )
-        ->React.array}
+      <div className="mt-6 grid gap-6 sm:grid-cols-3">
+        {AboutContent.highlights->Array.mapWithIndex((item, i) => highlightCard(i, item))->React.array}
       </div>
+
+      <Reveal className="mt-12">
+        <div className="mask-fade-x relative overflow-hidden py-1" ariaHidden=true>
+          <div className="flex w-max animate-marquee gap-3 hover:[animation-play-state:paused]">
+            {Array.concat(AboutContent.tech, AboutContent.tech)
+            ->Array.mapWithIndex((tech, i) => techChip(i, tech))
+            ->React.array}
+          </div>
+        </div>
+      </Reveal>
     </div>
   </section>
 }
