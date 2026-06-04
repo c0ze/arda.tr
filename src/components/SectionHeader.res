@@ -1,14 +1,22 @@
+/** Section header: a mono eyebrow with a gradient tick, a display-font title,
+    and an optional description. `align` controls left vs centered layout. */
 @react.component
-let make = (~eyebrow, ~title, ~description) => {
-  <div className="text-center space-y-3">
-    <span className="font-mono text-xs text-primary/70 tracking-[0.2em] uppercase">
+let make = (~eyebrow, ~title, ~description, ~align="left") => {
+  let centered = align == "center"
+  let containerClass =
+    "flex flex-col gap-4 " ++ (centered ? "items-center text-center" : "items-start text-left")
+  let descriptionClass =
+    "max-w-xl text-base leading-relaxed text-muted-foreground" ++ (centered ? " mx-auto" : "")
+
+  <div className={containerClass}>
+    <span
+      className="inline-flex items-center gap-3 font-mono text-[0.7rem] font-medium uppercase tracking-[0.32em] text-primary/85">
+      <span className="h-px w-8 bg-gradient-aurora" ariaHidden=true />
       {eyebrow->React.string}
     </span>
-    <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+    <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
       {title->React.string}
     </h2>
-    <p className="text-muted-foreground max-w-xl mx-auto">
-      {description->React.string}
-    </p>
+    <p className={descriptionClass}> {description->React.string} </p>
   </div>
 }
