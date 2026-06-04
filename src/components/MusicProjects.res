@@ -19,6 +19,8 @@ let kindBadge = kind =>
 let imageOverlay =
   <div className="pointer-events-none absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/5" />
 
+/** Music section: release cards plus glass pills linking to streaming and
+    archive profiles. */
 @react.component
 let make = () => {
   <section id={SiteConfig.music} className="relative scroll-mt-24 px-6 py-24 sm:py-32">

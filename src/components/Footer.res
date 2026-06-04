@@ -10,6 +10,8 @@ let renderSocialIcon = icon =>
   | #Bluesky => Icons.bluesky(~className="w-4 h-4", ())
   }
 
+/** One social link as a glass icon pill, preserving each link's rel
+    (e.g. Mastodon's rel="me" for identity verification). */
 let socialPill = (link: FooterContent.socialLink) =>
   <a
     key={link.name}
@@ -21,6 +23,8 @@ let socialPill = (link: FooterContent.socialLink) =>
     {renderSocialIcon(link.icon)}
   </a>
 
+/** Footer: a closing contact CTA, glass social pills, and the Tokyo-time
+    signoff with theme attribution. */
 @react.component
 let make = () => {
   let currentYear = makeDate()->Date.getFullYear

@@ -1,3 +1,5 @@
+/** Builds the <img> class list, honoring contain-vs-cover fit and the
+    light-theme logo invert. */
 let imageClassName = (containImage, invertOnLight) => {
   let base = "h-full w-full transition-transform duration-500 group-hover:scale-105 "
   let fit = containImage ? "object-contain p-4" : "object-cover"
@@ -5,6 +7,8 @@ let imageClassName = (containImage, invertOnLight) => {
   base ++ fit ++ invert
 }
 
+/** Glass work/release card: a themed image link, an aurora glow ring on hover,
+    tag badges, and a repo (GitHub) or site (external-link) action icon. */
 @react.component
 let make = (
   ~title,

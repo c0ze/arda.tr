@@ -1,3 +1,5 @@
+/** Maps a CTA's variant ("default" → primary glow, anything else → glass) to
+    its full button class list. */
 let ctaClassName = variant => {
   let base = "group inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 hover:scale-[1.03] sm:w-auto "
   switch variant {
@@ -28,6 +30,8 @@ let statItem = (i, stat: HeroContent.stat) =>
     </div>
   </div>
 
+/** Landing hero: a glass eyebrow with the live Tokyo clock, the two-tone
+    gradient name, the CTA row, a stats strip, and a scroll cue. */
 @react.component
 let make = () => {
   <section

@@ -1,3 +1,5 @@
+/** Section header: a mono eyebrow with a gradient tick, a display-font title,
+    and an optional description. `align` controls left vs centered layout. */
 @react.component
 let make = (~eyebrow, ~title, ~description, ~align="left") => {
   let centered = align == "center"

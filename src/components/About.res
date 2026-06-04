@@ -52,6 +52,8 @@ let highlightCard = (i, item: AboutContent.highlight) =>
     </div>
   </Reveal>
 
+/** About section: editorial bio, a quick-facts panel, glass highlight cards,
+    and a scrolling tech ribbon — each revealed on scroll. */
 @react.component
 let make = () => {
   <section id={SiteConfig.about} className="relative scroll-mt-24 px-6 py-24 sm:py-32">

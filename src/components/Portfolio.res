@@ -17,6 +17,8 @@ let playableOverlay =
     </span>
   </div>
 
+/** Work section: the Projects, Games and Tools groups, each a section header
+    plus a grid of reveal-animated ProjectCards. */
 @react.component
 let make = () => {
   <section id={SiteConfig.portfolio} className="relative scroll-mt-24 px-6 py-24 sm:py-32">

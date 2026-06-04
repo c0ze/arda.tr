@@ -8,6 +8,7 @@ const formatter = new Intl.DateTimeFormat("en-GB", {
   hour12: false,
 });
 
+/** Current Tokyo wall-clock time formatted as HH:MM:SS (24-hour). */
 function tokyoNow() {
   return formatter.format(new Date());
 }
