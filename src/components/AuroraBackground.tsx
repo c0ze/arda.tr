@@ -79,7 +79,7 @@ export function AuroraBackground() {
     >
       <div className="absolute inset-0 bg-gradient-subtle opacity-70" />
 
-      <div className="absolute inset-0 opacity-70 [filter:blur(58px)] sm:[filter:blur(88px)]">
+      <div className="absolute inset-0 opacity-40 [filter:blur(58px)] sm:[filter:blur(88px)]">
         {BLOBS.map((blob, i) => (
           <span
             key={i}

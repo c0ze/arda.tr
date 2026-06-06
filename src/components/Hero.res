@@ -50,7 +50,7 @@ let make = () => {
         ariaLabel={HeroContent.name}
         className="animate-fade-in-2 mt-8 font-display text-6xl font-bold leading-[0.92] tracking-tight sm:text-7xl md:text-8xl">
         <span className="block text-foreground"> {HeroContent.nameLead->React.string} </span>
-        <span className="block text-gradient-aurora"> {HeroContent.nameAccent->React.string} </span>
+        <span className="block text-gradient-name"> {HeroContent.nameAccent->React.string} </span>
       </h1>
 
       <p

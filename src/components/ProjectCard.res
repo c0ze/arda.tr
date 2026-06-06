@@ -63,7 +63,7 @@ let make = (
   <article className="group relative flex h-full flex-col">
     <div
       ariaHidden=true
-      className="absolute -inset-px rounded-2xl bg-gradient-aurora opacity-0 blur-[3px] transition-opacity duration-300 group-hover:opacity-50"
+      className="absolute -inset-px rounded-2xl bg-gradient-aurora opacity-0 blur-[3px] transition-opacity duration-300 group-hover:opacity-30"
     />
     <div
       className="glass relative flex h-full flex-col overflow-hidden rounded-2xl transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-glow">

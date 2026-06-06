@@ -19,7 +19,7 @@
   --popover: 252 18% 18%;
   --popover-foreground: 60 30% 96%;
 
-  --primary: 265 89% 75%;
+  --primary: 265 74% 75%;
   --primary-foreground: 252 18% 15%;
 
   --secondary: 252 18% 22%;
@@ -28,29 +28,29 @@
   --muted: 252 18% 22%;
   --muted-foreground: 252 15% 61%;
 
-  --accent: 265 89% 75%;
+  --accent: 265 74% 75%;
   --accent-foreground: 252 18% 15%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 252 18% 15%;
 
   --border: 252 18% 28%;
   --input: 252 18% 28%;
-  --ring: 265 89% 75%;
+  --ring: 265 74% 75%;
 
   --radius: 0.75rem;
 
   --gradient-subtle: linear-gradient(135deg, hsl(252 18% 15%), hsl(252 18% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(265 89% 75%), hsl(326 100% 74%));
+  --gradient-accent: linear-gradient(135deg, hsl(265 74% 75%), hsl(326 80% 74%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /* Ivory — light purple */
@@ -106,7 +106,7 @@
   --popover: 168 15% 18%;
   --popover-foreground: 60 30% 96%;
 
-  --primary: 170 100% 75%;
+  --primary: 170 80% 75%;
   --primary-foreground: 168 15% 15%;
 
   --secondary: 168 15% 22%;
@@ -115,26 +115,26 @@
   --muted: 168 15% 22%;
   --muted-foreground: 168 15% 57%;
 
-  --accent: 170 100% 75%;
+  --accent: 170 80% 75%;
   --accent-foreground: 168 15% 15%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 168 15% 15%;
 
   --border: 168 15% 28%;
   --input: 168 15% 28%;
-  --ring: 170 100% 75%;
+  --ring: 170 80% 75%;
 
   --gradient-subtle: linear-gradient(135deg, hsl(168 15% 15%), hsl(168 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(170 100% 75%), hsl(115 100% 75%));
+  --gradient-accent: linear-gradient(135deg, hsl(170 80% 75%), hsl(115 80% 75%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /* Sakura — dark magenta */
@@ -148,7 +148,7 @@
   --popover: 292 15% 18%;
   --popover-foreground: 60 30% 96%;
 
-  --primary: 326 100% 75%;
+  --primary: 326 80% 75%;
   --primary-foreground: 292 15% 15%;
 
   --secondary: 292 15% 22%;
@@ -157,26 +157,26 @@
   --muted: 292 15% 22%;
   --muted-foreground: 292 15% 61%;
 
-  --accent: 326 100% 75%;
+  --accent: 326 80% 75%;
   --accent-foreground: 292 15% 15%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 292 15% 15%;
 
   --border: 292 15% 28%;
   --input: 292 15% 28%;
-  --ring: 326 100% 75%;
+  --ring: 326 80% 75%;
 
   --gradient-subtle: linear-gradient(135deg, hsl(292 15% 15%), hsl(292 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(326 100% 75%), hsl(265 89% 75%));
+  --gradient-accent: linear-gradient(135deg, hsl(326 80% 75%), hsl(265 74% 75%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /* Amber — dark gold */
@@ -190,7 +190,7 @@
   --popover: 48 15% 18%;
   --popover-foreground: 60 30% 96%;
 
-  --primary: 60 100% 75%;
+  --primary: 60 80% 75%;
   --primary-foreground: 48 15% 15%;
 
   --secondary: 48 15% 22%;
@@ -199,26 +199,26 @@
   --muted: 48 15% 22%;
   --muted-foreground: 48 15% 57%;
 
-  --accent: 60 100% 75%;
+  --accent: 60 80% 75%;
   --accent-foreground: 48 15% 15%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 48 15% 15%;
 
   --border: 48 15% 28%;
   --input: 48 15% 28%;
-  --ring: 60 100% 75%;
+  --ring: 60 80% 75%;
 
   --gradient-subtle: linear-gradient(135deg, hsl(48 15% 15%), hsl(48 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(60 100% 75%), hsl(115 100% 75%));
+  --gradient-accent: linear-gradient(135deg, hsl(60 80% 75%), hsl(115 80% 75%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /* Ember — dark red */
@@ -232,7 +232,7 @@
   --popover: 355 15% 18%;
   --popover-foreground: 60 30% 96%;
 
-  --primary: 10 100% 75%;
+  --primary: 10 80% 75%;
   --primary-foreground: 355 15% 15%;
 
   --secondary: 355 15% 22%;
@@ -241,26 +241,26 @@
   --muted: 355 15% 22%;
   --muted-foreground: 355 15% 61%;
 
-  --accent: 10 100% 75%;
+  --accent: 10 80% 75%;
   --accent-foreground: 355 15% 15%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 355 15% 15%;
 
   --border: 355 15% 28%;
   --input: 355 15% 28%;
-  --ring: 10 100% 75%;
+  --ring: 10 80% 75%;
 
   --gradient-subtle: linear-gradient(135deg, hsl(355 15% 15%), hsl(355 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(10 100% 75%), hsl(326 100% 75%));
+  --gradient-accent: linear-gradient(135deg, hsl(10 80% 75%), hsl(326 80% 75%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /* Steel — very dark blue */
@@ -283,10 +283,10 @@
   --muted: 210 15% 14%;
   --muted-foreground: 210 15% 51%;
 
-  --accent: 170 100% 75%;
+  --accent: 170 80% 75%;
   --accent-foreground: 210 15% 4%;
 
-  --destructive: 10 100% 75%;
+  --destructive: 10 80% 75%;
   --destructive-foreground: 210 15% 4%;
 
   --border: 210 15% 18%;
@@ -294,15 +294,15 @@
   --ring: 210 50% 55%;
 
   --gradient-subtle: linear-gradient(135deg, hsl(210 15% 4%), hsl(210 15% 7%));
-  --gradient-accent: linear-gradient(135deg, hsl(210 50% 55%), hsl(170 100% 75%));
+  --gradient-accent: linear-gradient(135deg, hsl(210 50% 55%), hsl(170 80% 75%));
   --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.4);
   --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.5);
 
-  --theme-cyan: 170 100% 75%;
-  --theme-green: 115 100% 75%;
-  --theme-pink: 326 100% 75%;
-  --theme-yellow: 60 100% 75%;
-  --theme-red: 10 100% 75%;
+  --theme-cyan: 170 80% 75%;
+  --theme-green: 115 80% 75%;
+  --theme-pink: 326 80% 75%;
+  --theme-yellow: 60 80% 75%;
+  --theme-red: 10 80% 75%;
 }
 
 /*
@@ -312,8 +312,8 @@
 */
 :root {
   --gradient-aurora: linear-gradient(130deg, hsl(var(--primary)) 0%, hsl(var(--theme-pink)) 45%, hsl(var(--theme-cyan)) 100%);
-  --shadow-glow: 0 0 0 1px hsl(var(--primary) / 0.12), 0 18px 50px -12px hsl(var(--primary) / 0.5);
-  --shadow-glow-strong: 0 0 70px -12px hsl(var(--primary) / 0.7);
+  --shadow-glow: 0 0 0 1px hsl(var(--primary) / 0.1), 0 18px 44px -14px hsl(var(--primary) / 0.28);
+  --shadow-glow-strong: 0 0 60px -16px hsl(var(--primary) / 0.4);
   --glass-bg: hsl(var(--card) / 0.5);
   --glass-border: hsl(var(--foreground) / 0.08);
 }
@@ -407,6 +407,16 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     animation: gradient 9s ease infinite;
+  }
+
+  /* Restrained two-tone name fill (primary → foreground). Replaces the animated
+     aurora on the hero headline — still theme-tinted, but not loud. */
+  .text-gradient-name {
+    background: linear-gradient(120deg, hsl(var(--primary)) 0%, hsl(var(--foreground)) 78%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 
   /* Frosted-glass surface for nav, cards and pills */
