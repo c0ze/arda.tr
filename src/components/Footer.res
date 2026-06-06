@@ -35,7 +35,7 @@ let make = () => {
         <div className="glass relative overflow-hidden rounded-3xl px-6 py-14 text-center sm:px-14 sm:py-20">
           <div
             ariaHidden=true
-            className="absolute -top-24 left-1/2 h-56 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-gradient-aurora opacity-30 blur-3xl"
+            className="absolute -top-24 left-1/2 h-56 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-gradient-aurora opacity-20 blur-3xl"
           />
           <div className="relative">
             <span className="font-mono text-[0.7rem] uppercase tracking-[0.32em] text-primary/85">
