@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 /** Tiny SVG fractal-noise tile used for a subtle film-grain texture. */
 const GRAIN =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
@@ -37,7 +35,6 @@ const BLOBS: Blob[] = [
  * Fixed, full-viewport ambient backdrop rendered behind all content:
  *   - a soft base wash,
  *   - drifting, blurred aurora blobs tinted from the active theme,
- *   - a cursor-following spotlight (fine-pointer devices only),
  *   - a film-grain overlay for texture,
  *   - top & bottom vignettes to seat foreground content.
  *
@@ -45,33 +42,6 @@ const BLOBS: Blob[] = [
  * sections stay transparent so this shows through subtly.
  */
 export function AuroraBackground() {
-  const spotlightRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = spotlightRef.current;
-    if (!el) return;
-
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!finePointer || reduced) return;
-
-    let raf = 0;
-    const onMove = (event: PointerEvent) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        el.style.setProperty("--mx", `${event.clientX}px`);
-        el.style.setProperty("--my", `${event.clientY}px`);
-        el.style.opacity = "1";
-      });
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
     <div
       aria-hidden="true"
@@ -91,15 +61,6 @@ export function AuroraBackground() {
           />
         ))}
       </div>
-
-      <div
-        ref={spotlightRef}
-        className="absolute inset-0 opacity-0 transition-opacity duration-700"
-        style={{
-          background:
-            "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--primary) / 0.1), transparent 60%)",
-        }}
-      />
 
       <div
         className="absolute inset-0 opacity-[0.13] mix-blend-overlay"
