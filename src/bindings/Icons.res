@@ -19,6 +19,20 @@ module Bot = {
 
 let bot = (~className=?, ()) => <Bot ?className />
 
+module X = {
+  @module("lucide-react") @react.component
+  external make: (~className: string=?, unit) => React.element = "X"
+}
+
+let x = (~className=?, ()) => <X ?className />
+
+module Send = {
+  @module("lucide-react") @react.component
+  external make: (~className: string=?, unit) => React.element = "Send"
+}
+
+let send = (~className=?, ()) => <Send ?className />
+
 module ChevronDown = {
   @module("lucide-react") @react.component
   external make: (~className: string=?, unit) => React.element = "ChevronDown"

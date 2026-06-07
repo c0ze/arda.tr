@@ -10,7 +10,9 @@ let make = () => {
       <About />
       <Portfolio />
       <MusicProjects />
+      <Blog />
       <Footer />
     </main>
+    <ChatWidget />
   </div>
 }
