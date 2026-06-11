@@ -71,10 +71,11 @@ mise exec node@24.14.0 -- npm run verify
 ## Frontend Guardrails
 
 - Keep the site a single-page experience unless there is a strong reason to add routing.
-- Preserve the current serif/sans/mono type system:
-  - `Lora` for headings
-  - `DM Sans` for body text
-  - `JetBrains Mono` for labels and technical accents
+- Preserve the current display/sans/mono type system (shared with
+  resume.arda.tr, blog.arda.tr and ai.arda.tr):
+  - `Archivo` for headings (`font-display`)
+  - `Manrope` for body text (`font-sans`)
+  - `JetBrains Mono` for labels and technical accents (`font-mono`)
 - Respect the current visual direction:
   - restrained motion
   - soft grid/background atmosphere

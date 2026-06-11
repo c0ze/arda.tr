@@ -20,40 +20,60 @@
     "portfolio": "portfolio",
     "music": "music"
   },
+  "defaultTheme": "dracula-pro",
   "themes": [
-    {
-      "id": "dracula-pro",
-      "name": "Void",
-      "color": "#9580FF"
-    },
     {
       "id": "alucard",
       "name": "Ivory",
-      "color": "#F0EAD6"
+      "hint": "light",
+      "color": "#F7F5F0"
+    },
+    {
+      "id": "paper",
+      "name": "Paper",
+      "hint": "high contrast",
+      "color": "#FFFFFF"
     },
     {
       "id": "blade",
       "name": "Abyss",
+      "hint": "dark teal",
       "color": "#80FFEA"
+    },
+    {
+      "id": "dracula-pro",
+      "name": "Void",
+      "hint": "dark purple",
+      "color": "#9580FF"
+    },
+    {
+      "id": "carbon",
+      "name": "Carbon",
+      "hint": "high contrast",
+      "color": "#0A0A0A"
     },
     {
       "id": "buffy",
       "name": "Sakura",
+      "hint": "dark magenta",
       "color": "#FF80BF"
     },
     {
       "id": "lincoln",
       "name": "Amber",
+      "hint": "dark gold",
       "color": "#FFFF80"
     },
     {
       "id": "morbius",
       "name": "Ember",
+      "hint": "dark red",
       "color": "#FF9580"
     },
     {
       "id": "van-helsing",
       "name": "Steel",
+      "hint": "dark blue",
       "color": "#708CA9"
     }
   ]

@@ -57,10 +57,14 @@ export function ThemeToggle() {
               className="w-4 h-4 rounded-full border border-border"
               style={{ backgroundColor: t.color }}
             />
-            <span>{t.name}</span>
-            {theme === t.id && (
-              <span className="ml-auto text-xs text-primary">Active</span>
-            )}
+            <span className="whitespace-nowrap font-medium">{t.name}</span>
+            <span
+              className={`ml-auto whitespace-nowrap text-right font-mono text-[0.62rem] leading-none ${
+                theme === t.id ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              {theme === t.id ? "active" : t.hint}
+            </span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

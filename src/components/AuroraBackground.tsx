@@ -49,7 +49,7 @@ export function AuroraBackground() {
     >
       <div className="absolute inset-0 bg-gradient-subtle opacity-70" />
 
-      <div className="absolute inset-0 opacity-40 [filter:blur(58px)] sm:[filter:blur(88px)]">
+      <div className="aurora-blobs absolute inset-0 opacity-40 [filter:blur(58px)] sm:[filter:blur(88px)]">
         {BLOBS.map((blob, i) => (
           <span
             key={i}
@@ -63,7 +63,7 @@ export function AuroraBackground() {
       </div>
 
       <div
-        className="absolute inset-0 opacity-[0.13] mix-blend-overlay"
+        className="aurora-grain absolute inset-0 opacity-[0.13] mix-blend-overlay"
         style={{ backgroundImage: `url("${GRAIN}")`, backgroundSize: "180px 180px" }}
       />
 
