@@ -14,7 +14,7 @@ type socialLink = {
   icon: [#Disc | #Music],
 }
 
-let eyebrow = "05 — Music"
+let eyebrow = "06 — Music"
 let title = "Music Projects"
 let description = "My musical endeavors, from atmospheric black metal to elven laments."
 
