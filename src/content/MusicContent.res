@@ -16,7 +16,7 @@ type socialLink = {
 
 let eyebrow = "05 — Music"
 let title = "Music Projects"
-let description = "My musical endeavors and contributions to the metal scene."
+let description = "My musical endeavors, from atmospheric black metal to elven laments."
 
 let projects: array<project> = [
   {
@@ -34,6 +34,15 @@ let projects: array<project> = [
     image: "/7th-shadow.webp",
     link: "https://distrokid.com/hyperfollow/the7thshadow/alienation-by-design-2",
     tags: ["Gothic Metal", "AI Music", "Experimental"],
+    kind: #Project,
+    invertOnLight: false,
+  },
+  {
+    title: "Arda",
+    description: "Elven laments in J.R.R. Tolkien's Sindarin, written in Tengwar with English translations.",
+    image: "/arda.webp",
+    link: "https://lind.arda.tr",
+    tags: ["Elvish", "Sindarin", "AI Music", "Dark Folk"],
     kind: #Project,
     invertOnLight: false,
   },
