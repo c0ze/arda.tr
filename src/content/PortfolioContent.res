@@ -23,6 +23,16 @@ let sections: array<section> = [
     description: "A collection of digital products and interactive experiences I've built.",
     items: [
       {
+        title: "SUDONE",
+        description: "Scan a shelf barcode in-store and know in seconds if it really beats online prices — your own private price notebook.",
+        image: "/sudone.webp",
+        link: "https://sudone.jp",
+        tags: ["Flutter", "Price Scanner", "Shopping"],
+        playable: false,
+        containImage: false,
+        repo: None,
+      },
+      {
         title: "Vigil.today",
         description: "Smart reminder widget PWA that keeps you on track with recurring tasks.",
         image: "/vigil-today.webp",
