@@ -67,15 +67,17 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
 ## Frontend Notes
 
 - Typography uses:
-  - `Lora` for headings
-  - `DM Sans` for body copy
+  - `Archivo` for headings
+  - `Manrope` for body copy
   - `JetBrains Mono` for labels and technical accents
 - Theme state is handled by `next-themes`
 - The page sections are authored in ReScript and compiled in-source to ignored `.res.mjs` artifacts
 - The current theme palette names live in `config/site.config.json`:
-  - `Void`
   - `Ivory`
+  - `Paper`
   - `Abyss`
+  - `Void`
+  - `Carbon`
   - `Sakura`
   - `Amber`
   - `Ember`
