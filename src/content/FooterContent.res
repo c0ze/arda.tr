@@ -48,7 +48,7 @@ let themeAttributionLabel = "Dracula Pro"
 let themeAttributionHref = "https://draculatheme.com/pro"
 
 // Closing call-to-action.
-let ctaEyebrow = "07 — Contact"
+let ctaEyebrow = "08 — Contact"
 let ctaTitle = "Let's build something worth shipping."
 let ctaText = "Open to interesting problems, collaborations, and the occasional jam session."
 let ctaButtonLabel = "Say hello"

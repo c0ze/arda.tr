@@ -8,6 +8,7 @@ The app is a single-page personal hub with:
 - an about section with career background and highlights
 - product, game, and tool showcases
 - a music section with project links
+- a writing section with the latest posts from blog.arda.tr, baked in at build time
 - footer links for GitHub, LinkedIn, Mastodon, Bluesky, and more
 
 ## Stack
@@ -55,6 +56,7 @@ Command notes:
 - `npm run generate:sitemap` can be run separately if only metadata changed
 - `npm run generate:site-config` regenerates the TypeScript site-config bridge from `config/site.config.json`
 - `npm run generate:themes-contract` regenerates `config/themes.json`, the committed cross-site theme contract, from the theme blocks in `src/index.css` + `config/site.config.json` (CI fails if it goes stale)
+- `npm run fetch:blog-posts` fetches the latest posts from the blog RSS feed into the gitignored `src/config/blog.generated.ts` bridge; on any feed failure it writes an empty list and the writing section renders nothing (a blog outage never breaks the build)
 
 ## Project Layout
 

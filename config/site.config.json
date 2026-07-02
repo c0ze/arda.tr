@@ -18,7 +18,8 @@
   "sections": {
     "about": "about",
     "portfolio": "portfolio",
-    "music": "music"
+    "music": "music",
+    "writing": "writing"
   },
   "defaultTheme": "dracula-pro",
   "themes": [

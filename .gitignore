@@ -17,6 +17,7 @@ build
 Gemini_Generated_Image_*.png
 src/**/*.res.mjs
 src/config/site.generated.ts
+src/config/blog.generated.ts
 lib/
 .bsb.lock
 .merlin

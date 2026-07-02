@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { blogPosts } from "@/config/blog";
 
 const LINKS = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#portfolio" },
   { label: "Music", href: "#music" },
-  { label: "Writing", href: "#writing" },
+  // The Writing section renders nothing when the build-time RSS fetch came
+  // back empty, so drop its anchor instead of pointing at a missing section.
+  ...(blogPosts.length > 0 ? [{ label: "Writing", href: "#writing" }] : []),
   { label: "Contact", href: "#contact" },
 ];
 
