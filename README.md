@@ -104,3 +104,8 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
 ## Deployment
 
 GitHub Actions builds and deploys the site to GitHub Pages on pushes to `main`.
+
+## License
+
+The code is [MIT-licensed](./LICENSE). Site content — personal text, imagery,
+and project descriptions — is © Arda Karaduman, all rights reserved.
