@@ -66,6 +66,10 @@ mise exec node@24.14.0 -- npm run verify
   - indexed pages
   - section IDs
   - theme metadata
+- `config/themes.json` is the generated, committed theme contract that the
+  sibling sites fetch from raw.githubusercontent.com. Never hand-edit it — run
+  `npm run generate:themes-contract` after touching theme CSS or theme
+  metadata (the `theme-contract.yml` workflow fails if it drifts).
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds.
 
 ## Frontend Guardrails

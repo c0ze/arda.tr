@@ -10,10 +10,11 @@
   },
   "scripts": {
     "generate:site-config": "node scripts/generate-site-config-module.mjs",
-    "res:build": "npm run generate:site-config && rescript",
+    "generate:themes-contract": "node scripts/generate-themes-contract.mjs",
+    "res:build": "npm run generate:site-config && npm run generate:themes-contract && rescript",
     "res:clean": "rescript clean",
     "res:dev": "rescript -w",
-    "dev": "npm run generate:site-config && concurrently -k -n rescript,vite \"npm run res:dev\" \"vite --config config/vite.config.ts\"",
+    "dev": "npm run generate:site-config && npm run generate:themes-contract && concurrently -k -n rescript,vite \"npm run res:dev\" \"vite --config config/vite.config.ts\"",
     "build": "npm run res:build && vite build --config config/vite.config.ts && npm run generate:sitemap",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint src config scripts --config config/eslint.config.js",

@@ -1,0 +1,36 @@
+name: Theme contract freshness
+
+# config/themes.json is the canonical "Ink & Ledger" theme contract consumed by
+# the sibling sites (blog.arda.tr, resume.arda.tr) via raw.githubusercontent.com.
+# This check fails when the committed contract is stale relative to the theme
+# blocks in src/index.css or the theme menu in config/site.config.json. It is a
+# separate workflow on purpose: a stale contract must never block Pages deploys.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Run JavaScript actions on Node 24 (opt in ahead of GitHub's June 2026 default).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Regenerate theme contract
+        # The generator only uses node built-ins, so `npm ci` is not needed.
+        run: node scripts/generate-themes-contract.mjs
+      - name: Fail if the committed contract is stale
+        run: git diff --exit-code config/themes.json

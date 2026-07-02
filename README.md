@@ -54,6 +54,7 @@ Command notes:
 - `npm run build` creates the production bundle and regenerates `dist/sitemap.xml`
 - `npm run generate:sitemap` can be run separately if only metadata changed
 - `npm run generate:site-config` regenerates the TypeScript site-config bridge from `config/site.config.json`
+- `npm run generate:themes-contract` regenerates `config/themes.json`, the committed cross-site theme contract, from the theme blocks in `src/index.css` + `config/site.config.json` (CI fails if it goes stale)
 
 ## Project Layout
 
