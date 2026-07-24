@@ -1,22 +1,22 @@
 import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,res}"],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+    // The No Shadow Rule — outside `extend` so Tailwind's default shadow scale
+    // is replaced, not merged. `shadow-md` etc. must not exist at all.
+    boxShadow: {
+      none: "none",
     },
     extend: {
       fontFamily: {
-        display: ['"Archivo"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['"Manrope"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Condensed grotesque for catalogue headers and entry names.
+        display: ['"Archivo Narrow"', '"Archivo"', "ui-sans-serif", "system-ui", "sans-serif"],
+        // Workhorse grotesque for descriptions and prose.
+        sans: ['"Archivo"', "system-ui", "-apple-system", "sans-serif"],
+        // B612 Mono — drawn for Airbus flight decks. Carries every numeral.
+        mono: ['"B612 Mono"', "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -24,6 +24,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        rule: "hsl(var(--rule))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -52,65 +53,31 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Theme-aware accent palette (re-tints per theme). Namespaced with
-        // `glow-` so it never clobbers Tailwind's built-in color scales.
-        "glow-cyan": "hsl(var(--theme-cyan) / <alpha-value>)",
-        "glow-green": "hsl(var(--theme-green) / <alpha-value>)",
-        "glow-pink": "hsl(var(--theme-pink) / <alpha-value>)",
-        "glow-yellow": "hsl(var(--theme-yellow) / <alpha-value>)",
-        "glow-red": "hsl(var(--theme-red) / <alpha-value>)",
+        // Band code — kind encoding only. Never a background or a gradient.
+        band: {
+          1: "hsl(var(--band-1))",
+          2: "hsl(var(--band-2))",
+          3: "hsl(var(--band-3))",
+          4: "hsl(var(--band-4))",
+          5: "hsl(var(--band-5))",
+          6: "hsl(var(--band-6))",
+          7: "hsl(var(--band-7))",
+          8: "hsl(var(--band-8))",
+        },
       },
-      backgroundImage: {
-        "gradient-subtle": "var(--gradient-subtle)",
-        "gradient-accent": "var(--gradient-accent)",
-        "gradient-aurora": "var(--gradient-aurora)",
-      },
-      boxShadow: {
-        soft: "var(--shadow-soft)",
-        medium: "var(--shadow-medium)",
-        glow: "var(--shadow-glow)",
-        "glow-strong": "var(--shadow-glow-strong)",
-      },
-      transitionTimingFunction: {
-        smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
-      },
+      // The Square Corner Rule.
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        aurora: {
-          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
-          "33%": { transform: "translate3d(6%, -7%, 0) scale(1.18)" },
-          "66%": { transform: "translate3d(-5%, 6%, 0) scale(0.92)" },
-        },
-        marquee: {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-50%)" },
-        },
-        "glow-pulse": {
-          "0%, 100%": { opacity: "1", boxShadow: "0 0 0 0 hsl(var(--theme-green) / 0.5)" },
-          "70%": { opacity: "0.85", boxShadow: "0 0 0 7px hsl(var(--theme-green) / 0)" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        aurora: "aurora 19s ease-in-out infinite",
-        "aurora-slow": "aurora 28s ease-in-out infinite",
-        marquee: "marquee 38s linear infinite",
-        "glow-pulse": "glow-pulse 2.4s ease-in-out infinite",
+        none: "0",
+        sm: "0",
+        DEFAULT: "0",
+        md: "0",
+        lg: "0",
+        xl: "0",
+        "2xl": "0",
+        "3xl": "0",
+        full: "0",
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [],
 } satisfies Config;

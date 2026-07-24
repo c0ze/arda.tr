@@ -3,410 +3,210 @@
 @tailwind utilities;
 
 /*
-  Theme CSS variables — defined outside @layer so Tailwind never purges them.
-  All colors in HSL format (no hsl() wrapper — consumed as hsl(var(--x))).
+  ── The Parts Catalogue ───────────────────────────────────────────────────
+  Four renditions of one printed object:
+    Stock       — uncoated cool grey-white catalogue paper (default, light)
+    Stock HC    — the same page printed for maximum legibility (AAA light)
+    Microfiche  — the catalogue photographed onto film (dark)
+    Microfiche HC — a high-contrast fiche reader (AAA dark)
+
+  All colors are raw HSL triplets consumed as hsl(var(--x)).
+  See DESIGN.md. Radius is 0 and shadows do not exist, by system rule.
 */
 
-/* Void — dark purple (default) */
+/* ── Stock — uncoated catalogue paper (default) ──────────────────────────── */
 :root,
-.dracula-pro {
-  --background: 252 18% 15%;
-  --foreground: 60 30% 96%;
+.stock {
+  --background: 48 16% 94%;
+  --foreground: 240 8% 9%;
 
-  --card: 252 18% 18%;
-  --card-foreground: 60 30% 96%;
+  --card: 45 13% 87%;
+  --card-foreground: 240 8% 9%;
 
-  --popover: 252 18% 18%;
-  --popover-foreground: 60 30% 96%;
+  --popover: 48 16% 94%;
+  --popover-foreground: 240 8% 9%;
 
-  --primary: 265 74% 75%;
-  --primary-foreground: 252 18% 15%;
+  /* No brand accent by design: "primary" is ink. Kind is carried by bands. */
+  --primary: 240 8% 9%;
+  --primary-foreground: 48 16% 94%;
 
-  --secondary: 252 18% 22%;
-  --secondary-foreground: 60 30% 96%;
+  --secondary: 45 13% 87%;
+  --secondary-foreground: 240 8% 9%;
 
-  --muted: 252 18% 22%;
-  --muted-foreground: 252 15% 61%;
+  --muted: 45 13% 87%;
+  --muted-foreground: 240 5% 37%;
 
-  --accent: 265 74% 75%;
-  --accent-foreground: 252 18% 15%;
+  --accent: 45 13% 87%;
+  --accent-foreground: 240 8% 9%;
 
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 252 18% 15%;
+  --destructive: 358 66% 45%;
+  --destructive-foreground: 48 16% 94%;
 
-  --border: 252 18% 28%;
-  --input: 252 18% 28%;
-  --ring: 265 74% 75%;
+  --border: 45 8% 60%;
+  --input: 45 8% 60%;
+  --ring: 240 8% 9%;
 
-  --radius: 0.75rem;
+  /* Printed rules are black ink at hairline weight: high contrast, low weight.
+     A soft hairline is what makes a page read as web rather than as print. */
+  --rule: 45 8% 58%;
+  /* Opaque — paper is opaque (The No Translucency Rule). */
+  --zebra: 45 13% 91%;
+  --row-hover: 45 13% 85%;
 
-  --gradient-subtle: linear-gradient(135deg, hsl(252 18% 15%), hsl(252 18% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(265 74% 75%), hsl(326 80% 74%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 0px;
 
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
+  /* Band code — IEC 60062 resistor colours, darkened where the printed hue
+     could not clear WCAG 1.4.11 (3:1 non-text) against Stock. Orange, yellow
+     and grey are the three that needed it; colour is this system's only
+     encoding device, so a band that cannot be seen is a band that fails. */
+  --band-1: 27 39% 30%;   /* brown  — systems      */
+  --band-2: 358 66% 45%;  /* red    — products     */
+  --band-3: 27 85% 42%;   /* orange — games        */
+  --band-4: 49 95% 30%;   /* yellow — writing      */
+  --band-5: 138 50% 36%;  /* green  — tools        */
+  --band-6: 215 59% 41%;  /* blue   — recorded     */
+  --band-7: 271 35% 47%;  /* violet — composed     */
+  --band-8: 225 6% 48%;   /* grey   — archived     */
 }
 
-/* Ivory — light purple */
-.alucard {
-  --background: 0 0% 96%;
-  --foreground: 0 0% 12%;
-
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 12%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 12%;
-
-  --primary: 253 53% 54%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 240 18% 90%;
-  --secondary-foreground: 0 0% 12%;
-
-  --muted: 240 18% 90%;
-  --muted-foreground: 0 0% 40%;
-
-  --accent: 253 53% 54%;
-  --accent-foreground: 0 0% 100%;
-
-  --destructive: 6 67% 48%;
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 240 18% 84%;
-  --input: 240 18% 84%;
-  --ring: 253 53% 54%;
-
-  --gradient-subtle: linear-gradient(135deg, hsl(0 0% 96%), hsl(240 18% 96%));
-  --gradient-accent: linear-gradient(135deg, hsl(253 53% 54%), hsl(253 53% 64%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.08);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.12);
-
-  --theme-cyan: 199 97% 30%;
-  --theme-green: 113 83% 24%;
-  --theme-pink: 338 79% 36%;
-  --theme-yellow: 46 71% 35%;
-  --theme-red: 6 67% 48%;
-}
-
-/* Paper — high-contrast light (targets WCAG AAA pairings) */
-.paper {
+/* ── Stock HC — AAA light ────────────────────────────────────────────────── */
+.stock-hc {
   --background: 0 0% 100%;
-  --foreground: 0 0% 4%;
+  --foreground: 0 0% 0%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 4%;
+  --card: 0 0% 96%;
+  --card-foreground: 0 0% 0%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 4%;
+  --popover-foreground: 0 0% 0%;
 
-  --primary: 253 85% 30%;
+  --primary: 0 0% 0%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 0 0% 94%;
-  --secondary-foreground: 0 0% 4%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 0%;
 
-  --muted: 0 0% 94%;
-  --muted-foreground: 0 0% 24%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 21%;
 
-  --accent: 253 85% 30%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 0%;
 
-  --destructive: 8 90% 32%;
+  --destructive: 358 80% 32%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 0 0% 32%;
-  --input: 0 0% 32%;
-  --ring: 253 85% 30%;
+  --border: 0 0% 25%;
+  --input: 0 0% 25%;
+  --ring: 0 0% 0%;
 
-  --gradient-subtle: linear-gradient(135deg, hsl(0 0% 100%), hsl(0 0% 100%));
-  --gradient-accent: linear-gradient(135deg, hsl(253 85% 30%), hsl(253 85% 30%));
-  --shadow-soft: none;
-  --shadow-medium: none;
+  --rule: 0 0% 25%;
+  --zebra: 0 0% 94%;
+  --row-hover: 0 0% 88%;
 
-  --theme-cyan: 192 100% 21%;
-  --theme-green: 130 90% 18%;
-  --theme-pink: 336 90% 28%;
-  --theme-yellow: 42 100% 22%;
-  --theme-red: 8 90% 32%;
+  /* Darkened so every band clears 4.5:1 against white as a filled mark. */
+  --band-1: 27 55% 24%;
+  --band-2: 358 75% 34%;
+  --band-3: 27 90% 30%;
+  --band-4: 49 95% 26%;
+  --band-5: 138 70% 22%;
+  --band-6: 215 75% 32%;
+  --band-7: 271 55% 36%;
+  --band-8: 225 8% 33%;
 }
 
-/* Abyss — dark teal */
-.blade {
-  --background: 168 15% 15%;
-  --foreground: 60 30% 96%;
+/* ── Microfiche — the catalogue on film (dark) ───────────────────────────── */
+.microfiche {
+  --background: 225 13% 6%;
+  --foreground: 225 9% 91%;
 
-  --card: 168 15% 18%;
-  --card-foreground: 60 30% 96%;
+  --card: 223 12% 12%;
+  --card-foreground: 225 9% 91%;
 
-  --popover: 168 15% 18%;
-  --popover-foreground: 60 30% 96%;
+  --popover: 223 12% 12%;
+  --popover-foreground: 225 9% 91%;
 
-  --primary: 170 80% 75%;
-  --primary-foreground: 168 15% 15%;
+  --primary: 225 9% 91%;
+  --primary-foreground: 225 13% 6%;
 
-  --secondary: 168 15% 22%;
-  --secondary-foreground: 60 30% 96%;
+  --secondary: 223 12% 12%;
+  --secondary-foreground: 225 9% 91%;
 
-  --muted: 168 15% 22%;
-  --muted-foreground: 168 15% 57%;
+  --muted: 223 12% 12%;
+  --muted-foreground: 225 5% 62%;
 
-  --accent: 170 80% 75%;
-  --accent-foreground: 168 15% 15%;
+  --accent: 223 12% 12%;
+  --accent-foreground: 225 9% 91%;
 
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 168 15% 15%;
+  --destructive: 358 70% 62%;
+  --destructive-foreground: 225 13% 6%;
 
-  --border: 168 15% 28%;
-  --input: 168 15% 28%;
-  --ring: 170 80% 75%;
+  --border: 224 12% 32%;
+  --input: 224 12% 32%;
+  --ring: 225 9% 91%;
 
-  --gradient-subtle: linear-gradient(135deg, hsl(168 15% 15%), hsl(168 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(170 80% 75%), hsl(115 80% 75%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
+  --rule: 224 12% 32%;
+  --zebra: 223 12% 10%;
+  --row-hover: 223 12% 16%;
 
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
+  /* Lifted so each band holds against film black. */
+  --band-1: 27 42% 52%;
+  --band-2: 358 72% 62%;
+  --band-3: 27 82% 58%;
+  --band-4: 49 78% 58%;
+  --band-5: 138 45% 52%;
+  --band-6: 215 62% 60%;
+  --band-7: 271 48% 66%;
+  --band-8: 225 7% 62%;
 }
 
-/* Sakura — dark magenta */
-.buffy {
-  --background: 292 15% 15%;
-  --foreground: 60 30% 96%;
+/* ── Microfiche HC — AAA dark ────────────────────────────────────────────── */
+.microfiche-hc {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
 
-  --card: 292 15% 18%;
-  --card-foreground: 60 30% 96%;
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 100%;
 
-  --popover: 292 15% 18%;
-  --popover-foreground: 60 30% 96%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 100%;
 
-  --primary: 326 80% 75%;
-  --primary-foreground: 292 15% 15%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
 
-  --secondary: 292 15% 22%;
-  --secondary-foreground: 60 30% 96%;
+  --secondary: 0 0% 7%;
+  --secondary-foreground: 0 0% 100%;
 
-  --muted: 292 15% 22%;
-  --muted-foreground: 292 15% 61%;
-
-  --accent: 326 80% 75%;
-  --accent-foreground: 292 15% 15%;
-
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 292 15% 15%;
-
-  --border: 292 15% 28%;
-  --input: 292 15% 28%;
-  --ring: 326 80% 75%;
-
-  --gradient-subtle: linear-gradient(135deg, hsl(292 15% 15%), hsl(292 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(326 80% 75%), hsl(265 74% 75%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
-}
-
-/* Amber — dark gold */
-.lincoln {
-  --background: 48 15% 15%;
-  --foreground: 60 30% 96%;
-
-  --card: 48 15% 18%;
-  --card-foreground: 60 30% 96%;
-
-  --popover: 48 15% 18%;
-  --popover-foreground: 60 30% 96%;
-
-  --primary: 60 80% 75%;
-  --primary-foreground: 48 15% 15%;
-
-  --secondary: 48 15% 22%;
-  --secondary-foreground: 60 30% 96%;
-
-  --muted: 48 15% 22%;
-  --muted-foreground: 48 15% 57%;
-
-  --accent: 60 80% 75%;
-  --accent-foreground: 48 15% 15%;
-
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 48 15% 15%;
-
-  --border: 48 15% 28%;
-  --input: 48 15% 28%;
-  --ring: 60 80% 75%;
-
-  --gradient-subtle: linear-gradient(135deg, hsl(48 15% 15%), hsl(48 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(60 80% 75%), hsl(115 80% 75%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
-}
-
-/* Ember — dark red */
-.morbius {
-  --background: 355 15% 15%;
-  --foreground: 60 30% 96%;
-
-  --card: 355 15% 18%;
-  --card-foreground: 60 30% 96%;
-
-  --popover: 355 15% 18%;
-  --popover-foreground: 60 30% 96%;
-
-  --primary: 10 80% 75%;
-  --primary-foreground: 355 15% 15%;
-
-  --secondary: 355 15% 22%;
-  --secondary-foreground: 60 30% 96%;
-
-  --muted: 355 15% 22%;
-  --muted-foreground: 355 15% 61%;
-
-  --accent: 10 80% 75%;
-  --accent-foreground: 355 15% 15%;
-
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 355 15% 15%;
-
-  --border: 355 15% 28%;
-  --input: 355 15% 28%;
-  --ring: 10 80% 75%;
-
-  --gradient-subtle: linear-gradient(135deg, hsl(355 15% 15%), hsl(355 15% 17%));
-  --gradient-accent: linear-gradient(135deg, hsl(10 80% 75%), hsl(326 80% 75%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.4);
-
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
-}
-
-/* Steel — very dark blue */
-.van-helsing {
-  --background: 210 15% 4%;
-  --foreground: 60 30% 96%;
-
-  --card: 210 15% 8%;
-  --card-foreground: 60 30% 96%;
-
-  --popover: 210 15% 8%;
-  --popover-foreground: 60 30% 96%;
-
-  --primary: 210 50% 55%;
-  --primary-foreground: 210 15% 4%;
-
-  --secondary: 210 15% 14%;
-  --secondary-foreground: 60 30% 96%;
-
-  --muted: 210 15% 14%;
-  --muted-foreground: 210 15% 51%;
-
-  --accent: 170 80% 75%;
-  --accent-foreground: 210 15% 4%;
-
-  --destructive: 10 80% 75%;
-  --destructive-foreground: 210 15% 4%;
-
-  --border: 210 15% 18%;
-  --input: 210 15% 18%;
-  --ring: 210 50% 55%;
-
-  --gradient-subtle: linear-gradient(135deg, hsl(210 15% 4%), hsl(210 15% 7%));
-  --gradient-accent: linear-gradient(135deg, hsl(210 50% 55%), hsl(170 80% 75%));
-  --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.4);
-  --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.5);
-
-  --theme-cyan: 170 80% 75%;
-  --theme-green: 115 80% 75%;
-  --theme-pink: 326 80% 75%;
-  --theme-yellow: 60 80% 75%;
-  --theme-red: 10 80% 75%;
-}
-
-/* Carbon — high-contrast dark (targets WCAG AAA pairings) */
-.carbon {
-  --background: 0 0% 2%;
-  --foreground: 0 0% 98%;
-
-  --card: 0 0% 5%;
-  --card-foreground: 0 0% 98%;
-
-  --popover: 0 0% 5%;
-  --popover-foreground: 0 0% 98%;
-
-  --primary: 265 100% 84%;
-  --primary-foreground: 0 0% 2%;
-
-  --secondary: 0 0% 12%;
-  --secondary-foreground: 0 0% 98%;
-
-  --muted: 0 0% 12%;
+  --muted: 0 0% 7%;
   --muted-foreground: 0 0% 80%;
 
-  --accent: 265 100% 84%;
-  --accent-foreground: 0 0% 2%;
+  --accent: 0 0% 7%;
+  --accent-foreground: 0 0% 100%;
 
-  --destructive: 10 100% 80%;
-  --destructive-foreground: 0 0% 2%;
+  --destructive: 358 90% 74%;
+  --destructive-foreground: 0 0% 0%;
 
-  --border: 0 0% 52%;
-  --input: 0 0% 52%;
-  --ring: 265 100% 84%;
+  --border: 0 0% 62%;
+  --input: 0 0% 62%;
+  --ring: 0 0% 100%;
 
-  --gradient-subtle: linear-gradient(135deg, hsl(0 0% 2%), hsl(0 0% 2%));
-  --gradient-accent: linear-gradient(135deg, hsl(265 100% 84%), hsl(265 100% 84%));
-  --shadow-soft: none;
-  --shadow-medium: none;
+  --rule: 0 0% 62%;
+  --zebra: 0 0% 7%;
+  --row-hover: 0 0% 14%;
 
-  --theme-cyan: 170 100% 80%;
-  --theme-green: 115 95% 78%;
-  --theme-pink: 326 100% 83%;
-  --theme-yellow: 60 100% 78%;
-  --theme-red: 10 100% 80%;
-}
-
-/*
-  Derived atmosphere tokens. These reference the *active* theme's
-  --primary / --accent / --theme-* vars above, so they automatically re-tint
-  for every theme without per-theme duplication.
-*/
-:root {
-  --gradient-aurora: linear-gradient(130deg, hsl(var(--primary)) 0%, hsl(var(--theme-pink)) 45%, hsl(var(--theme-cyan)) 100%);
-  --shadow-glow: 0 0 0 1px hsl(var(--primary) / 0.1), 0 18px 44px -14px hsl(var(--primary) / 0.28);
-  --shadow-glow-strong: 0 0 60px -16px hsl(var(--primary) / 0.4);
-  --glass-bg: hsl(var(--card) / 0.5);
-  --glass-border: hsl(var(--foreground) / 0.08);
+  --band-1: 27 60% 66%;
+  --band-2: 358 90% 74%;
+  --band-3: 27 95% 66%;
+  --band-4: 49 95% 66%;
+  --band-5: 138 60% 64%;
+  --band-6: 215 85% 74%;
+  --band-7: 271 70% 78%;
+  --band-8: 0 0% 76%;
 }
 
 @layer base {
   html {
-    /* Fluid rem base: ~16px on phones → 20px on large screens. Keeps the
-       editorial type big on desktop without overflowing mobile. */
-    font-size: clamp(100%, 0.92rem + 0.55vw, 125%);
+    /* Catalogues are dense; the base stays modest and grows only a little. */
+    font-size: clamp(93.75%, 0.88rem + 0.22vw, 106.25%);
     scroll-behavior: smooth;
   }
 
@@ -419,137 +219,173 @@
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.6;
+    line-height: 1.5;
     overflow-x: hidden;
+    /* The Tabular Figures Rule — numerals align on the digit everywhere. */
+    font-variant-numeric: tabular-nums;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
-    line-height: 1.2;
-    font-weight: 600;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  /* The Square Corner Rule — no exceptions, including UI primitives. */
+  *, *::before, *::after {
+    border-radius: 0 !important;
   }
 
   ::selection {
-    background: hsl(var(--primary) / 0.32);
-    color: hsl(var(--foreground));
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  ::-webkit-scrollbar { width: 11px; height: 11px; }
-  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--card)); }
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary) / 0.4);
-    border-radius: 999px;
-    border: 3px solid transparent;
-    background-clip: content-box;
+    background: hsl(var(--rule));
+    border: 3px solid hsl(var(--card));
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--primary) / 0.6);
-    background-clip: content-box;
-  }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
 
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
-    outline-offset: 3px;
-    border-radius: 6px;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ── Rules carry every structure. Nothing floats, nothing glows. ───────── */
+  .rule-t { border-top: 1px solid hsl(var(--rule)); }
+  .rule-b { border-bottom: 1px solid hsl(var(--rule)); }
+  .rule-r { border-right: 1px solid hsl(var(--rule)); }
+  .rule-heavy-b { border-bottom: 2px solid hsl(var(--foreground)); }
+
+  /* Catalogue row: zebra banding + a one-step tone lift on hover, which is
+     this form's entire native motion. scroll-margin clears the sticky
+     masthead when a featured plate jumps to its own catalogue number. */
+  .cat-row {
+    border-bottom: 1px solid hsl(var(--rule));
+    scroll-margin-top: 4.5rem;
+  }
+  .cat-row:nth-child(even) { background: hsl(var(--zebra)); }
+  .cat-row:hover { background: hsl(var(--row-hover)); }
+
+  /*
+    The listing grid. Desktop is a true seven-column table; below 900px it
+    restacks into a spec card per entry — no column is dropped, they relabel.
+  */
+  .cat-cols {
+    display: grid;
+    grid-template-columns:
+      6.5rem 1.25rem minmax(9rem, 1.05fr) minmax(12rem, 1.6fr)
+      10rem 3.25rem 4.75rem;
+    gap: 0.9rem;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  /* Two lines, hard. A ruled table with ragged row heights stops reading as
+     print, and the description is the only column that can run long. */
+  .cat-row .col-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  @media (max-width: 1023.98px) {
+    .cat-cols {
+      grid-template-columns: 1.25rem 1fr auto;
+      gap: 0.5rem 0.7rem;
+      align-items: start;
+      padding-top: 0.85rem;
+      padding-bottom: 0.85rem;
+    }
+    /* label: value pairs carry the column meaning once the header is gone */
+    .cat-cols > .col-band { grid-column: 1 / 2; grid-row: 1; order: 0; margin-top: 0.15rem; }
+    .cat-cols > .col-cat { grid-column: 2 / 3; order: 1; }
+    .cat-cols > .col-name { grid-column: 2 / 4; order: 2; }
+    .cat-cols > .col-desc { grid-column: 2 / 4; order: 3; }
+    .cat-cols > .col-spec { grid-column: 2 / 3; order: 4; white-space: normal; }
+    .cat-cols > .col-year { grid-column: 2 / 3; order: 5; }
+    .cat-cols > .col-status { grid-column: 3 / 4; grid-row: 1; order: 6; justify-self: end; }
+    .cat-head { display: none; }
+  }
+
+  /*
+    Column labels. Visible as `label: value` pairs once the header strip is
+    gone on small screens; still announced to screen readers on desktop, where
+    the visible header is decorative. display:none would strand desktop
+    screen-reader users with seven unlabelled values.
+  */
+  @media (min-width: 1024px) {
+    .col-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  }
+
+  /* Column header strip. */
+  .cat-head {
+    background: hsl(var(--card));
+    border-bottom: 1px solid hsl(var(--rule));
+    @apply font-mono uppercase text-muted-foreground;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* The band mark. Always paired with a text label for a11y — colour is
+     never the sole signal. */
+  .band-mark {
+    width: 0.875rem;
+    height: 0.875rem;
+    display: inline-block;
+    background: hsl(var(--band));
+    flex: none;
+  }
+
+  /* Status / link chip. */
+  .cat-chip {
+    border: 1px solid hsl(var(--rule));
+    @apply font-mono uppercase inline-block text-center;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.4rem;
+    transition: background 0.12s linear, color 0.12s linear;
+  }
+  a.cat-chip:hover,
+  a.cat-chip:focus-visible {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+    border-color: hsl(var(--foreground));
+  }
+
+  /* Mono label used for column heads, kind names, rail text, metadata. */
+  .cat-label {
+    @apply font-mono uppercase;
+    font-size: 0.625rem;
+    letter-spacing: 0.09em;
   }
 }
 
 @layer utilities {
-  .animate-fade-in   { animation: fade-in 0.7s ease-out both; }
-  .animate-fade-in-1 { animation: fade-in 0.7s 0.05s ease-out both; }
-  .animate-fade-in-2 { animation: fade-in 0.7s 0.18s ease-out both; }
-  .animate-fade-in-3 { animation: fade-in 0.7s 0.30s ease-out both; }
-  .animate-fade-in-4 { animation: fade-in 0.7s 0.45s ease-out both; }
-  .animate-fade-in-5 { animation: fade-in 0.7s 0.60s ease-out both; }
-  .animate-fade-in-6 { animation: fade-in 0.7s 0.80s ease-out both; }
-
-  .animate-bounce-slow { animation: bounce-slow 2.4s ease-in-out infinite; }
-
-  .hero-grid {
-    background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
-    background-size: 32px 32px;
-  }
-
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes bounce-slow {
-    0%, 100% { transform: translateY(0);   opacity: 0.35; }
-    50%       { transform: translateY(7px); opacity: 0.7; }
+  /* Vertical rail lettering for the bleed tabs. */
+  .writing-vertical {
+    writing-mode: vertical-rl;
   }
 }
 
-@layer utilities {
-  /* Animated gradient text filled with the active theme's color story */
-  .text-gradient-aurora {
-    background: var(--gradient-aurora);
-    background-size: 220% 220%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: gradient 9s ease infinite;
-  }
-
-  /* Restrained two-tone name fill (primary → foreground). Replaces the animated
-     aurora on the hero headline — still theme-tinted, but not loud. */
-  .text-gradient-name {
-    background: linear-gradient(120deg, hsl(var(--primary)) 0%, hsl(var(--foreground)) 78%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* Frosted-glass surface for nav, cards and pills */
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
-    border: 1px solid var(--glass-border);
-  }
-
-  .glass-strong {
-    background: hsl(var(--card) / 0.72);
-    backdrop-filter: blur(22px) saturate(160%);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid var(--glass-border);
-  }
-
-  /* Fade the left/right edges of horizontally-scrolling content (marquee) */
-  .mask-fade-x {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  }
-
-  /* Scroll-reveal: hidden until the Reveal component adds .is-visible */
-  .reveal {
-    opacity: 0;
-    transform: translateY(26px);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-    will-change: opacity, transform;
-  }
-  .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Defined here (not only in the Tailwind config) because it's referenced by
-     .text-gradient-aurora rather than an `animate-gradient` utility, so Tailwind
-     would otherwise not emit it. */
-  @keyframes gradient {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-}
-
-/* Respect users who prefer reduced motion: freeze ambient animation and make
-   sure revealed content is always shown. */
+/*
+  Reduced motion: the only motion in this system is a 120ms tone change and
+  smooth anchor scrolling, but honour the preference regardless.
+*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -558,57 +394,14 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  html {
-    scroll-behavior: auto;
-  }
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* Light-on-transparent logos (e.g. the Pagan wordmark) vanish on the light
-   theme. Invert them to dark there so they read against the light card. */
-.alucard .theme-invert-logo,
-.paper .theme-invert-logo {
-  filter: invert(1);
+  html { scroll-behavior: auto; }
 }
 
 /*
-  High-contrast themes (Paper / Carbon): kill translucency, glow and ambient
-  texture; strong borders and AAA ink only. Gradient text collapses to the
-  solid primary so headlines never dip below contrast targets.
+  Light-on-transparent logos (the Pagan wordmark) vanish on paper grounds.
+  Invert them there so they read against the stock.
 */
-.paper .glass,
-.paper .glass-strong,
-.carbon .glass,
-.carbon .glass-strong {
-  background: hsl(var(--card));
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-color: hsl(var(--border));
-}
-.paper, .carbon {
-  --gradient-aurora: linear-gradient(130deg, hsl(var(--primary)), hsl(var(--primary)));
-  --shadow-glow: 0 0 0 1px hsl(var(--border));
-  --shadow-glow-strong: 0 0 0 1px hsl(var(--border));
-  --glass-border: hsl(var(--border));
-}
-.paper .text-gradient-name,
-.carbon .text-gradient-name,
-.paper .text-gradient-aurora,
-.carbon .text-gradient-aurora {
-  background: none;
-  -webkit-text-fill-color: currentColor;
-  color: hsl(var(--primary));
-  animation: none;
-}
-.paper .hero-grid,
-.carbon .hero-grid,
-.paper .aurora-blobs,
-.carbon .aurora-blobs,
-.paper .aurora-grain,
-.carbon .aurora-grain {
-  background-image: none;
-  display: none;
+.stock .theme-invert-logo,
+.stock-hc .theme-invert-logo {
+  filter: invert(1);
 }

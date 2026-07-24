@@ -176,12 +176,12 @@ let bubble = (msg: chatMsg) => {
     key={Int.toString(msg.id)}
     className={"flex " ++ (msg.role == "user" ? "justify-end" : "justify-start")}>
     <div
-      className={"max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed " ++ (
+      className={"max-w-[85%] px-3.5 py-2 text-sm leading-relaxed " ++ (
         msg.role == "user"
-          ? "whitespace-pre-wrap rounded-br-md bg-primary text-primary-foreground"
+          ? "whitespace-pre-wrap bg-primary text-primary-foreground"
           : msg.isError
-          ? "whitespace-pre-wrap rounded-bl-md border border-destructive/40 bg-destructive/10 text-foreground"
-          : "rounded-bl-md bg-secondary text-foreground"
+          ? "whitespace-pre-wrap border border-destructive bg-card text-foreground"
+          : "bg-secondary text-foreground"
       )}>
       {isModel ? <Markdown text={msg.content} /> : React.string(msg.content)}
     </div>
@@ -321,7 +321,7 @@ let make = () => {
           onClick={_ => setIsOpen(_ => true)}
           ariaLabel={launcherLabel}
           ariaHaspopup=#dialog
-          className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center gap-2 rounded-full bg-primary px-0 text-primary-foreground shadow-glow transition-transform duration-200 hover:scale-105 sm:w-auto sm:px-5">
+          className="fixed bottom-0 left-7 z-50 flex h-10 items-center justify-center gap-2 border-r border-t border-rule bg-foreground px-3 text-background transition-colors duration-100 md:left-10">
           {Icons.bot(~className="h-6 w-6 shrink-0", ())}
           <span className="hidden text-sm font-medium sm:inline"> {React.string(launcherLabel)} </span>
         </button>}
@@ -329,19 +329,19 @@ let make = () => {
       ? <div
           role="dialog"
           ariaLabel={titleLabel}
-          className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-h-[80vh] max-w-md flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-glow ring-1 ring-foreground/5 sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[24rem]">
+          className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden border border-rule bg-background sm:inset-x-auto sm:bottom-0 sm:left-10 sm:w-[24rem]">
           <div
-            className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
+            className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-muted px-4 py-3">
             <div className="flex items-center gap-2.5">
               <span
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-glow"
+                className="flex h-9 w-9 items-center justify-center bg-primary text-primary-foreground "
                 ariaHidden=true>
                 {Icons.bot(~className="h-5 w-5", ())}
               </span>
               <div className="leading-tight">
                 <p className="font-display text-sm font-bold text-foreground"> {React.string(titleLabel)} </p>
                 <p className="flex items-center gap-1.5 font-mono text-[0.65rem] text-muted-foreground">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" ariaHidden=true />
+                  <span className="h-1.5 w-1.5 bg-primary" ariaHidden=true />
                   {React.string("AI · Gemini")}
                 </p>
               </div>
@@ -350,7 +350,7 @@ let make = () => {
               type_="button"
               onClick={_ => setIsOpen(_ => false)}
               ariaLabel={closeLabel}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary">
+              className="flex h-8 w-8 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-foreground hover:text-primary">
               {Icons.x(~className="h-4 w-4", ())}
             </button>
           </div>
@@ -362,7 +362,7 @@ let make = () => {
             className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             <div className="flex justify-start">
               <div
-                className="max-w-[85%] rounded-2xl rounded-bl-md bg-secondary px-3.5 py-2 text-sm leading-relaxed text-foreground">
+                className="max-w-[85%] bg-secondary px-3.5 py-2 text-sm leading-relaxed text-foreground">
                 {React.string(greeting)}
               </div>
             </div>
@@ -374,7 +374,7 @@ let make = () => {
                       key={Int.toString(i)}
                       type_="button"
                       onClick={_ => submit(s)}
-                      className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary">
+                      className="border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-primary">
                       {React.string(s)}
                     </button>
                   )
@@ -384,14 +384,10 @@ let make = () => {
             {messages->Array.map(bubble)->React.array}
             {busy && !streaming
               ? <div className="flex justify-start" ariaLabel={thinkingLabel}>
-                  <div className="flex gap-1 rounded-2xl rounded-bl-md bg-secondary px-3.5 py-3">
-                    <span
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:-0.3s]"
-                    />
-                    <span
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:-0.15s]"
-                    />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60" />
+                  /* A printed catalogue has no bouncing anything. The wait
+                     state reads as a status line, in the label voice. */
+                  <div className="cat-label bg-secondary px-3.5 py-3 text-muted-foreground">
+                    {"Querying ···"->React.string}
                   </div>
                 </div>
               : React.null}
@@ -413,13 +409,13 @@ let make = () => {
               }}
               placeholder={placeholder}
               disabled={busy}
-              className="min-w-0 flex-1 rounded-full border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
+              className="min-w-0 flex-1 border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2  disabled:opacity-60"
             />
             <button
               type_="submit"
               ariaLabel={sendLabel}
               disabled={!canSend}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100">
+              className="flex h-10 w-10 shrink-0 items-center justify-center bg-primary text-primary-foreground transition-transform duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100">
               {Icons.send(~className="h-4 w-4", ())}
             </button>
           </form>

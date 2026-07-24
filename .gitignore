@@ -32,3 +32,6 @@ lib/
 *.njsproj
 *.sln
 *.sw?
+
+# Impeccable transient decision-page state (PID, port, heartbeat)
+.impeccable/questions/

@@ -94,3 +94,10 @@ let tech = [
   "CI/CD",
   "Linux",
 ]
+
+// Maker-record fields. These live here, not in Record.res — AGENTS.md requires
+// all copy to sit in *Content.res so text edits never touch layout.
+let recordCat = "AK 0-0001"
+let recordName = "Arda Karaduman"
+let recordTitle = "Systems Architect & Pragmatic Programmer"
+let recordLanguages = "Turkish (native) · English (near-native) · Japanese (business)"

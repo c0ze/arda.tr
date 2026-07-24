@@ -4,7 +4,10 @@ Codex working notes for this repository.
 
 ## Purpose
 
-Maintain `arda.tr`, a single-page personal portfolio for Arda Karaduman.
+Maintain `arda.tr`, a single-page personal catalogue for Arda Karaduman — every
+piece of work he has shipped, of every kind, as one flat ordered listing.
+See DESIGN.md ("The Parts Catalogue") and PRODUCT.md before changing anything
+visual.
 
 The site should stay:
 
@@ -35,8 +38,9 @@ boundary. Stay inside this split:
   `ErrorBoundary`, the shadcn primitives in `components/ui/` (wrapped by `.res`
   bindings), and `lib/utils.ts`. Don't grow this layer without a real reason.
 - **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
-  Each section (`Hero`, `About`, `Portfolio`, `Music`, `Footer`) reads its copy
-  and data from its matching `*Content.res`. Keep it that way when editing text.
+  `CatalogContent.res` is the catalogue itself — every entry, its band, its
+  catalogue number. `AboutContent.res` and `FooterContent.res` carry the
+  maker record and back matter. Keep it that way when editing text.
 - `src/config/site.generated.ts` is generated from `config/site.config.json` by
   `scripts/generate-site-config-module.mjs` (run via the `prepare` hook and the
   build); it is gitignored — edit the JSON, not the generated file.
@@ -77,14 +81,14 @@ mise exec node@24.14.0 -- npm run verify
 - Keep the site a single-page experience unless there is a strong reason to add routing.
 - Preserve the current display/sans/mono type system (shared with
   resume.arda.tr, blog.arda.tr and ai.arda.tr):
-  - `Archivo` for headings (`font-display`)
-  - `Manrope` for body text (`font-sans`)
-  - `JetBrains Mono` for labels and technical accents (`font-mono`)
-- Respect the current visual direction:
-  - restrained motion
-  - soft grid/background atmosphere
-  - strong contrast
-  - card-based content sections
+  - `Archivo Narrow` for catalogue headers and entry names (`font-display`)
+  - `Archivo` for descriptions and prose (`font-sans`)
+  - `B612 Mono` for every numeral, label and spec value (`font-mono`)
+- Respect the current visual direction (DESIGN.md is canonical):
+  - zero border-radius, zero shadow, zero translucency
+  - 1px hairline rules carry every structure; nothing floats
+  - band colour encodes kind and nothing else
+  - the only motion is a 120ms tone step on row hover
 - Avoid template bloat and unnecessary dependencies.
 
 ## Accessibility And UX

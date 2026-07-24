@@ -16,65 +16,35 @@
     }
   ],
   "sections": {
-    "about": "about",
-    "portfolio": "portfolio",
-    "music": "music"
+    "catalogue": "catalogue",
+    "about": "record",
+    "contact": "contact"
   },
-  "defaultTheme": "dracula-pro",
+  "defaultTheme": "stock",
   "themes": [
     {
-      "id": "alucard",
-      "name": "Ivory",
-      "hint": "light",
-      "color": "#F7F5F0"
+      "id": "stock",
+      "name": "Stock",
+      "hint": "catalogue paper",
+      "color": "#F2F1ED"
     },
     {
-      "id": "paper",
-      "name": "Paper",
-      "hint": "high contrast",
+      "id": "stock-hc",
+      "name": "Stock HC",
+      "hint": "AAA light",
       "color": "#FFFFFF"
     },
     {
-      "id": "blade",
-      "name": "Abyss",
-      "hint": "dark teal",
-      "color": "#80FFEA"
+      "id": "microfiche",
+      "name": "Microfiche",
+      "hint": "film",
+      "color": "#0E0F12"
     },
     {
-      "id": "dracula-pro",
-      "name": "Void",
-      "hint": "dark purple",
-      "color": "#9580FF"
-    },
-    {
-      "id": "carbon",
-      "name": "Carbon",
-      "hint": "high contrast",
-      "color": "#0A0A0A"
-    },
-    {
-      "id": "buffy",
-      "name": "Sakura",
-      "hint": "dark magenta",
-      "color": "#FF80BF"
-    },
-    {
-      "id": "lincoln",
-      "name": "Amber",
-      "hint": "dark gold",
-      "color": "#FFFF80"
-    },
-    {
-      "id": "morbius",
-      "name": "Ember",
-      "hint": "dark red",
-      "color": "#FF9580"
-    },
-    {
-      "id": "van-helsing",
-      "name": "Steel",
-      "hint": "dark blue",
-      "color": "#708CA9"
+      "id": "microfiche-hc",
+      "name": "Microfiche HC",
+      "hint": "AAA dark",
+      "color": "#000000"
     }
   ]
 }

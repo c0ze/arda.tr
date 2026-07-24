@@ -1,10 +1,10 @@
 # arda.tr
 
-Personal portfolio site for Arda Karaduman.
+Personal catalogue site for Arda Karaduman.
 
 The app is a single-page personal hub with:
 
-- a hero section with resume, blog, and AI chat CTAs
+- a featured plate strip with resume, blog, and AI chat CTAs
 - an about section with career background and highlights
 - product, game, and tool showcases
 - a music section with project links

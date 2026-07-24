@@ -1,6 +1,5 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Palette } from "lucide-react";
 import { themes } from "@/config/site";
 import {
   DropdownMenu,
@@ -9,6 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+/**
+ * Stock / Microfiche selector, set as a catalogue metadata field rather than a
+ * button: the current rendition is named in mono, and the menu lists the four
+ * with a square swatch each.
+ */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -19,12 +23,9 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-        <button
-          className="glass flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground"
-          aria-label="Select theme"
-        >
-          <Palette className="h-4 w-4" />
-        </button>
+      <span className="cat-chip text-muted-foreground" aria-hidden="true">
+        STOCK ▾
+      </span>
     );
   }
 
@@ -33,36 +34,31 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
-          className="glass group flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all hover:shadow-glow"
-          aria-label="Select theme"
-          title={`Theme: ${currentTheme.name}`}
-        >
-          <div
-            className="h-4 w-4 rounded-full ring-1 ring-foreground/20 transition-transform duration-300 group-hover:scale-110"
+        <button className="cat-chip inline-flex items-center gap-2" aria-label="Select rendition">
+          <span
+            className="inline-block h-2.5 w-2.5 border border-rule"
             style={{ backgroundColor: currentTheme.color }}
+            aria-hidden="true"
           />
+          {currentTheme.name} ▾
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="glass-strong w-52">
+      <DropdownMenuContent align="end" className="w-56 border border-rule bg-background p-0">
         {themes.map((t) => (
           <DropdownMenuItem
             key={t.id}
             onClick={() => setTheme(t.id)}
-            className={`flex items-center gap-3 cursor-pointer ${
-              theme === t.id ? "bg-primary/10 text-primary" : ""
+            className={`flex cursor-pointer items-center gap-2.5 border-b border-rule px-3 py-2 last:border-b-0 ${
+              theme === t.id ? "bg-card" : ""
             }`}
           >
-            <div
-              className="w-4 h-4 rounded-full border border-border"
-              style={{ backgroundColor: t.color }}
-            />
-            <span className="whitespace-nowrap font-medium">{t.name}</span>
             <span
-              className={`ml-auto whitespace-nowrap text-right font-mono text-[0.62rem] leading-none ${
-                theme === t.id ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
+              className="inline-block h-3 w-3 border border-rule"
+              style={{ backgroundColor: t.color }}
+              aria-hidden="true"
+            />
+            <span className="font-display text-sm font-semibold">{t.name}</span>
+            <span className="cat-label ml-auto text-muted-foreground">
               {theme === t.id ? "active" : t.hint}
             </span>
           </DropdownMenuItem>

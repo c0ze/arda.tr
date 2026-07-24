@@ -18,8 +18,8 @@ interface TokyoClockProps {
 }
 
 /**
- * A live local time readout for Tokyo — a small personal detail tying the page
- * to where Arda actually is. Updates once a second.
+ * A live local time readout for Tokyo, set as a catalogue metadata field —
+ * where this catalogue is published from. Updates once a second.
  */
 export function TokyoClock({ className = "" }: TokyoClockProps) {
   const [time, setTime] = useState(tokyoNow);
@@ -30,16 +30,8 @@ export function TokyoClock({ className = "" }: TokyoClockProps) {
   }, []);
 
   return (
-    <span
-      className={`inline-flex items-center gap-2 font-mono text-xs text-muted-foreground ${className}`}
-      title="My local time in Tokyo"
-    >
-      <span className="relative flex h-2 w-2" aria-hidden="true">
-        <span className="absolute inline-flex h-full w-full animate-glow-pulse rounded-full bg-glow-green" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-glow-green" />
-      </span>
-      <span className="tabular-nums tracking-tight">TOKYO {time}</span>
-      <span className="text-muted-foreground/60">JST</span>
+    <span className={`cat-label text-muted-foreground ${className}`} title="Local time in Tokyo">
+      TOKYO <span className="text-foreground">{time}</span> JST
     </span>
   );
 }
