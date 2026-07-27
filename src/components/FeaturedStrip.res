@@ -23,6 +23,10 @@ let make = (~onCite: unit => unit) => {
           <a
             href={e.href}
             rel="noopener noreferrer"
+            /* The Fig. number is decorative and the image alt is empty, so
+               without this the link announces only as "Fig. 1" — which says
+               nothing about where it goes. */
+            ariaLabel={`${e.name} — ${kind.name}, ${e.status}`}
             className="group relative block aspect-[5/2] overflow-hidden bg-card rule-b md:aspect-[16/10]">
             <img
               src={e.image}
@@ -32,7 +36,9 @@ let make = (~onCite: unit => unit) => {
                 e.invertOnLight ? " theme-invert-logo" : ""
               )}
             />
-            <span className="cat-label absolute left-0 top-0 bg-foreground px-1.5 py-0.5 text-background">
+            <span
+              className="cat-label absolute left-0 top-0 bg-foreground px-1.5 py-0.5 text-background"
+              ariaHidden=true>
               {`Fig. ${Int.toString(i + 1)}`->React.string}
             </span>
           </a>

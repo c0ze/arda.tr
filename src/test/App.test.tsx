@@ -3,7 +3,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import App from "@/App";
 import * as Catalog from "@/content/CatalogContent.res.mjs";
 
-const entries = Catalog.entries as { cat: string; name: string; band: number; featured: boolean }[];
+const entries = Catalog.entries as {
+  cat: string;
+  name: string;
+  band: number;
+  featured: boolean;
+  href: string;
+}[];
 const kinds = Catalog.kinds as { band: number; name: string }[];
 
 describe("App", () => {
@@ -21,6 +27,21 @@ describe("App", () => {
     expect(screen.getByRole("heading", { level: 3, name: "Pagan" })).toBeInTheDocument();
     // The key is printed, so the band code is legible to a first-time visitor.
     expect(screen.getByRole("heading", { name: /Key — band code/ })).toBeInTheDocument();
+  });
+
+  it("names the featured plate image links after their entry, not their figure number", () => {
+    render(<App />);
+
+    // The image alt is empty and "Fig. N" is decorative, so without an explicit
+    // label these links announce as "Fig. 1" and say nothing about where they go.
+    for (const e of entries.filter((x) => x.featured)) {
+      // Two links point at each plate — the image and the title. The image one
+      // is the one that would otherwise be nameless; find it by its label.
+      const imageLink = screen.getByRole("link", { name: new RegExp(`^${e.name} — .+, .+$`) });
+      expect(imageLink).toHaveAttribute("href", e.href);
+      expect(imageLink.querySelector("img")).not.toBeNull();
+    }
+    expect(screen.queryByRole("link", { name: /^Fig\. \d$/ })).not.toBeInTheDocument();
   });
 
   it("gives every featured plate a working in-page anchor to its own row", () => {
