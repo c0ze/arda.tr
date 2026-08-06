@@ -1,0 +1,27 @@
+# Arda Karaduman
+
+> arda.tr is the personal catalogue of Arda Karaduman — a software developer between Istanbul and Tokyo. Resume, blog, AI chat, and a showcase of products, games, tools, and music projects.
+
+## Sections
+
+- [Home](https://arda.tr/): Featured links — resume, blog, AI chat
+- About: career background and highlights
+- Products, games, and tools: project showcase
+- Music: music project links
+
+## Projects
+
+- [Gand](https://gand.tr/): Independent software studio
+- [Skriv.ist](https://skriv.ist/): Minimalist ebook reader
+- [Fable Spun Kids](https://kids.fable.tr/): Personalized storybooks for children
+- [Vigil Today](https://vigil.today/): Smart reminder widget PWA
+- [SUDONE](https://sudone.jp/): Sudoku and number puzzles
+- [Pagan](https://pagan.tr/): Photography portfolio
+- [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
+
+## Elsewhere
+
+- [GitHub](https://github.com/c0ze)
+- [LinkedIn](https://www.linkedin.com/in/ardakaraduman)
+- [Mastodon](https://mastodon.social/@c0ze)
+- [Bluesky](https://bsky.app/profile/arda.tr)
