@@ -16,7 +16,7 @@
 - [Fable Spun Kids](https://kids.fable.tr/): Personalized storybooks for children
 - [Vigil Today](https://vigil.today/): Smart reminder widget PWA
 - [SUDONE](https://sudone.jp/): Sudoku and number puzzles
-- [Pagan](https://pagan.tr/): Photography portfolio
+- [Pagan](https://pagan.tr/): Turkish black metal band — official site
 - [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
 
 ## Elsewhere
