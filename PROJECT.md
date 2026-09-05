@@ -75,6 +75,7 @@ mise exec node@24.14.0 -- npm run verify
   `npm run generate:themes-contract` after touching theme CSS or theme
   metadata (the `theme-contract.yml` workflow fails if it drifts).
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds.
+- `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only before receiving text. Transport and React Strict Mode regressions run under `npm run verify` with mocked responses.
 
 ## Frontend Guardrails
 
