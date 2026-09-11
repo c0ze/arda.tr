@@ -1,21 +1,22 @@
 # Arda Karaduman
 
-> arda.tr is the personal catalogue of Arda Karaduman — a software developer between Istanbul and Tokyo. Resume, blog, AI chat, and a showcase of products, games, tools, and music projects.
+> arda.tr is the personal catalogue of Arda Karaduman — a Systems Architect and pragmatic programmer in Tokyo, where he has lived since 2004. One flat table of systems, products, games, writing, tools, and music, plus resume, blog, and AI chat.
 
 ## Sections
 
-- [Home](https://arda.tr/): Featured links — resume, blog, AI chat
-- About: career background and highlights
-- Products, games, and tools: project showcase
-- Music: music project links
+- [Catalogue](https://arda.tr/#catalogue): The full catalogue — systems, products, games, writing, tools, and music in one table
+- [Record](https://arda.tr/#record): Career background — Systems Architect at Veltra, Keio University, earlier roles
+- [Contact](https://arda.tr/#contact): Email and social links
 
 ## Projects
 
 - [Gand](https://gand.tr/): Independent software studio
-- [Skriv.ist](https://skriv.ist/): Minimalist ebook reader
-- [Fable Spun Kids](https://kids.fable.tr/): Personalized storybooks for children
+- [Gand Games](https://gand.games/): The games arm of Gand — the label the games ship under
+- [COMMIT!!!](https://commit.gand.tr/): Software-career sim where the legacy monolith is the final boss — out now on Steam and Android
+- [Skriv.ist](https://skriv.ist/): Multiplatform ebook reader
+- [Fablespun](https://fable.tr/): AI-spun fables — illustrated tales for kids
 - [Vigil Today](https://vigil.today/): Smart reminder widget PWA
-- [SUDONE](https://sudone.jp/): Sudoku and number puzzles
+- [SUDONE](https://sudone.jp/): Scan a shelf barcode in-store and know in seconds if it really beats online prices
 - [Pagan](https://pagan.tr/): Turkish black metal band — official site
 - [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
 
@@ -23,5 +24,5 @@
 
 - [GitHub](https://github.com/c0ze)
 - [LinkedIn](https://www.linkedin.com/in/ardakaraduman)
-- [Mastodon](https://mastodon.social/@c0ze)
-- [Bluesky](https://bsky.app/profile/arda.tr)
+- [Mastodon](https://mastodon.world/@arda)
+- [Bluesky](https://bsky.app/profile/arda-karaduman.bsky.social)

@@ -28,7 +28,7 @@ type entry = {
 }
 
 let catalogueNo = "No.1"
-let revision = "2026.07"
+let revision = "2026.09"
 
 let kinds: array<kind> = [
   {band: 1, name: "Systems", note: "infrastructure & architecture"},
@@ -135,7 +135,7 @@ let entries: array<entry> = [
     cat: "AK 3-0096",
     band: 3,
     name: "COMMIT!!!",
-    description: "A software-career sim where the legacy monolith is the final boss. Take the job, ship the commit, dodge the debt, make rent. Out now on Android; Steam 10 Sep 2026.",
+    description: "A software-career sim where the legacy monolith is the final boss. Take the job, ship the commit, dodge the debt, make rent. Out now on Steam and Android.",
     spec: "Simulation · Android · Steam",
     year: "2026",
     status: "RELEASED",
@@ -167,7 +167,6 @@ let entries: array<entry> = [
     href: "https://adarkroom.coze.org",
     repo: "https://github.com/c0ze/adarkroom-gleam",
     image: "/adarkroom.webp",
-    featured: true,
   },
   {
     ...blank,
@@ -203,8 +202,7 @@ let entries: array<entry> = [
     description: "A retro-style action game. Take control and fight your way through enemy lines.",
     spec: "Action · Retro",
     year: "2024",
-    status: "PLAYABLE",
-    href: "https://tankfury.arda.tr",
+    status: "ARCHIVED",
     image: "/commando.webp",
   },
   {
@@ -215,8 +213,7 @@ let entries: array<entry> = [
     description: "Dive into the digital realm with this hacking simulation. Test your skills and breach the system.",
     spec: "Simulation · Puzzle",
     year: "2024",
-    status: "PLAYABLE",
-    href: "https://hackerman.arda.tr",
+    status: "ARCHIVED",
     image: "/hackerman.webp",
   },
   {
@@ -227,8 +224,7 @@ let entries: array<entry> = [
     description: "A classic Domino game built with Love2D and Lua. Play against the computer in this web-based version.",
     spec: "Lua · Love2D",
     year: "2024",
-    status: "PLAYABLE",
-    href: "https://domino.arda.tr",
+    status: "ARCHIVED",
     image: "/domino.webp",
   },
   /* 4 — Writing */
