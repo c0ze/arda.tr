@@ -4,10 +4,10 @@ Codex working notes for this repository.
 
 ## Purpose
 
-Maintain `arda.tr`, a single-page personal catalogue for Arda Karaduman — every
-piece of work he has shipped, of every kind, as one flat ordered listing.
-See DESIGN.md ("The Parts Catalogue") and PRODUCT.md before changing anything
-visual.
+Maintain `arda.tr`, a single-page personal landing for Arda Karaduman: every
+piece of work he has shipped, of every kind, in one grid. It is the "wild" member
+of the One Bit Forest family (see `/DESIGN-SYSTEM.md` in the parent workspace).
+Read DESIGN.md and PRODUCT.md before changing anything visual.
 
 The site should stay:
 
@@ -34,13 +34,20 @@ boundary. Stay inside this split:
 - **ReScript (`.res`)** — all page sections (`src/components/*.res`), their
   bindings (`src/bindings/*.res`), and all copy/data (`src/content/*Content.res`).
 - **TypeScript (`.tsx`/`.ts`)** — only the interop shell: the entry/provider
-  (`main.tsx`, `App.tsx`, `ThemeProvider.tsx`, `ThemeToggle.tsx`), the React
-  `ErrorBoundary`, the shadcn primitives in `components/ui/` (wrapped by `.res`
-  bindings), and `lib/utils.ts`. Don't grow this layer without a real reason.
+  (`main.tsx`, `App.tsx`, `ThemeProvider.tsx`, `ThemeToggle.tsx`,
+  `TokyoClock.tsx`), the React `ErrorBoundary`, the Radix dropdown in
+  `components/ui/`, `lib/utils.ts`, and `OneBit.tsx`, which mounts the canvas
+  effects (bound for ReScript in `bindings/OneBit.res`). Don't grow this layer
+  without a real reason.
+- **`src/lib/onebit.js`** is the family's shared 1-bit engine, copied verbatim
+  from `design-previews/onebit/onebit.js`. Do not fork it: change the
+  design-previews copy first, then copy it to every site.
 - **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
-  `CatalogContent.res` is the catalogue itself — every entry, its band, its
-  catalogue number. `AboutContent.res` and `FooterContent.res` carry the
-  maker record and back matter. Keep it that way when editing text.
+  `CatalogContent.res` is the catalogue itself: every entry, its band (kind),
+  and its catalogue number (the card's anchor id). `HeroContent.res` carries the
+  status bar, the hero and the section prompts. `AboutContent.res` and
+  `FooterContent.res` carry the record and contact. Keep it that way when
+  editing text.
 - `src/config/site.generated.ts` is generated from `config/site.config.json` by
   `scripts/generate-site-config-module.mjs` (run via the `prepare` hook and the
   build); it is gitignored — edit the JSON, not the generated file.
@@ -70,26 +77,32 @@ mise exec node@24.14.0 -- npm run verify
   - indexed pages
   - section IDs
   - theme metadata
-- `config/themes.json` is the generated, committed theme contract that the
-  sibling sites fetch from raw.githubusercontent.com. Never hand-edit it — run
+- `config/themes.json` is the generated, committed theme contract (v3: the
+  four rendition ids, roles, required tokens and this site's values) that the
+  sibling sites fetch from raw.githubusercontent.com. Never hand-edit it. Run
   `npm run generate:themes-contract` after touching theme CSS or theme
-  metadata (the `theme-contract.yml` workflow fails if it drifts).
+  metadata; the `theme-contract.yml` workflow fails if it drifts.
+  `config/themes.v1.json` is the frozen v1 contract, kept for old readers.
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds.
 - `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only before receiving text. Transport and React Strict Mode regressions run under `npm run verify` with mocked responses.
 
 ## Frontend Guardrails
 
 - Keep the site a single-page experience unless there is a strong reason to add routing.
-- Preserve the current display/sans/mono type system (shared with
-  resume.arda.tr, blog.arda.tr and ai.arda.tr):
-  - `Archivo Narrow` for catalogue headers and entry names (`font-display`)
-  - `Archivo` for descriptions and prose (`font-sans`)
-  - `B612 Mono` for every numeral, label and spec value (`font-mono`)
-- Respect the current visual direction (DESIGN.md is canonical):
-  - zero border-radius, zero shadow, zero translucency
-  - 1px hairline rules carry every structure; nothing floats
-  - band colour encodes kind and nothing else
-  - the only motion is a 120ms tone step on row hover
+- Preserve the family type system (shared with resume.arda.tr, blog.arda.tr
+  and ai.arda.tr):
+  - `Big Shoulders Display` 800–900, uppercase, for the name, section titles
+    and card names (`font-display`)
+  - `IBM Plex Sans` for prose (`font-sans`)
+  - `IBM Plex Mono` for UI, labels, meta and prompts (`font-mono`)
+- Respect the visual direction (DESIGN.md is canonical):
+  - renditions `night` (default), `night-hc`, `xerox`, `xerox-hc`
+  - one signal colour (lichen), radius 0, no shadows, no gradients except the
+    status bar scrim, 1px rules
+  - all imagery is dithered live by `onebit.js`; any text over it sits on a
+    solid `--bg` backing
+  - all motion goes through `onebit.js`, which pauses off-screen and draws a
+    still frame under reduced motion
 - Avoid template bloat and unnecessary dependencies.
 
 ## Accessibility And UX

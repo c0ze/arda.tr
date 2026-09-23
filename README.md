@@ -1,14 +1,15 @@
 # arda.tr
 
-Personal catalogue site for Arda Karaduman.
+Personal landing site for Arda Karaduman, in the family design system "One Bit
+Forest" (see DESIGN.md).
 
-The app is a single-page personal hub with:
+The app is a single page with:
 
-- a featured plate strip with resume, blog, and AI chat CTAs
-- an about section with career background and highlights
-- product, game, and tool showcases
-- a music section with project links
-- footer links for GitHub, LinkedIn, Mastodon, Bluesky, and more
+- a hero, a dithered night forest in parallax, with the status bar and the name
+- Works: every project, game, tool and record in one filterable card grid
+- Record: career background as a spec sheet
+- Contact: email and profile links
+- a floating chat widget backed by ai.arda.tr
 
 ## Stack
 
@@ -68,21 +69,15 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
 ## Frontend Notes
 
 - Typography uses:
-  - `Archivo` for headings
-  - `Manrope` for body copy
-  - `JetBrains Mono` for labels and technical accents
-- Theme state is handled by `next-themes`
+  - `Big Shoulders Display` for headings and names
+  - `IBM Plex Sans` for body copy
+  - `IBM Plex Mono` for UI, labels and meta
+- Theme state is handled by `next-themes`. There are four renditions, listed in
+  `config/site.config.json`: `night` (default), `night-hc`, `xerox` and
+  `xerox-hc`.
+- Canvas imagery and motion come from `src/lib/onebit.js`, the family's shared
+  1-bit engine.
 - The page sections are authored in ReScript and compiled in-source to ignored `.res.mjs` artifacts
-- The current theme palette names live in `config/site.config.json`:
-  - `Ivory`
-  - `Paper`
-  - `Abyss`
-  - `Void`
-  - `Carbon`
-  - `Sakura`
-  - `Amber`
-  - `Ember`
-  - `Steel`
 - The app is intentionally lightweight and avoids a large component framework
 
 ## SEO And Metadata
