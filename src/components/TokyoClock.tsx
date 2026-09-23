@@ -18,8 +18,8 @@ interface TokyoClockProps {
 }
 
 /**
- * A live local time readout for Tokyo, set as a catalogue metadata field —
- * where this catalogue is published from. Updates once a second.
+ * A live local time readout for Tokyo, where this site is made. Sits in the
+ * status bar as `JST hh:mm:ss`. Updates once a second.
  */
 export function TokyoClock({ className = "" }: TokyoClockProps) {
   const [time, setTime] = useState(tokyoNow);
@@ -30,8 +30,8 @@ export function TokyoClock({ className = "" }: TokyoClockProps) {
   }, []);
 
   return (
-    <span className={`cat-label text-muted-foreground ${className}`} title="Local time in Tokyo">
-      TOKYO <span className="text-foreground">{time}</span> JST
+    <span className={className} title="Local time in Tokyo">
+      JST {time}
     </span>
   );
 }

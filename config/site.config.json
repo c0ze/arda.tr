@@ -20,32 +20,35 @@
     "about": "record",
     "contact": "contact"
   },
-  "defaultTheme": "stock",
+  "defaultTheme": "night",
   "themes": [
     {
-      "id": "stock",
-      "name": "Stock",
-      "hint": "catalogue paper",
-      "color": "#F2F1ED"
+      "id": "night",
+      "role": "dark",
+      "name": "Night",
+      "hint": "dark",
+      "color": "#060708"
     },
     {
-      "id": "stock-hc",
-      "name": "Stock HC",
-      "hint": "AAA light",
-      "color": "#FFFFFF"
-    },
-    {
-      "id": "microfiche",
-      "name": "Microfiche",
-      "hint": "film",
-      "color": "#0E0F12"
-    },
-    {
-      "id": "microfiche-hc",
-      "name": "Microfiche HC",
+      "id": "night-hc",
+      "role": "hc-dark",
+      "name": "Night HC",
       "hint": "AAA dark",
       "color": "#000000"
+    },
+    {
+      "id": "xerox",
+      "role": "light",
+      "name": "Xerox",
+      "hint": "light",
+      "color": "#efede6"
+    },
+    {
+      "id": "xerox-hc",
+      "role": "hc-light",
+      "name": "Xerox HC",
+      "hint": "AAA light",
+      "color": "#ffffff"
     }
   ]
 }
-

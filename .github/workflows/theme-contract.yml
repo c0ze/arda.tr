@@ -1,6 +1,6 @@
 name: Theme contract freshness
 
-# config/themes.json is the canonical "Ink & Ledger" theme contract consumed by
+# config/themes.json is the canonical "One Bit Forest" theme contract (v3) read by
 # the sibling sites (blog.arda.tr, resume.arda.tr) via raw.githubusercontent.com.
 # This check fails when the committed contract is stale relative to the theme
 # blocks in src/index.css or the theme menu in config/site.config.json. It is a

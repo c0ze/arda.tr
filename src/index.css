@@ -3,405 +3,451 @@
 @tailwind utilities;
 
 /*
-  ── The Parts Catalogue ───────────────────────────────────────────────────
-  Four renditions of one printed object:
-    Stock       — uncoated cool grey-white catalogue paper (default, light)
-    Stock HC    — the same page printed for maximum legibility (AAA light)
-    Microfiche  — the catalogue photographed onto film (dark)
-    Microfiche HC — a high-contrast fiche reader (AAA dark)
+  ── One Bit Forest ────────────────────────────────────────────────────────
+  The family design system (/DESIGN-SYSTEM.md, adopted 2026-09-23). arda.tr is
+  the wild one: a night forest dithered to one bit, one neon phosphor — lichen —
+  cutting through the monochrome.
 
-  All colors are raw HSL triplets consumed as hsl(var(--x)).
-  See DESIGN.md. Radius is 0 and shadows do not exist, by system rule.
+  Four renditions, same ids on every family site:
+    night     — dark (default)          night-hc — high-contrast dark (AAA)
+    xerox     — light, photocopy paper  xerox-hc — high-contrast light (AAA)
+
+  Colours are hex. --ob-* are read by src/lib/onebit.js every frame, so a
+  rendition switch repaints the canvases immediately. Keep each block a
+  top-level rule: scripts/generate-themes-contract.mjs reads them from here.
 */
 
-/* ── Stock — uncoated catalogue paper (default) ──────────────────────────── */
 :root,
-.stock {
-  --background: 48 16% 94%;
-  --foreground: 240 8% 9%;
-
-  --card: 45 13% 87%;
-  --card-foreground: 240 8% 9%;
-
-  --popover: 48 16% 94%;
-  --popover-foreground: 240 8% 9%;
-
-  /* No brand accent by design: "primary" is ink. Kind is carried by bands. */
-  --primary: 240 8% 9%;
-  --primary-foreground: 48 16% 94%;
-
-  --secondary: 45 13% 87%;
-  --secondary-foreground: 240 8% 9%;
-
-  --muted: 45 13% 87%;
-  --muted-foreground: 240 5% 37%;
-
-  --accent: 45 13% 87%;
-  --accent-foreground: 240 8% 9%;
-
-  --destructive: 358 66% 45%;
-  --destructive-foreground: 48 16% 94%;
-
-  --border: 45 8% 60%;
-  --input: 45 8% 60%;
-  --ring: 240 8% 9%;
-
-  /* Printed rules are black ink at hairline weight: high contrast, low weight.
-     A soft hairline is what makes a page read as web rather than as print. */
-  --rule: 45 8% 58%;
-  /* Opaque — paper is opaque (The No Translucency Rule). */
-  --zebra: 45 13% 91%;
-  --row-hover: 45 13% 85%;
-
-  --radius: 0px;
-
-  /* Band code — IEC 60062 resistor colours, darkened where the printed hue
-     could not clear WCAG 1.4.11 (3:1 non-text) against Stock. Orange, yellow
-     and grey are the three that needed it; colour is this system's only
-     encoding device, so a band that cannot be seen is a band that fails. */
-  --band-1: 27 39% 30%;   /* brown  — systems      */
-  --band-2: 358 66% 45%;  /* red    — products     */
-  --band-3: 27 85% 42%;   /* orange — games        */
-  --band-4: 49 95% 30%;   /* yellow — writing      */
-  --band-5: 138 50% 36%;  /* green  — tools        */
-  --band-6: 215 59% 41%;  /* blue   — recorded     */
-  --band-7: 271 35% 47%;  /* violet — composed     */
-  --band-8: 225 6% 48%;   /* grey   — archived     */
+.night {
+  color-scheme: dark;
+  --bg: #060708;
+  --surface: #0d0f10;
+  --fg: #e4e0d4;
+  --fg-2: #9d998e;
+  --rule: #22252a;
+  --signal: #c6ff3a;
+  --ob-ink: #e4e0d4;
+  --ob-ground: #060708;
+  --ob-signal: #c6ff3a;
 }
 
-/* ── Stock HC — AAA light ────────────────────────────────────────────────── */
-.stock-hc {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 0%;
-
-  --card: 0 0% 96%;
-  --card-foreground: 0 0% 0%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
-
-  --primary: 0 0% 0%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 0%;
-
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 21%;
-
-  --accent: 0 0% 96%;
-  --accent-foreground: 0 0% 0%;
-
-  --destructive: 358 80% 32%;
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 0 0% 25%;
-  --input: 0 0% 25%;
-  --ring: 0 0% 0%;
-
-  --rule: 0 0% 25%;
-  --zebra: 0 0% 94%;
-  --row-hover: 0 0% 88%;
-
-  /* Darkened so every band clears 4.5:1 against white as a filled mark. */
-  --band-1: 27 55% 24%;
-  --band-2: 358 75% 34%;
-  --band-3: 27 90% 30%;
-  --band-4: 49 95% 26%;
-  --band-5: 138 70% 22%;
-  --band-6: 215 75% 32%;
-  --band-7: 271 55% 36%;
-  --band-8: 225 8% 33%;
+.night-hc {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #000000;
+  --fg: #ffffff;
+  --fg-2: #d0cdc4;
+  --rule: #8a8a8a;
+  --signal: #d4ff5c;
+  --ob-ink: #ffffff;
+  --ob-ground: #000000;
+  --ob-signal: #d4ff5c;
 }
 
-/* ── Microfiche — the catalogue on film (dark) ───────────────────────────── */
-.microfiche {
-  --background: 225 13% 6%;
-  --foreground: 225 9% 91%;
-
-  --card: 223 12% 12%;
-  --card-foreground: 225 9% 91%;
-
-  --popover: 223 12% 12%;
-  --popover-foreground: 225 9% 91%;
-
-  --primary: 225 9% 91%;
-  --primary-foreground: 225 13% 6%;
-
-  --secondary: 223 12% 12%;
-  --secondary-foreground: 225 9% 91%;
-
-  --muted: 223 12% 12%;
-  --muted-foreground: 225 5% 62%;
-
-  --accent: 223 12% 12%;
-  --accent-foreground: 225 9% 91%;
-
-  --destructive: 358 70% 62%;
-  --destructive-foreground: 225 13% 6%;
-
-  --border: 224 12% 32%;
-  --input: 224 12% 32%;
-  --ring: 225 9% 91%;
-
-  --rule: 224 12% 32%;
-  --zebra: 223 12% 10%;
-  --row-hover: 223 12% 16%;
-
-  /* Lifted so each band holds against film black. */
-  --band-1: 27 42% 52%;
-  --band-2: 358 72% 62%;
-  --band-3: 27 82% 58%;
-  --band-4: 49 78% 58%;
-  --band-5: 138 45% 52%;
-  --band-6: 215 62% 60%;
-  --band-7: 271 48% 66%;
-  --band-8: 225 7% 62%;
+.xerox {
+  color-scheme: light;
+  --bg: #efede6;
+  --surface: #f7f6f1;
+  --fg: #111210;
+  --fg-2: #5d5b55;
+  --rule: #cfccc2;
+  --signal: #3f5f00;
+  --ob-ink: #111210;
+  --ob-ground: #efede6;
+  --ob-signal: #3f5f00;
 }
 
-/* ── Microfiche HC — AAA dark ────────────────────────────────────────────── */
-.microfiche-hc {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-
-  --card: 0 0% 7%;
-  --card-foreground: 0 0% 100%;
-
-  --popover: 0 0% 7%;
-  --popover-foreground: 0 0% 100%;
-
-  --primary: 0 0% 100%;
-  --primary-foreground: 0 0% 0%;
-
-  --secondary: 0 0% 7%;
-  --secondary-foreground: 0 0% 100%;
-
-  --muted: 0 0% 7%;
-  --muted-foreground: 0 0% 80%;
-
-  --accent: 0 0% 7%;
-  --accent-foreground: 0 0% 100%;
-
-  --destructive: 358 90% 74%;
-  --destructive-foreground: 0 0% 0%;
-
-  --border: 0 0% 62%;
-  --input: 0 0% 62%;
-  --ring: 0 0% 100%;
-
-  --rule: 0 0% 62%;
-  --zebra: 0 0% 7%;
-  --row-hover: 0 0% 14%;
-
-  --band-1: 27 60% 66%;
-  --band-2: 358 90% 74%;
-  --band-3: 27 95% 66%;
-  --band-4: 49 95% 66%;
-  --band-5: 138 60% 64%;
-  --band-6: 215 85% 74%;
-  --band-7: 271 70% 78%;
-  --band-8: 0 0% 76%;
+.xerox-hc {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --fg: #000000;
+  --fg-2: #2e2e2e;
+  --rule: #1a1a1a;
+  --signal: #2b4200;
+  --ob-ink: #000000;
+  --ob-ground: #ffffff;
+  --ob-signal: #2b4200;
 }
 
 @layer base {
   html {
-    /* Catalogues are dense; the base stays modest and grows only a little. */
-    font-size: clamp(93.75%, 0.88rem + 0.22vw, 106.25%);
     scroll-behavior: smooth;
+    background: var(--bg);
   }
 
   * {
-    @apply border-border;
+    @apply border-rule;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    background: var(--bg);
+    color: var(--fg);
+    @apply font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
     overflow-x: hidden;
-    /* The Tabular Figures Rule — numerals align on the digit everywhere. */
-    font-variant-numeric: tabular-nums;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
-    line-height: 1.1;
-    font-weight: 700;
-  }
-
-  /* The Square Corner Rule — no exceptions, including UI primitives. */
+  /* Radius 0 everywhere, no exceptions (UI primitives included). */
   *, *::before, *::after {
     border-radius: 0 !important;
   }
 
   ::selection {
-    background: hsl(var(--foreground));
-    color: hsl(var(--background));
+    background: var(--signal);
+    color: var(--bg);
   }
-
-  ::-webkit-scrollbar { width: 12px; height: 12px; }
-  ::-webkit-scrollbar-track { background: hsl(var(--card)); }
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--rule));
-    border: 3px solid hsl(var(--card));
-  }
-  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
 
   :focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid var(--signal);
     outline-offset: 2px;
+  }
+
+  canvas.px {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
 }
 
 @layer components {
-  /* ── Rules carry every structure. Nothing floats, nothing glows. ───────── */
-  .rule-t { border-top: 1px solid hsl(var(--rule)); }
-  .rule-b { border-bottom: 1px solid hsl(var(--rule)); }
-  .rule-r { border-right: 1px solid hsl(var(--rule)); }
-  .rule-heavy-b { border-bottom: 2px solid hsl(var(--foreground)); }
-
-  /* Catalogue row: zebra banding + a one-step tone lift on hover, which is
-     this form's entire native motion. scroll-margin clears the sticky
-     masthead when a featured plate jumps to its own catalogue number. */
-  .cat-row {
-    border-bottom: 1px solid hsl(var(--rule));
-    scroll-margin-top: 4.5rem;
+  /* ── shared: the prompt line and its blinking block ─────────────────────── */
+  .prompt {
+    font: 14px/1.6 theme("fontFamily.mono");
+    color: var(--fg-2);
+    overflow-wrap: anywhere;
   }
-  .cat-row:nth-child(even) { background: hsl(var(--zebra)); }
-  .cat-row:hover { background: hsl(var(--row-hover)); }
+  .prompt b { color: var(--signal); font-weight: 400; }
+  .prompt .cur {
+    display: inline-block;
+    width: 9px;
+    height: 17px;
+    background: var(--signal);
+    vertical-align: -3px;
+    animation: ob-blink 1.1s steps(1) infinite;
+  }
+  @keyframes ob-blink { 50% { opacity: 0; } }
 
-  /*
-    The listing grid. Desktop is a true seven-column table; below 900px it
-    restacks into a spec card per entry — no column is dropped, they relabel.
-  */
-  .cat-cols {
-    display: grid;
-    grid-template-columns:
-      6.5rem 1.25rem minmax(9rem, 1.05fr) minmax(12rem, 1.6fr)
-      10rem 3.25rem 4.75rem;
-    gap: 0.9rem;
+  .sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin: 18px 0 26px;
+  }
+  .sec-head h2 {
+    font: 900 72px/.9 theme("fontFamily.display");
+    text-transform: uppercase;
+  }
+  .sec-head small {
+    font: 12px/1.5 theme("fontFamily.mono");
+    color: var(--fg-2);
+    text-align: right;
+  }
+
+  /* ── status bar ─────────────────────────────────────────────────────────── */
+  .bar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+    display: flex;
     align-items: center;
-    min-height: 2.75rem;
+    gap: 22px;
+    height: 34px;
+    padding: 0 20px;
+    font: 12px/1 theme("fontFamily.mono");
+    letter-spacing: .02em;
+    color: var(--fg-2);
+    /* the one permitted gradient: a scrim behind text over imagery */
+    background: linear-gradient(var(--bg) 62%, transparent);
   }
-  /* Two lines, hard. A ruled table with ragged row heights stops reading as
-     print, and the description is the only column that can run long. */
-  .cat-row .col-desc {
+  .bar-site { color: var(--fg); display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+  .bar-site i { width: 8px; height: 14px; background: var(--signal); display: inline-block; }
+  .bar-site span { color: var(--fg-2); }
+  .bar nav { display: flex; gap: 16px; }
+  .bar nav a:hover { color: var(--signal); }
+  .bar-sp { flex: 1; }
+  .bar-clock { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rend {
+    border: 1px solid currentColor;
+    padding: 3px 7px;
+    font: inherit;
+    color: var(--fg-2);
+    background: var(--bg);
+    white-space: nowrap;
+  }
+  button.rend:hover { color: var(--signal); }
+
+  /* ── hero ───────────────────────────────────────────────────────────────── */
+  .hero { position: relative; height: 100vh; height: 100svh; min-height: 680px; overflow: hidden; }
+  .hero-forest { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--signal); opacity: .8; }
+  .tick.tl { top: 48px; left: 20px; border-top-width: 1px; border-left-width: 1px; }
+  .tick.tr { top: 48px; right: 20px; border-top-width: 1px; border-right-width: 1px; }
+  .tick.bl { bottom: 20px; left: 20px; border-bottom-width: 1px; border-left-width: 1px; }
+  .tick.br { bottom: 20px; right: 20px; border-bottom-width: 1px; border-right-width: 1px; }
+  .geo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity .3s;
+    font: 11px/1.5 theme("fontFamily.mono");
+    color: var(--signal);
+    white-space: nowrap;
+    background: var(--bg);
+    padding: 3px 7px;
+    pointer-events: none;
+  }
+  .geo::before { content: ""; position: absolute; left: -46px; top: 8px; width: 40px; height: 1px; background: var(--signal); opacity: .7; }
+
+  .ident { position: absolute; left: 40px; top: 66px; right: 40px; max-width: 900px; }
+  .kicker {
+    display: inline-block;
+    font: 12px/1 theme("fontFamily.mono");
+    color: var(--signal);
+    letter-spacing: .04em;
+    margin-bottom: 14px;
+    background: var(--bg);
+    padding: 5px 7px;
+  }
+  .ident h1 {
+    font: 900 clamp(64px, 9.4vw, 150px)/.8 theme("fontFamily.display");
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    color: var(--fg);
+  }
+  .ident h1 span { display: block; }
+  .intro {
+    display: inline-flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 20px 0 0 -40px;
+    padding: 8px 10px 8px 40px;
+    background: var(--bg);
+    font: 15px/1.4 theme("fontFamily.sans");
+    color: var(--fg-2);
+  }
+  .intro b { color: var(--fg); font-weight: 500; }
+  .cta { font: 13px/1 theme("fontFamily.mono"); color: var(--bg); background: var(--signal); padding: 9px 12px; border: 1px solid var(--signal); white-space: nowrap; }
+  .cta.ghost { background: var(--bg); color: var(--signal); }
+  .cta:hover { filter: brightness(1.15); }
+
+  .pagan { position: absolute; right: 40px; bottom: 36px; width: 288px; text-align: right; background: var(--bg); padding: 12px 14px 10px; }
+  .pagan canvas { width: 260px; height: 150px; margin-left: auto; }
+  .pagan p { font: 11px/1.5 theme("fontFamily.mono"); color: var(--fg-2); margin-top: 6px; }
+  .pagan p b { color: var(--fg); font-weight: 500; }
+  .pagan:hover p { color: var(--signal); }
+
+  /* ── works ──────────────────────────────────────────────────────────────── */
+  .works { padding: 70px 40px 90px; border-top: 1px solid var(--rule); }
+  .kinds { display: flex; flex-wrap: wrap; border: 1px solid var(--rule); }
+  .kinds button {
+    font: 12.5px/1 theme("fontFamily.mono");
+    padding: 12px 14px;
+    border-right: 1px solid var(--rule);
+    color: var(--fg-2);
+    display: flex;
+    gap: 10px;
+  }
+  .kinds button em { font-style: normal; opacity: .6; }
+  .kinds button:hover { color: var(--fg); }
+  .kinds button[aria-pressed="true"] { background: var(--signal); color: var(--bg); }
+  .kinds button[aria-pressed="true"] em { opacity: .75; }
+  .kinds button:focus-visible { outline-offset: -4px; outline-color: var(--fg); }
+  .works-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    min-height: 44px;
+    align-items: center;
+    padding: 8px 0 10px;
+    font: 12px/1.4 theme("fontFamily.mono");
+    color: var(--fg-2);
+  }
+  .works-status strong { color: var(--fg); font-weight: 400; }
+  .works-status button { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
+
+  .grid-works { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .card {
+    position: relative;
+    background: var(--bg);
+    padding: 14px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: background .2s;
+    scroll-margin-top: 24px;
+  }
+  .card:hover, .card:focus-within { background: var(--surface); }
+  .card-img { position: relative; aspect-ratio: 16 / 10; background: var(--bg); overflow: hidden; }
+  .card-img canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hex, .pin { position: absolute; top: 8px; font: 11px/1 theme("fontFamily.mono"); background: var(--bg); padding: 3px 5px; }
+  .hex { left: 8px; color: var(--fg); }
+  .pin { right: 8px; color: var(--signal); border: 1px solid var(--signal); }
+  .card h3 { font: 800 30px/.95 theme("fontFamily.display"); text-transform: uppercase; letter-spacing: .005em; overflow-wrap: anywhere; }
+  .card-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+  .card-link:focus-visible { outline: none; }
+  .card-link:focus-visible::after { outline: 2px solid var(--signal); outline-offset: -2px; }
+  .card:hover .card-link { color: var(--signal); }
+  .note {
+    font: 13.5px/1.45 theme("fontFamily.sans");
+    color: var(--fg-2);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  @media (max-width: 1023.98px) {
-    .cat-cols {
-      grid-template-columns: 1.25rem 1fr auto;
-      gap: 0.5rem 0.7rem;
-      align-items: start;
-      padding-top: 0.85rem;
-      padding-bottom: 0.85rem;
-    }
-    /* label: value pairs carry the column meaning once the header is gone */
-    .cat-cols > .col-band { grid-column: 1 / 2; grid-row: 1; order: 0; margin-top: 0.15rem; }
-    .cat-cols > .col-cat { grid-column: 2 / 3; order: 1; }
-    .cat-cols > .col-name { grid-column: 2 / 4; order: 2; }
-    .cat-cols > .col-desc { grid-column: 2 / 4; order: 3; }
-    .cat-cols > .col-spec { grid-column: 2 / 3; order: 4; white-space: normal; }
-    .cat-cols > .col-year { grid-column: 2 / 3; order: 5; }
-    .cat-cols > .col-status { grid-column: 3 / 4; grid-row: 1; order: 6; justify-self: end; }
-    .cat-head { display: none; }
-  }
+  .meta { margin-top: auto; display: flex; justify-content: space-between; gap: 10px; font: 11.5px/1 theme("fontFamily.mono"); color: var(--fg-2); }
+  .meta-r { display: flex; gap: 12px; }
+  .st.live { color: var(--signal); }
+  .st.live::before { content: "● "; }
+  .src { position: relative; z-index: 2; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
+  .src:hover { color: var(--signal); }
 
-  /*
-    Column labels. Visible as `label: value` pairs once the header strip is
-    gone on small screens; still announced to screen readers on desktop, where
-    the visible header is decorative. display:none would strand desktop
-    screen-reader users with seven unlabelled values.
-  */
-  @media (min-width: 1024px) {
-    .col-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
-    }
-  }
+  /* ── record ─────────────────────────────────────────────────────────────── */
+  .record { padding: 70px 40px 90px; border-top: 1px solid var(--rule); }
+  .record-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border: 1px solid var(--rule); }
+  .spec { border-right: 1px solid var(--rule); }
+  .spec div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 16px; padding: 11px 16px; border-bottom: 1px solid var(--rule); }
+  .spec div:last-child { border-bottom: 0; }
+  .spec dt { font: 12px/1.6 theme("fontFamily.mono"); color: var(--fg-2); }
+  .spec dt::after { content: ":"; }
+  .spec dd { font: 14.5px/1.5 theme("fontFamily.sans"); color: var(--fg); }
+  .spec dd.mono { font: 12.5px/1.7 theme("fontFamily.mono"); color: var(--fg-2); }
+  .bio { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .bio p { font: 15.5px/1.65 theme("fontFamily.sans"); color: var(--fg-2); max-width: 64ch; }
+  .bio p strong { color: var(--fg); font-weight: 500; }
+  .bio-prompt { font: 12px/1 theme("fontFamily.mono"); color: var(--signal); }
 
-  /* Column header strip. */
-  .cat-head {
-    background: hsl(var(--card));
-    border-bottom: 1px solid hsl(var(--rule));
-    @apply font-mono uppercase text-muted-foreground;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
+  /* ── contact ────────────────────────────────────────────────────────────── */
+  .foot { border-top: 1px solid var(--rule); }
+  .foot-tl { width: 100%; height: 66px; }
+  .foot-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 14px 40px;
+    /* bottom padding clears the fixed chat launcher */
+    padding: 20px 40px 72px;
+    background: var(--fg);
+    color: var(--bg);
+    font: 12px/1.6 theme("fontFamily.mono");
   }
+  .foot-bar h2 { font: 900 30px/.95 theme("fontFamily.display"); text-transform: uppercase; margin-bottom: 10px; }
+  .foot-bar ul { display: flex; flex-wrap: wrap; gap: 4px 0; }
+  .foot-bar li:not(:last-child)::after { content: "·"; padding: 0 8px; opacity: .6; }
+  .foot-bar a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .foot-bar a:hover { text-decoration-thickness: 2px; }
+  .foot-bar :focus-visible { outline-color: var(--bg); }
+  .foot-bar .colophon { text-align: right; opacity: .8; }
 
-  /* The band mark. Always paired with a text label for a11y — colour is
-     never the sole signal. */
-  .band-mark {
-    width: 0.875rem;
-    height: 0.875rem;
-    display: inline-block;
-    background: hsl(var(--band));
-    flex: none;
+  /* ── chat ───────────────────────────────────────────────────────────────── */
+  .chat-launch {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 12px 0 8px;
+    background: var(--bg);
+    border: 1px solid var(--signal);
+    color: var(--signal);
+    font: 12.5px/1 theme("fontFamily.mono");
   }
-
-  /* Status / link chip. */
-  .cat-chip {
-    border: 1px solid hsl(var(--rule));
-    @apply font-mono uppercase inline-block text-center;
-    font-size: 0.625rem;
-    letter-spacing: 0.08em;
-    padding: 0.2rem 0.4rem;
-    transition: background 0.12s linear, color 0.12s linear;
+  .chat-launch canvas { width: 24px; height: 24px; }
+  .chat-launch:hover { background: var(--surface); }
+  .chat {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 50;
+    width: 25rem;
+    max-height: min(80vh, 640px);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    color: var(--fg);
   }
-  a.cat-chip:hover,
-  a.cat-chip:focus-visible {
-    background: hsl(var(--foreground));
-    color: hsl(var(--background));
-    border-color: hsl(var(--foreground));
-  }
-
-  /* Mono label used for column heads, kind names, rail text, metadata. */
-  .cat-label {
-    @apply font-mono uppercase;
-    font-size: 0.625rem;
-    letter-spacing: 0.09em;
-  }
+  .chat-head { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; border-bottom: 1px solid var(--rule); }
+  .chat-head canvas { width: 44px; height: 44px; flex: none; }
+  .chat-head p:first-child { font: 900 24px/.9 theme("fontFamily.display"); text-transform: uppercase; }
+  .chat-head p + p { font: 11px/1.5 theme("fontFamily.mono"); color: var(--fg-2); margin-top: 4px; }
+  .chat-x { margin-left: auto; align-self: flex-start; width: 32px; height: 32px; border: 1px solid var(--rule); color: var(--fg-2); font: 14px/1 theme("fontFamily.mono"); }
+  .chat-x:hover { color: var(--signal); border-color: var(--signal); }
+  .chat-log { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 16px; }
+  .msg-who { font: 11px/1.4 theme("fontFamily.mono"); color: var(--fg-2); margin-bottom: 4px; }
+  .msg.bot .msg-who { color: var(--signal); }
+  .msg-txt { font: 14.5px/1.6 theme("fontFamily.sans"); overflow-wrap: anywhere; }
+  .msg.you .msg-txt { white-space: pre-wrap; color: var(--fg-2); }
+  .msg.err .msg-txt { color: var(--fg); border-left: 2px solid var(--signal); padding-left: 10px; white-space: pre-wrap; }
+  .msg-txt strong { color: var(--fg); }
+  .cursor { display: inline-block; width: 10px; height: 18px; vertical-align: -3px; margin-left: 3px; }
+  .qp { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .qp button { font: 12px/1.3 theme("fontFamily.mono"); border: 1px solid var(--rule); padding: 8px 10px; color: var(--fg-2); text-align: left; }
+  .qp button:hover { border-color: var(--signal); color: var(--signal); }
+  .qp button em { font-style: normal; opacity: .6; margin-right: 8px; }
+  .chat-form { display: flex; align-items: center; gap: 10px; margin: 0 12px 12px; border: 1px solid var(--rule); padding: 0 6px 0 12px; }
+  .chat-form:focus-within { border-color: var(--signal); }
+  .chat-form b { color: var(--signal); font: 14px/1 theme("fontFamily.mono"); font-weight: 400; }
+  .chat-form input { flex: 1; min-width: 0; background: transparent; border: 0; padding: 13px 0; font: 14px/1 theme("fontFamily.mono"); color: var(--fg); caret-color: var(--signal); }
+  .chat-form input::placeholder { color: var(--fg-2); }
+  .chat-form input:focus-visible { outline: none; }
+  .chat-form input:disabled { opacity: .6; }
+  .chat-send { font: 12px/1 theme("fontFamily.mono"); color: var(--bg); background: var(--signal); padding: 8px 10px; }
+  .chat-send:disabled { background: transparent; color: var(--fg-2); }
+  .chat-hint { font: 10.5px/1.4 theme("fontFamily.mono"); color: var(--fg-2); padding: 0 14px 12px; margin-top: -4px; }
 }
 
-@layer utilities {
-  /* Vertical rail lettering for the bleed tabs. */
-  .writing-vertical {
-    writing-mode: vertical-rl;
-  }
+/* ── narrow screens ─────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .grid-works { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .geo { display: none; }
+  .record-grid { grid-template-columns: minmax(0, 1fr); }
+  .spec { border-right: 0; border-bottom: 1px solid var(--rule); }
+  /* On a phone the ridge climbs behind the name: give each line solid backing. */
+  .ident h1 span { display: table; background: var(--bg); padding-right: .05em; }
+}
+@media (max-width: 700px) {
+  .bar { gap: 14px; padding: 0 12px; font-size: 11px; }
+  .bar nav { gap: 11px; }
+  .bar-site span, .bar-clock { display: none; }
+  .tick { display: none; }
+  .ident { left: 16px; right: 16px; top: 58px; }
+  .ident h1 { font-size: clamp(52px, 16.5vw, 96px); }
+  .intro { display: flex; margin: 20px -16px 0; padding: 10px 16px; }
+  .pagan { right: 16px; bottom: 16px; width: 196px; padding: 10px 12px 8px; }
+  .pagan canvas { width: 172px; height: 99px; }
+  .works, .record { padding: 48px 16px 64px; }
+  .sec-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .sec-head h2 { font-size: 52px; }
+  .sec-head small { text-align: left; }
+  .kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); }
+  .kinds button { border-right: 0; background: var(--bg); justify-content: space-between; }
+  .spec div { grid-template-columns: 6rem minmax(0, 1fr); gap: 12px; padding: 10px 12px; }
+  .bio { padding: 16px 12px; }
+  .foot-bar { padding: 18px 16px 72px; }
+  .foot-bar .colophon { text-align: left; }
+  .chat { left: 0; right: 0; bottom: 0; width: auto; max-height: 85vh; border-width: 1px 0 0; }
+}
+@media (max-width: 560px) {
+  .grid-works { grid-template-columns: minmax(0, 1fr); }
+  .chat-launch span { display: none; }
+  .chat-launch { padding: 0 8px; }
 }
 
-/*
-  Reduced motion: the only motion in this system is a 120ms tone change and
-  smooth anchor scrolling, but honour the preference regardless.
-*/
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
   html { scroll-behavior: auto; }
-}
-
-/*
-  Light-on-transparent logos (the Pagan wordmark) vanish on paper grounds.
-  Invert them there so they read against the stock.
-*/
-.stock .theme-invert-logo,
-.stock-hc .theme-invert-logo {
-  filter: invert(1);
+  .prompt .cur { animation: none; }
+  .card, .geo { transition: none; }
 }
