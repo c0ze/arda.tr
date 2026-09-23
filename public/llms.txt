@@ -1,10 +1,10 @@
 # Arda Karaduman
 
-> arda.tr is the personal catalogue of Arda Karaduman — a Systems Architect and pragmatic programmer in Tokyo, where he has lived since 2004. One flat table of systems, products, games, writing, tools, and music, plus resume, blog, and AI chat.
+> arda.tr is the personal catalogue of Arda Karaduman — a Systems Architect and pragmatic programmer in Tokyo, where he has lived since 2004. One grid of systems, products, games, writing, tools, and music, plus resume, blog, and AI chat.
 
 ## Sections
 
-- [Catalogue](https://arda.tr/#catalogue): The full catalogue — systems, products, games, writing, tools, and music in one table
+- [Catalogue](https://arda.tr/#catalogue): The full catalogue — systems, products, games, writing, tools, and music in one grid
 - [Record](https://arda.tr/#record): Career background — Systems Architect at Veltra, Keio University, earlier roles
 - [Contact](https://arda.tr/#contact): Email and social links
 
