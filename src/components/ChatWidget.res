@@ -9,16 +9,16 @@
 let launcherLabel = "Ask about Arda"
 let titleLabel = "Ask about Arda"
 let closeLabel = "Close"
-let greeting = "Hi! I'm Arda's AI assistant — ask me anything about his work, projects, or background."
+let greeting = "Arda's AI assistant. Ask about his work, projects or background."
 let placeholder = "Ask a question…"
 let sendLabel = "Send"
 let thinkingLabel = "Thinking…"
-let errorLabel = "I couldn't reach the assistant just now — please try again in a moment."
-let suggestions = ["What does Arda build?", "Tell me about his projects", "What's his background?"]
+let errorLabel = "I couldn't reach the assistant. Try again in a moment."
+let suggestions = ["What does Arda build?", "Where has he worked?", "What's his background?"]
 let botLabel = "construct"
 let youLabel = "you"
 let modelLabel = "ai · gemini"
-let hintLabel = "arda's ai can make mistakes. verify important information."
+let hintLabel = "answers can be wrong. check anything important."
 let sendText = "enter ↵"
 let inputLabel = "Your question"
 

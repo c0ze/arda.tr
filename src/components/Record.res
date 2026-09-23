@@ -21,7 +21,6 @@ let make = () => {
     <div className="record-grid">
       <dl className="spec">
         {row("Name", AboutContent.recordName)}
-        {row("Title", AboutContent.recordTitle)}
         {AboutContent.facts->Array.map(f => row(f.label, f.value))->React.array}
         {row("Languages", AboutContent.recordLanguages)}
         {row("Stack", AboutContent.tech->Array.join(" · "), ~mono=true)}

@@ -21,24 +21,24 @@ let description = "A pragmatic programmer who enjoys tinkering, hacking, and exp
 
 let bio: array<array<segment>> = [
   [
-    {text: "I've been living in ", emphasis: false},
+    {text: "I've lived in ", emphasis: false},
     {text: "Japan since 2004", emphasis: true},
     {
-      text: ", where I earned my Master's degree in Computer Science from Keio University (2006-2008). I also pursued PhD studies in Embedded Processor Design and Optimization from 2008-2011.",
+      text: ". M.Sc. in Computer Science at Keio University (2006–2008), then PhD studies in embedded processor design and optimization (2008–2011).",
       emphasis: false,
     },
   ],
   [
-    {text: "With over ", emphasis: false},
-    {text: "15 years of professional experience", emphasis: true},
+    {text: "Over ", emphasis: false},
+    {text: "15 years of professional work", emphasis: true},
     {
-      text: ", I've worked across the full technology stack - from embedded systems to cloud architecture. Currently serving as a Systems Architect at Veltra since 2024, I specialize in integrating legacy applications with AI using MCP and building scalable infrastructure solutions.",
+      text: ", from embedded systems to cloud architecture. Since 2024 I've been Systems Architect at Veltra, integrating legacy applications with AI over MCP and building infrastructure.",
       emphasis: false,
     },
   ],
   [
     {
-      text: "My journey has taken me through various roles at companies like Gaussy, Robotfund, and Mobilous, always focusing on pragmatic solutions and continuous learning.",
+      text: "Before that: Gaussy, Robotfund and Mobilous.",
       emphasis: false,
     },
   ],
@@ -99,5 +99,4 @@ let tech = [
 // all copy to sit in *Content.res so text edits never touch layout.
 let recordCat = "AK 0-0001"
 let recordName = "Arda Karaduman"
-let recordTitle = "Systems Architect & Pragmatic Programmer"
 let recordLanguages = "Turkish (native) · English (near-native) · Japanese (business)"

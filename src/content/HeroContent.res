@@ -20,15 +20,15 @@ let nav: array<link> = [
 
 let kicker = "// systems architect · tokyo since 2004"
 let nameLines = ["Arda", "Karaduman"]
-let introLead = "Programmer"
-let introRest = " by trade. Black metal, old machines and pine forests by choice."
+let introLead = "Software, games and black metal."
+let introRest = " Day job: legacy systems and AI at Veltra."
 let worksCta = "ls ~/works ↓"
 let askCta = "ask"
 let askLabel = "Ask Arda's AI"
 
 // The tag that follows the radio mast on the ridge.
 let mastCoords = "35.6518°N 139.5446°E"
-let mastPlace = "調布 · CHOFU · RX ACTIVE"
+let mastPlace = "調布 · CHOFU · TOKYO"
 
 let paganName = "PAGAN"
 let paganNote = "atmospheric black metal"
@@ -38,5 +38,5 @@ let paganImage = "/pagan.webp"
 
 // Shell prompts that open each section.
 let shellPrompt = "arda@chofu:~$"
-let worksTagline = "indexed in hex, as god intended"
+let worksTagline = "numbered in hex from 0x00"
 let recordCommand = "cat ~/record"

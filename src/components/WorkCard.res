@@ -47,7 +47,7 @@ let make = (~entry: CatalogContent.entry, ~index: int) => {
         <span className={live ? "st live" : "st"}>
           {entry.status->String.toLowerCase->React.string}
           {primary == ""
-            ? <span className="sr-only"> {" — no public link"->React.string} </span>
+            ? <span className="sr-only"> {" (no public link)"->React.string} </span>
             : React.null}
         </span>
         {entry.repo != "" && entry.href != ""

@@ -46,8 +46,8 @@ let socialLinks: array<socialLink> = [
 
 // Closing call-to-action.
 let ctaEyebrow = "07 — Contact"
-let ctaTitle = "Let's build something worth shipping."
-let ctaText = "Open to interesting problems, collaborations, and the occasional jam session."
+let ctaTitle = "Contact"
+let ctaText = "Open to collaborations, in code or music."
 let ctaButtonLabel = "Say hello"
 let ctaButtonHref = "mailto:arda@karaduman.org"
-let builtNote = "built in tokyo, rendered in one bit"
+let builtNote = "made in tokyo with rescript and react"
