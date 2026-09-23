@@ -208,9 +208,11 @@ let revealPrefix: (string, int) => string = %raw(`
     var s = text.slice(0, n);
     var last = s.charCodeAt(s.length - 1);
     if (last >= 0xd800 && last <= 0xdbff) s = s.slice(0, -1);
+    if (s.endsWith("*") && text.charAt(s.length) === "*") s = s.slice(0, -1); // half a ** marker
     s = s.replace(/\[([^\]\n]*)(\]\([^)\n]*)?$/, "$1");
-    if ((s.match(/\*\*/g) || []).length % 2) s += "**";
-    if ((s.match(/\`/g) || []).length % 2) s += "\`";
+    // an opener with nothing after it yet is dropped, not closed: "**" + "**" would show as "****"
+    if ((s.match(/\*\*/g) || []).length % 2) s = s.endsWith("**") ? s.slice(0, -2) : s + "**";
+    if ((s.match(/\`/g) || []).length % 2) s = s.endsWith("\`") ? s.slice(0, -1) : s + "\`";
     return s;
   }
 `)
