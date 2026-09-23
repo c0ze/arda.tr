@@ -44,13 +44,10 @@ let socialLinks: array<socialLink> = [
   },
 ]
 
-let themeAttributionLabel = "Dracula Pro"
-let themeAttributionHref = "https://draculatheme.com/pro"
-
 // Closing call-to-action.
 let ctaEyebrow = "07 — Contact"
 let ctaTitle = "Let's build something worth shipping."
 let ctaText = "Open to interesting problems, collaborations, and the occasional jam session."
 let ctaButtonLabel = "Say hello"
 let ctaButtonHref = "mailto:arda@karaduman.org"
-let builtNote = "Built in Tokyo"
+let builtNote = "built in tokyo, rendered in one bit"

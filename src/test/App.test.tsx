@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import App from "@/App";
 import * as Catalog from "@/content/CatalogContent.res.mjs";
 
@@ -9,108 +9,118 @@ const entries = Catalog.entries as {
   band: number;
   featured: boolean;
   href: string;
+  repo: string;
 }[];
 const kinds = Catalog.kinds as { band: number; name: string }[];
+const anchor = (cat: string) => cat.replace(/ /g, "-");
+const listing = () => document.getElementById("catalogue-listing")!;
+const kindButton = (name: string) => screen.getByRole("button", { name: new RegExp(`^${name.toLowerCase()}/ \\d\\d$`) });
 
 describe("App", () => {
-  it("renders the catalogue masthead and the featured plate", () => {
+  it("names the page once, in the hero, with the status bar around it", () => {
     render(<App />);
 
-    // Exactly one h1, and it names the document — the page had none before.
+    // Exactly one h1, and it is the person the page is about.
     const h1s = screen.getAllByRole("heading", { level: 1 });
     expect(h1s).toHaveLength(1);
-    expect(h1s[0]).toHaveTextContent(/arda\s*\.tr/i);
+    expect(h1s[0]).toHaveTextContent(/Arda\s+Karaduman/);
 
     expect(screen.getByRole("button", { name: "Select rendition" })).toBeInTheDocument();
-    // The featured entries lead the page at plate scale.
-    expect(screen.getByRole("heading", { level: 3, name: "SUDONE" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Pagan" })).toBeInTheDocument();
-    // The key is printed, so the band code is legible to a first-time visitor.
-    expect(screen.getByRole("heading", { name: /Key — band code/ })).toBeInTheDocument();
-  });
-
-  it("names the featured plate image links after their entry, not their figure number", () => {
-    render(<App />);
-
-    // The image alt is empty and "Fig. N" is decorative, so without an explicit
-    // label these links announce as "Fig. 1" and say nothing about where they go.
-    for (const e of entries.filter((x) => x.featured)) {
-      // Two links point at each plate — the image and the title. The image one
-      // is the one that would otherwise be nameless; find it by its label.
-      const imageLink = screen.getByRole("link", { name: new RegExp(`^${e.name} — .+, .+$`) });
-      expect(imageLink).toHaveAttribute("href", e.href);
-      expect(imageLink.querySelector("img")).not.toBeNull();
-    }
-    expect(screen.queryByRole("link", { name: /^Fig\. \d$/ })).not.toBeInTheDocument();
-  });
-
-  it("gives every featured plate a working in-page anchor to its own row", () => {
-    render(<App />);
-
-    for (const e of entries.filter((x) => x.featured)) {
-      const cite = screen.getByRole("link", { name: `See cat. ${e.cat} ↓` });
-      expect(cite).toHaveAttribute("href", `#${e.cat.replace(/ /g, "-")}`);
-      // ...and the target actually exists.
-      expect(document.getElementById(e.cat.replace(/ /g, "-"))).not.toBeNull();
+    expect(screen.getByRole("link", { name: "ls ~/works ↓" })).toHaveAttribute("href", "#catalogue");
+    // llms.txt deep-links these three sections.
+    for (const id of ["catalogue", "record", "contact"]) {
+      expect(document.getElementById(id)).not.toBeNull();
     }
   });
 
-  it("lists every entry, of every kind, in one table", () => {
+  it("lists every entry, of every kind, as a card with its own heading and anchor", () => {
     render(<App />);
 
-    // The thesis: one flat listing, no per-kind territories. Every catalogue
-    // number must be present on first paint.
-    for (const entry of entries) {
-      expect(screen.getByText(entry.cat)).toBeInTheDocument();
+    // The thesis: one flat listing. Every entry is present on first paint, and
+    // its catalogue-number id survives so old deep links (#AK-2-0142) land.
+    for (const e of entries) {
+      expect(screen.getByRole("heading", { level: 3, name: e.name })).toBeInTheDocument();
+      const card = document.getElementById(anchor(e.cat));
+      expect(card).not.toBeNull();
+      expect(within(card!).getByRole("heading", { level: 3 })).toHaveTextContent(e.name);
     }
-    expect(screen.getByText(`all ${entries.length} entries, every kind, one table`)).toBeInTheDocument();
+    expect(within(listing()).getAllByRole("article")).toHaveLength(entries.length);
   });
 
-  it("pairs every band mark with its kind name for screen readers", () => {
+  it("links each card to its site, and to its source when it has both", () => {
     render(<App />);
 
-    // Colour is never the sole signal — DESIGN.md, The One Band Rule.
-    for (const kind of kinds) {
-      const inKind = entries.filter((e) => e.band === kind.band).length;
-      if (inKind > 0) {
-        expect(screen.getAllByText(`Kind: ${kind.name}`).length).toBe(inKind);
+    for (const e of entries) {
+      const card = document.getElementById(anchor(e.cat))!;
+      const primary = e.href || e.repo;
+      if (primary) {
+        expect(within(card).getByRole("link", { name: e.name })).toHaveAttribute("href", primary);
+      } else {
+        expect(within(card).queryByRole("link", { name: e.name })).toBeNull();
       }
+      const src = within(card).queryByRole("link", { name: `Source for ${e.name}` });
+      if (e.href && e.repo) expect(src).toHaveAttribute("href", e.repo);
+      else expect(src).toBeNull();
     }
   });
 
-  it("clears an active filter when a featured plate cites its own row", () => {
+  it("marks featured entries in place instead of repeating them", () => {
     render(<App />);
 
-    // Filter to Games, which unmounts SUDONE's row...
-    const facet = screen
-      .getAllByRole("button")
-      .find((b) => /Band 3/.test(b.textContent ?? "") && /originals & ports/.test(b.textContent ?? ""));
-    fireEvent.click(facet!);
-    expect(screen.queryByText("AK 2-0142")).not.toBeInTheDocument();
+    for (const e of entries) {
+      const card = document.getElementById(anchor(e.cat))!;
+      expect(within(card).queryByText("featured") !== null).toBe(e.featured);
+    }
+  });
 
-    // ...then cite it from the featured strip. The anchor would point at a
-    // node that is not in the DOM unless the citation clears the filter.
-    fireEvent.click(screen.getByRole("link", { name: "See cat. AK 2-0142 ↓" }));
-    expect(screen.getByText("AK 2-0142")).toBeInTheDocument();
+  it("filters the listing by kind, announces it, and clears again", () => {
+    render(<App />);
+
+    const games = kinds.find((k) => k.band === 3)!;
+    const button = kindButton(games.name);
+    expect(button).toHaveAttribute("aria-pressed", "false");
+    expect(button).toHaveAttribute("aria-controls", "catalogue-listing");
+
+    fireEvent.click(button);
+
+    expect(button).toHaveAttribute("aria-pressed", "true");
+    const inKind = entries.filter((e) => e.band === 3);
+    expect(within(listing()).getAllByRole("article")).toHaveLength(inKind.length);
+    expect(document.getElementById("AK-2-0142")).toBeNull();
+    expect(document.getElementById("AK-3-0088")).not.toBeNull();
+    // The status line is a live region, so the new count is announced.
+    const status = screen.getByText(/showing/).closest("[aria-live]");
+    expect(status).toHaveAttribute("aria-live", "polite");
+    expect(status).toHaveTextContent(`showing ${String(inKind.length).padStart(2, "0")} of ${entries.length}`);
+
+    fireEvent.click(screen.getByRole("button", { name: "clear filter" }));
+    expect(button).toHaveAttribute("aria-pressed", "false");
+    expect(within(listing()).getAllByRole("article")).toHaveLength(entries.length);
     expect(document.getElementById("AK-2-0142")).not.toBeNull();
   });
 
-  it("filters the listing by band and clears again", () => {
+  it("toggles a kind off again, and `*` shows every kind", () => {
     render(<App />);
 
-    // The facet row and the tab rail drive the same state; both expose a
-    // button per band, so scope to the facet row's richer label.
-    const facet = screen
-      .getAllByRole("button")
-      .find((b) => /Band 3/.test(b.textContent ?? "") && /originals & ports/.test(b.textContent ?? ""));
-    expect(facet).toBeDefined();
+    const all = screen.getByRole("button", { name: /all kinds/ });
+    expect(all).toHaveAttribute("aria-pressed", "true");
+    const tools = kindButton(kinds.find((k) => k.band === 5)!.name);
 
-    fireEvent.click(facet!);
+    fireEvent.click(tools);
+    expect(all).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(tools);
+    expect(all).toHaveAttribute("aria-pressed", "true");
 
-    expect(screen.queryByText("AK 2-0142")).not.toBeInTheDocument();
-    expect(screen.getByText("AK 3-0088")).toBeInTheDocument();
+    fireEvent.click(tools);
+    fireEvent.click(all);
+    expect(within(listing()).getAllByRole("article")).toHaveLength(entries.length);
+  });
 
-    fireEvent.click(screen.getByRole("button", { name: "Clear filter ×" }));
-    expect(screen.getByText("AK 2-0142")).toBeInTheDocument();
+  it("opens the chat from the hero's ask button", () => {
+    render(<App />);
+
+    expect(screen.queryByRole("dialog", { name: "Ask about Arda" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Ask Arda's AI" }));
+    expect(screen.getByRole("dialog", { name: "Ask about Arda" })).toBeInTheDocument();
   });
 });
