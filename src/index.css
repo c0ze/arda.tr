@@ -383,6 +383,12 @@
   .chat-head p + p { font: 11px/1.5 theme("fontFamily.mono"); color: var(--fg-2); margin-top: 4px; }
   .chat-x { margin-left: auto; align-self: flex-start; width: 32px; height: 32px; border: 1px solid var(--rule); color: var(--fg-2); font: 14px/1 theme("fontFamily.mono"); }
   .chat-x:hover { color: var(--signal); border-color: var(--signal); }
+  /* Voice toggle: ♪ on / ♪ off. Muted dims it, like the toggle on ai.arda.tr. */
+  .chat-voice { margin-left: auto; align-self: flex-start; height: 32px; min-width: 7ch; padding: 0 8px; border: 1px solid var(--fg-2); color: var(--fg); font: 12px/1 theme("fontFamily.mono"); white-space: nowrap; }
+  .chat-voice + .chat-x { margin-left: 0; }
+  .chat-voice .voice-word { margin-left: .5ch; }
+  .chat-voice[aria-pressed="false"] { border-color: var(--rule); color: var(--fg-2); }
+  .chat-voice:hover { color: var(--signal); border-color: var(--signal); }
   .chat-log { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 16px; }
   .msg-who { font: 11px/1.4 theme("fontFamily.mono"); color: var(--fg-2); margin-bottom: 4px; }
   .msg.bot .msg-who { color: var(--signal); }
@@ -390,7 +396,7 @@
   .msg.you .msg-txt { white-space: pre-wrap; color: var(--fg-2); }
   .msg.err .msg-txt { color: var(--fg); border-left: 2px solid var(--signal); padding-left: 10px; white-space: pre-wrap; }
   .msg-txt strong { color: var(--fg); }
-  .cursor { display: inline-block; width: 10px; height: 18px; vertical-align: -3px; margin-left: 3px; }
+  .px.cursor { display: inline-block; width: 10px; height: 18px; vertical-align: -3px; margin-left: 3px; }
   .qp { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
   .qp button { font: 12px/1.3 theme("fontFamily.mono"); border: 1px solid var(--rule); padding: 8px 10px; color: var(--fg-2); text-align: left; }
   .qp button:hover { border-color: var(--signal); color: var(--signal); }
@@ -443,6 +449,9 @@
 @media (max-width: 560px) {
   .grid-works { grid-template-columns: minmax(0, 1fr); }
   .chat-launch span { display: none; }
+  .chat-voice { min-width: 0; }
+  .chat-voice .voice-word { display: none; }
+  .chat-voice[aria-pressed="false"] .voice-glyph { text-decoration: line-through; }
   .chat-launch { padding: 0 8px; }
 }
 

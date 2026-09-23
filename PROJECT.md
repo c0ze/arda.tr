@@ -42,6 +42,10 @@ boundary. Stay inside this split:
 - **`src/lib/onebit.js`** is the family's shared 1-bit engine, copied verbatim
   from `design-previews/onebit/onebit.js`. Do not fork it: change the
   design-previews copy first, then copy it to every site.
+- **`src/lib/voice.js`** is the family's shared spoken-reply client (types in
+  `voice.d.ts`, bound for ReScript in `bindings/Voice.res`), copied verbatim
+  from `design-previews/onebit/voice.js` under the same rule. Its header
+  documents the SSE voice protocol.
 - **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
   `CatalogContent.res` is the catalogue itself: every entry, its band (kind),
   and its catalogue number (the card's anchor id). `HeroContent.res` carries the
@@ -84,7 +88,7 @@ mise exec node@24.14.0 -- npm run verify
   metadata; the `theme-contract.yml` workflow fails if it drifts.
   `config/themes.v1.json` is the frozen v1 contract, kept for old readers.
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds.
-- `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only before receiving text. Transport and React Strict Mode regressions run under `npm run verify` with mocked responses.
+- `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only before receiving text. The stream deadline is 45 s without data. Unless muted, requests carry `voice: true, lang: "en"` (from `voice.js` `requestFields`); one speaker per reply gates the visible text to what has been spoken, drives the orb's `level`, and is stopped on close, on a new question and on mute. The header's ♪ "Voice" toggle persists the choice site-wide (localStorage `voice`). Transport and React Strict Mode regressions run under `npm run verify` with mocked responses. `ChatWidget.voice.test.tsx` covers the voice path with a fake AudioContext and mocked speech events.
 
 ## Frontend Guardrails
 

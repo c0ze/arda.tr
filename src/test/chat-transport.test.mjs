@@ -10,8 +10,9 @@ const end = source.search(/(?:var|let|const) scrollToBottom =/);
 assert.ok(start >= 0 && end > start, 'compiled chat transport boundaries must exist');
 const transport = source.slice(start, end) + '\nthis.postChat = postChat; this.postChatStream = postChatStream;';
 
-async function request(parts, { method = 'postChatStream', ok = true, timeout = false } = {}) {
+async function request(parts, { method = 'postChatStream', ok = true, timeout = false, extra, onEvent } = {}) {
   const events = [];
+  let body;
   let cancelled = 0;
   let deadline;
   let signal;
@@ -27,6 +28,7 @@ async function request(parts, { method = 'postChatStream', ok = true, timeout = 
     clearTimeout() {},
     fetch(_url, options) {
       signal = options.signal;
+      body = JSON.parse(options.body);
       if (timeout) return new Promise((_resolve, reject) => {
         signal.addEventListener('abort', () => reject(new Error('aborted')));
         queueMicrotask(() => deadline());
@@ -39,10 +41,10 @@ async function request(parts, { method = 'postChatStream', ok = true, timeout = 
     const done = (text) => { events.push(['done', text]); resolve(); };
     const error = () => { events.push(['error']); resolve(); };
     if (method === 'postChat') context.postChat('hello', [], done, error);
-    else context.postChatStream('hello', [], (text) => events.push(['chunk', text]), done, error);
+    else context.postChatStream('hello', [], (text) => events.push(['chunk', text]), done, error, extra, onEvent);
   });
   await new Promise((resolve) => setImmediate(resolve));
-  return { events, cancelled, signal };
+  return { events, cancelled, signal, body };
 }
 
 test('empty stream reports failure instead of inserting an empty reply', async () => {
@@ -88,4 +90,28 @@ test('deadline aborts a stalled request and reports failure once', async () => {
 
 test('non-streaming fallback rejects an HTTP error even if it contains reply text', async () => {
   assert.deepEqual((await request([], { method: 'postChat', ok: false })).events, [['error']]);
+});
+
+test('without extra fields the body is exactly the text-only request', async () => {
+  const result = await request(['data: {"type":"done","text":"ok"}\n\n']);
+  assert.deepEqual(result.body, { message: 'hello', history: [] });
+});
+
+test('voice fields are merged into the body and every event reaches onEvent before completion', async () => {
+  const seen = [];
+  const result = await request([
+    'data: {"type":"thinking"}\n\n',
+    'data: {"type":"voice","on":true}\n\ndata: {"type":"chunk","text":"Hi."}\n\n',
+    'data: {"type":"speech","seq":0,"start":0,"end":3,"audio":null,"marks":[]}\n\n',
+    'data: {"type":"speech_end","upto":3}\n\ndata: {"type":"done","text":"Hi."}\n\n',
+  ], { extra: { voice: true, lang: 'en' }, onEvent: (e) => seen.push(e.type) });
+  assert.deepEqual(result.body, { message: 'hello', history: [], voice: true, lang: 'en' });
+  assert.deepEqual(seen, ['thinking', 'voice', 'chunk', 'speech', 'speech_end', 'done']);
+  assert.deepEqual(result.events, [['chunk', 'Hi.'], ['done', 'Hi.']]);
+});
+
+test('a throwing onEvent cannot break the stream', async () => {
+  const result = await request(['data: {"type":"chunk","text":"a"}\n\ndata: {"type":"done","text":"a"}\n\n'],
+    { onEvent: () => { throw new Error('boom'); } });
+  assert.deepEqual(result.events, [['chunk', 'a'], ['done', 'a']]);
 });

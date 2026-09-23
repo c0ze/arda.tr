@@ -44,6 +44,7 @@ module Orb = {
     size?: int,
     speed?: float,
     pulse?: int,
+    level?: float,
   }
 
   @module("@/components/OneBit") @react.component(: orbProps)

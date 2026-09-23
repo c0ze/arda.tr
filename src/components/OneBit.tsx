@@ -119,9 +119,11 @@ interface OrbProps {
   speed?: number;
   /** Change this (e.g. once per streamed chunk) to make the orb sizzle. 0 is ignored. */
   pulse?: number;
+  /** Loudness 0..1 of a voice speaking through the orb; each new value sizzles it in proportion. */
+  level?: number;
 }
 
-export function Orb({ className, size = 40, speed = 0.6, pulse = 0 }: OrbProps) {
+export function Orb({ className, size = 40, speed = 0.6, pulse = 0, level = 0 }: OrbProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const fx = useRef<OrbFx | null>(null);
 
@@ -139,6 +141,10 @@ export function Orb({ className, size = 40, speed = 0.6, pulse = 0 }: OrbProps) 
   useEffect(() => {
     if (pulse) fx.current?.sizzle(0.5 + Math.random() * 0.5);
   }, [pulse]);
+
+  useEffect(() => {
+    if (level > 0) fx.current?.sizzle(level * 0.6);
+  }, [level]);
 
   return <canvas ref={ref} className={cls(className)} aria-hidden="true" />;
 }
