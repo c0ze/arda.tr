@@ -38,7 +38,11 @@ export function Forest({ className, onMast }: ForestProps) {
   useEffect(() => {
     const el = ref.current;
     if (!el || !canvasOK()) return;
-    const fx = forest(el, { onMast: (x, y) => mast.current?.(x, y) });
+    const fx = forest(el, {
+      onMast: (x, y) => mast.current?.(x, y),
+      // drawn by Codex, animated in Aseprite: see art/werewolf/
+      werewolfSprite: { src: "/werewolf.png", frames: 8, run: [0, 5], rise: 6, howl: 7 },
+    });
     // ?summon=wolf or ?summon=bat brings one on without waiting for its turn
     const kind = new URLSearchParams(window.location.search).get("summon");
     if (kind === "wolf" || kind === "bat") window.setTimeout(() => fx.summon(kind), 1200);

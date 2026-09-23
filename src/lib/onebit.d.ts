@@ -21,6 +21,8 @@ export interface ForestOptions {
   creatureEvery?: number;
   /** Called at notable moments, e.g. ("wolf", "howl"). */
   onCreature?: ((kind: "wolf" | "bat", moment: string) => void) | null;
+  /** Horizontal sprite sheet for the werewolf (dark figure, light rim lines, transparent background). */
+  werewolfSprite?: { src: string; frames?: number; run?: [number, number]; rise?: number; howl?: number } | null;
 }
 
 export interface Forest extends Anim {
