@@ -14,6 +14,18 @@ export interface ForestOptions {
   fps?: number;
   /** Mast light position in CSS px relative to the canvas; x is null while the mast is off-canvas. */
   onMast?: ((x: number | null, y: number) => void) | null;
+  /** Werewolf and bat walk-ons, taking turns; on by default. */
+  creatures?: boolean;
+  /** Seconds before the first walk-on, and between walk-ons. */
+  creatureFirst?: number;
+  creatureEvery?: number;
+  /** Called at notable moments, e.g. ("wolf", "howl"). */
+  onCreature?: ((kind: "wolf" | "bat", moment: string) => void) | null;
+}
+
+export interface Forest extends Anim {
+  /** Bring a creature on right away. */
+  summon(kind: "wolf" | "bat"): void;
 }
 
 export interface TreelineOptions {
@@ -62,7 +74,7 @@ export const B8: Float32Array;
 export function reducedMotion(): boolean;
 export function rng(seed: number): () => number;
 export function hash(str: string): number;
-export function forest(canvas: HTMLCanvasElement, opts?: ForestOptions): Anim;
+export function forest(canvas: HTMLCanvasElement, opts?: ForestOptions): Forest;
 export function treeline(canvas: HTMLCanvasElement, opts?: TreelineOptions): Anim;
 export function dithered(canvas: HTMLCanvasElement, src: string | HTMLImageElement | null, opts?: DitheredOptions): Dithered;
 export function orb(canvas: HTMLCanvasElement, opts?: OrbOptions): Orb;

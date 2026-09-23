@@ -39,6 +39,9 @@ export function Forest({ className, onMast }: ForestProps) {
     const el = ref.current;
     if (!el || !canvasOK()) return;
     const fx = forest(el, { onMast: (x, y) => mast.current?.(x, y) });
+    // ?summon=wolf or ?summon=bat brings one on without waiting for its turn
+    const kind = new URLSearchParams(window.location.search).get("summon");
+    if (kind === "wolf" || kind === "bat") window.setTimeout(() => fx.summon(kind), 1200);
     return () => fx.destroy();
   }, []);
 
