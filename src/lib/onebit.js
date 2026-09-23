@@ -442,7 +442,8 @@ export function orb(canvas, opts = {}) {
   const anim = animate(canvas, draw, { fps: o.fps });
   return {
     ...anim,
-    sizzle(amount = 1) { heat = Math.min(1.2, Math.max(heat, 0) + amount * 0.6); if (anim.reduced) anim.redraw(); },
+    // under reduced motion the orb stays still: a sizzle would freeze as a single noisy frame
+    sizzle(amount = 1) { if (!anim.reduced) heat = Math.min(1.2, Math.max(heat, 0) + amount * 0.6); },
   };
 }
 
