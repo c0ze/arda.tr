@@ -13,12 +13,17 @@
 - [Gand](https://gand.tr/): Independent software studio
 - [Gand Games](https://gand.games/): Games label of Gand
 - [COMMIT!!!](https://commit.gand.tr/): Software-career sim. The legacy monolith is the final boss. On Steam and Android
+- [G Copy](https://g-copy.gand.games/): Floppy-disk copying business game after X-Copy, playable in the browser
+- [Gage](https://gage.coze.org/): Chess on X with no Twitter API, via a browser extension
 - [Skriv.ist](https://skriv.ist/): Multiplatform ebook reader
 - [Fablespun](https://fable.tr/): Illustrated fables for kids, generated with AI
 - [Vigil Today](https://vigil.today/): Reminder widget PWA for recurring tasks
 - [SUDONE](https://sudone.jp/): Scan a shelf barcode in a shop and check whether the price beats online
 - [Pagan](https://pagan.tr/): Turkish black metal band, official site
 - [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
+- [tincan](https://github.com/c0ze/tincan): Message passing between AI coding agents through a spool on disk
+- [tenioha](https://c0ze.github.io/tenioha/): Experimental functional language with Japanese particles in function signatures
+- [cozy-tracker](https://tracker.coze.org/): Adaptive game music with Impulse Tracker modules
 
 ## Elsewhere
 
