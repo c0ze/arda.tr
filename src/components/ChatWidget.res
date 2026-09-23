@@ -1,9 +1,10 @@
-// Floating "Ask about Arda" helpdesk widget. A launcher opens a themed chat
-// panel that streams from the ai.arda.tr bot's SSE /api/chat/stream (Gemini;
-// the server holds the key) and renders Markdown. Falls back to non-streaming
-// /api/chat. SSR-safe: the network call only runs in event handlers, and the
-// panel only mounts after a click. Requires the bot's CORS ALLOWED_ORIGINS to
-// include this origin (https://arda.tr).
+// Floating "Ask about Arda" helpdesk widget. A launcher opens a One Bit chat
+// panel — a revolving orb that sizzles on every streamed chunk, a crackling
+// cursor trailing the reply — that streams from the ai.arda.tr bot's SSE
+// /api/chat/stream (Gemini; the server holds the key) and renders Markdown.
+// Falls back to non-streaming /api/chat. SSR-safe: the network call only runs
+// in event handlers, and the panel only mounts after a click. Requires the
+// bot's CORS ALLOWED_ORIGINS to include this origin (https://arda.tr).
 
 let launcherLabel = "Ask about Arda"
 let titleLabel = "Ask about Arda"
@@ -14,6 +15,12 @@ let sendLabel = "Send"
 let thinkingLabel = "Thinking…"
 let errorLabel = "I couldn't reach the assistant just now — please try again in a moment."
 let suggestions = ["What does Arda build?", "Tell me about his projects", "What's his background?"]
+let botLabel = "construct"
+let youLabel = "you"
+let modelLabel = "ai · gemini"
+let hintLabel = "arda's ai can make mistakes. verify important information."
+let sendText = "enter ↵"
+let inputLabel = "Your question"
 
 type chatMsg = {
   id: int,
@@ -184,20 +191,25 @@ let listenForOpen: (unit => unit) => (unit => unit) = %raw(`
   }
 `)
 
-let bubble = (msg: chatMsg) => {
+// Messages are labelled like a terminal transcript (`construct ▸` / `you ▸`),
+// as on ai.arda.tr. `live` marks the reply that is still streaming: it gets the
+// crackling 1-bit cursor after its last word.
+let bubble = (msg: chatMsg, ~live: bool) => {
   let isModel = msg.role != "user" && !msg.isError
   <div
     key={Int.toString(msg.id)}
-    className={"flex " ++ (msg.role == "user" ? "justify-end" : "justify-start")}>
-    <div
-      className={"max-w-[85%] px-3.5 py-2 text-sm leading-relaxed " ++ (
-        msg.role == "user"
-          ? "whitespace-pre-wrap bg-primary text-primary-foreground"
-          : msg.isError
-          ? "whitespace-pre-wrap border border-destructive bg-card text-foreground"
-          : "bg-secondary text-foreground"
-      )}>
-      {isModel ? <Markdown text={msg.content} /> : React.string(msg.content)}
+    className={"msg " ++ (msg.role == "user" ? "you" : msg.isError ? "bot err" : "bot")}>
+    <p className="msg-who">
+      {React.string(msg.role == "user" ? youLabel : botLabel)}
+      <span ariaHidden=true> {React.string(" ▸")} </span>
+    </p>
+    <div className="msg-txt">
+      {isModel
+        ? <Markdown
+            text={msg.content}
+            trailing=?{live ? Some(<OneBit.Crackle className="cursor" />) : None}
+          />
+        : React.string(msg.content)}
     </div>
   </div>
 }
@@ -331,6 +343,12 @@ let make = () => {
   }
 
   let canSend = String.trim(input) !== "" && !busy
+  // Changes on every streamed chunk (and on send), which makes the orb sizzle.
+  let pulse = busy ? lastLen + Array.length(messages) : 0
+  let liveId = switch (streaming, messages->Array.get(Array.length(messages) - 1)) {
+  | (true, Some(m)) if m.role != "user" => m.id
+  | _ => -1
+  }
 
   <>
     {isOpen
@@ -341,73 +359,57 @@ let make = () => {
           onClick={_ => setIsOpen(_ => true)}
           ariaLabel={launcherLabel}
           ariaHaspopup=#dialog
-          className="fixed bottom-0 left-7 z-50 flex h-10 items-center justify-center gap-2 border-r border-t border-rule bg-foreground px-3 text-background transition-colors duration-100 md:left-10">
-          {Icons.bot(~className="h-6 w-6 shrink-0", ())}
-          <span className="hidden text-sm font-medium sm:inline"> {React.string(launcherLabel)} </span>
+          className="chat-launch">
+          <OneBit.Orb size=20 />
+          <span> {React.string(launcherLabel)} </span>
         </button>}
     {isOpen
-      ? <div
-          role="dialog"
-          ariaLabel={titleLabel}
-          className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden border border-rule bg-background sm:inset-x-auto sm:bottom-0 sm:left-10 sm:w-[24rem]">
-          <div
-            className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-muted px-4 py-3">
-            <div className="flex items-center gap-2.5">
-              <span
-                className="flex h-9 w-9 items-center justify-center bg-primary text-primary-foreground "
-                ariaHidden=true>
-                {Icons.bot(~className="h-5 w-5", ())}
-              </span>
-              <div className="leading-tight">
-                <p className="font-display text-sm font-bold text-foreground"> {React.string(titleLabel)} </p>
-                <p className="flex items-center gap-1.5 font-mono text-[0.65rem] text-muted-foreground">
-                  <span className="h-1.5 w-1.5 bg-primary" ariaHidden=true />
-                  {React.string("AI · Gemini")}
-                </p>
-              </div>
+      ? <div role="dialog" ariaLabel={titleLabel} className="chat">
+          <div className="chat-head">
+            <OneBit.Orb size=40 pulse />
+            <div>
+              <p> {React.string(titleLabel)} </p>
+              <p> {React.string(modelLabel)} </p>
             </div>
             <button
               type_="button"
               onClick={_ => setIsOpen(_ => false)}
               ariaLabel={closeLabel}
-              className="flex h-8 w-8 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-foreground hover:text-primary">
-              {Icons.x(~className="h-4 w-4", ())}
+              className="chat-x">
+              {React.string("×")}
             </button>
           </div>
 
-          <div
-            ref={ReactDOM.Ref.domRef(listRef)}
-            role="log"
-            ariaLive=#polite
-            className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            <div className="flex justify-start">
-              <div
-                className="max-w-[85%] bg-secondary px-3.5 py-2 text-sm leading-relaxed text-foreground">
-                {React.string(greeting)}
-              </div>
+          <div ref={ReactDOM.Ref.domRef(listRef)} role="log" ariaLive=#polite className="chat-log">
+            <div className="msg bot">
+              <p className="msg-who">
+                {React.string(botLabel)}
+                <span ariaHidden=true> {React.string(" ▸")} </span>
+              </p>
+              <div className="msg-txt"> {React.string(greeting)} </div>
             </div>
             {Array.length(messages) == 0
-              ? <div className="flex flex-col items-start gap-2 pt-1">
+              ? <div className="qp">
                   {suggestions
                   ->Array.mapWithIndex((s, i) =>
-                    <button
-                      key={Int.toString(i)}
-                      type_="button"
-                      onClick={_ => submit(s)}
-                      className="border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-primary">
+                    <button key={Int.toString(i)} type_="button" onClick={_ => submit(s)}>
+                      <em ariaHidden=true> {React.string(Int.toString(i + 1))} </em>
                       {React.string(s)}
                     </button>
                   )
                   ->React.array}
                 </div>
               : React.null}
-            {messages->Array.map(bubble)->React.array}
+            {messages->Array.map(m => bubble(m, ~live=m.id == liveId))->React.array}
             {busy && !streaming
-              ? <div className="flex justify-start" ariaLabel={thinkingLabel}>
-                  /* A printed catalogue has no bouncing anything. The wait
-                     state reads as a status line, in the label voice. */
-                  <div className="cat-label bg-secondary px-3.5 py-3 text-muted-foreground">
-                    {"Querying ···"->React.string}
+              ? <div className="msg bot">
+                  <p className="msg-who">
+                    {React.string(botLabel)}
+                    <span ariaHidden=true> {React.string(" ▸")} </span>
+                  </p>
+                  <div className="msg-txt">
+                    <span className="sr-only"> {React.string(thinkingLabel)} </span>
+                    <OneBit.Crackle className="cursor" />
                   </div>
                 </div>
               : React.null}
@@ -418,7 +420,8 @@ let make = () => {
               ReactEvent.Form.preventDefault(e)
               submit(input)
             }}
-            className="flex shrink-0 items-center gap-2 border-t border-border p-3">
+            className="chat-form">
+            <b ariaHidden=true> {React.string("▸")} </b>
             <input
               ref={ReactDOM.Ref.domRef(inputRef)}
               type_="text"
@@ -428,17 +431,14 @@ let make = () => {
                 setInput(_ => value)
               }}
               placeholder={placeholder}
+              ariaLabel={inputLabel}
               disabled={busy}
-              className="min-w-0 flex-1 border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2  disabled:opacity-60"
             />
-            <button
-              type_="submit"
-              ariaLabel={sendLabel}
-              disabled={!canSend}
-              className="flex h-10 w-10 shrink-0 items-center justify-center bg-primary text-primary-foreground transition-transform duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100">
-              {Icons.send(~className="h-4 w-4", ())}
+            <button type_="submit" ariaLabel={sendLabel} disabled={!canSend} className="chat-send">
+              {React.string(sendText)}
             </button>
           </form>
+          <p className="chat-hint"> {React.string(hintLabel)} </p>
         </div>
       : React.null}
   </>

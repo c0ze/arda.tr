@@ -1,7 +1,7 @@
 // Renders the chat bot's markdown replies as React *elements* (never raw HTML),
 // so model output can't inject markup. Parsing lives in markdownParse.mjs; this
-// module only builds elements and validates link schemes. Styling uses theme
-// tokens so it blends into the chat bubble.
+// module only builds elements and validates link schemes. Styling uses the
+// rendition tokens so it sits in the chat transcript.
 
 type block
 type inlineTok
@@ -30,7 +30,7 @@ let renderInline = toks =>
     | "bold" => <strong key className="font-semibold"> {React.string(tVal(tok))} </strong>
     | "italic" => <em key className="italic"> {React.string(tVal(tok))} </em>
     | "code" =>
-      <code key className="rounded bg-foreground/10 px-1 py-0.5 font-mono text-[0.85em]">
+      <code key className="bg-surface px-1 py-0.5 font-mono text-[0.85em] text-signal">
         {React.string(tVal(tok))}
       </code>
     | "link" =>
@@ -40,7 +40,7 @@ let renderInline = toks =>
             href={tHref(tok)}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary underline underline-offset-2 hover:no-underline">
+            className="text-signal underline underline-offset-2 hover:no-underline">
             {React.string(tVal(tok))}
           </a>
         : <React.Fragment key> {React.string(tVal(tok))} </React.Fragment>
@@ -54,23 +54,39 @@ let renderItems = items =>
   ->Array.mapWithIndex((line, j) => <li key={Int.toString(j)}> {renderInline(line)} </li>)
   ->React.array
 
+// `trailing` (e.g. the streaming cursor) is set inline at the end of the last
+// paragraph, so it trails the final word; after a list or code block it goes
+// underneath instead.
 @react.component
-let make = (~text) =>
+let make = (~text, ~trailing: option<React.element>=?) => {
+  let blocks = parse(text)
+  let last = Array.length(blocks) - 1
+  let tail = trailing->Option.getOr(React.null)
+  let isPara = b => !(["ul", "ol", "code"]->Array.includes(bType(b)))
+  let tailInline = switch blocks->Array.get(last) {
+  | Some(b) => isPara(b)
+  | None => false
+  }
+
   <div className="space-y-2">
-    {parse(text)
+    {blocks
     ->Array.mapWithIndex((b, i) => {
       let key = Int.toString(i)
       switch bType(b) {
       | "ul" => <ul key className="list-disc space-y-1 pl-5"> {renderItems(bItems(b))} </ul>
       | "ol" => <ol key className="list-decimal space-y-1 pl-5"> {renderItems(bItems(b))} </ol>
       | "code" =>
-        <pre
-          key
-          className="overflow-x-auto rounded-lg bg-foreground/10 p-3 font-mono text-xs leading-relaxed">
+        <pre key className="overflow-x-auto bg-surface p-3 font-mono text-xs leading-relaxed">
           <code> {React.string(bText(b))} </code>
         </pre>
-      | _ => <p key> {renderInline(bInline(b))} </p>
+      | _ =>
+        <p key>
+          {renderInline(bInline(b))}
+          {i == last ? tail : React.null}
+        </p>
       }
     })
     ->React.array}
+    {tailInline ? React.null : tail}
   </div>
+}

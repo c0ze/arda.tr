@@ -57,3 +57,13 @@ it("keeps partial text and reports interruption without automatically resubmitti
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(screen.getByRole("textbox")).toBeEnabled();
 });
+
+it("closes on Escape and hands focus back to the launcher", async () => {
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  expect(screen.getByRole("dialog", { name: "Ask about Arda" })).toBeInTheDocument();
+  expect(screen.getByRole("log")).toBeInTheDocument();
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(screen.queryByRole("dialog")).toBeNull();
+  await waitFor(() => expect(screen.getByRole("button", { name: "Ask about Arda" })).toHaveFocus());
+});
