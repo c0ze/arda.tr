@@ -174,7 +174,7 @@ let entries: array<entry> = [
     cat: "AK 3-0094",
     band: 3,
     name: "Gand Games",
-    description: "Games label of Gand, an independent studio in Istanbul and Tokyo.",
+    description: "Games label of Gand, an independent studio in Tokyo.",
     spec: "Studio · Label",
     year: "2026",
     status: "LIVE",
