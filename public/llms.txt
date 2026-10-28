@@ -19,6 +19,8 @@
 - [Fablespun](https://fable.tr/): Illustrated fables for kids, generated with AI
 - [Vigil Today](https://vigil.today/): Reminder widget PWA for recurring tasks
 - [SUDONE](https://sudone.jp/): Scan a shelf barcode in a shop and check whether the price beats online
+- [dergi.coze.org](https://dergi.coze.org/): Turkish Commodore 64 and Amiga magazines from 1985 on, every issue page by page and every article searchable
+- [RETRO](https://retro.coze.org/): Monthly Turkish magazine on games, metal, hardware and AI, written by AI in the voice of a 90s print magazine
 - [Pagan](https://pagan.tr/): Turkish black metal band, official site
 - [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
 - [tincan](https://github.com/c0ze/tincan): Message passing between AI coding agents through a spool on disk
