@@ -95,3 +95,25 @@ it("keeps the input usable and focused while a reply is on its way", async () =>
   expect(input).toHaveFocus();
   expect(input).toHaveValue("Second question");
 });
+
+it("marks the log busy while a reply streams, so it is announced once, complete", async () => {
+  let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+  const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  const log = screen.getByRole("log");
+  expect(log).toHaveAttribute("aria-live", "polite");
+  expect(log).not.toHaveAttribute("aria-busy", "true");
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+
+  emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":"Half an"}\n\n') });
+  expect(await screen.findByText("Half an")).toBeVisible();
+  expect(log).toHaveAttribute("aria-busy", "true");
+
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+  emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Half an answer."}\n\n') });
+  expect(await screen.findByText("Half an answer.")).toBeVisible();
+  expect(log).not.toHaveAttribute("aria-busy", "true");
+});

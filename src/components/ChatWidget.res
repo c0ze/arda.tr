@@ -570,7 +570,15 @@ let make = () => {
             </button>
           </div>
 
-          <div ref={ReactDOM.Ref.domRef(listRef)} role="log" ariaLive=#polite className="chat-log">
+          // Busy while a reply is still being written into the log (streamed, or
+          // revealed as it is spoken), so screen readers announce it once, whole,
+          // instead of on every chunk.
+          <div
+            ref={ReactDOM.Ref.domRef(listRef)}
+            role="log"
+            ariaLive=#polite
+            ariaBusy={liveId != -1}
+            className="chat-log">
             <div className="msg bot">
               <p className="msg-who">
                 {React.string(botLabel)}
