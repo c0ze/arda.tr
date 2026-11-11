@@ -20,6 +20,8 @@ const DropdownMenuContent = React.forwardRef<
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
+// Focus is the system's 2px signal ring, inset: --surface equals --bg in the
+// HC renditions, and signal text already marks the selected rendition.
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>
@@ -27,7 +29,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2.5 border-b border-rule px-3 py-2.5 outline-none last:border-b-0 focus:bg-surface focus:text-signal data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-pointer select-none items-center gap-2.5 border-b border-rule px-3 py-2.5 outline-none last:border-b-0 focus:bg-surface focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-signal data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
