@@ -33,8 +33,11 @@ The next-themes class goes on `<html>`, and the preference is stored in the
 | `xerox-hc` | hc-light (AAA) | `#ffffff` | `#ffffff` | `#000000` | `#2e2e2e` | `#1a1a1a` | `#2b4200` |
 
 - Canvas palette: `--ob-ink` = `--fg`, `--ob-ground` = `--bg`, `--ob-signal` =
-  `--signal`. Always hex. The engine re-reads them every frame, so switching
-  rendition repaints the canvases immediately. In xerox the forest therefore
+  `--signal`. Always hex. The engine re-reads them every frame, and
+  `OneBit.tsx` repaints each canvas when the class on `<html>` changes (under
+  reduced motion there is no next frame), so switching rendition repaints the
+  canvases immediately. An inline script in `index.html` puts the stored
+  rendition on `<html>` before the first frame. In xerox the forest therefore
   prints as a negative: pale trees and a dark moon on paper.
 - Solid signal buttons set their label in `--bg`.
 - Stored ids from older systems migrate by role in `ThemeProvider.tsx`

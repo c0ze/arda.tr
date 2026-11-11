@@ -24,6 +24,18 @@ function canvasOK() {
 
 const cls = (className?: string) => (className ? `px ${className}` : "px");
 
+/**
+ * Calls `repaint` whenever the rendition class on <html> changes. The engine
+ * reads the palette on every frame, but under prefers-reduced-motion (and while
+ * paused off-screen) it paints no further frames, so a switch would leave the
+ * canvas in the old rendition. Returns a disconnect.
+ */
+function onRendition(repaint: () => void) {
+  const mo = new MutationObserver(repaint);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => mo.disconnect();
+}
+
 interface ForestProps {
   className?: string;
   /** Called every frame with the mast light's position (CSS px, canvas-relative); x is null off-canvas. */
@@ -46,7 +58,11 @@ export function Forest({ className, onMast }: ForestProps) {
     // ?summon=wolf or ?summon=bat brings one on without waiting for its turn
     const kind = new URLSearchParams(window.location.search).get("summon");
     if (kind === "wolf" || kind === "bat") window.setTimeout(() => fx.summon(kind), 1200);
-    return () => fx.destroy();
+    const off = onRendition(fx.redraw);
+    return () => {
+      off();
+      fx.destroy();
+    };
   }, []);
 
   return <canvas ref={ref} className={cls(className)} aria-hidden="true" />;
@@ -66,7 +82,11 @@ export function Treeline({ className, seed = 1, px = 2, speed = 0 }: TreelinePro
     const el = ref.current;
     if (!el || !canvasOK()) return;
     const fx = treeline(el, { seed, px, speed });
-    return () => fx.destroy();
+    const off = onRendition(fx.redraw);
+    return () => {
+      off();
+      fx.destroy();
+    };
   }, [seed, px, speed]);
 
   return <canvas ref={ref} className={cls(className)} aria-hidden="true" />;
@@ -88,6 +108,8 @@ interface DitheredProps {
 export function Dithered({ className, src, fallbackSeed, px = 2, contrast, lift, invert, hot = false }: DitheredProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const fx = useRef<DitheredFx | null>(null);
+  const isHot = useRef(hot);
+  isHot.current = hot;
 
   useEffect(() => {
     const el = ref.current;
@@ -100,7 +122,10 @@ export function Dithered({ className, src, fallbackSeed, px = 2, contrast, lift,
       ...(invert === undefined ? {} : { invert }),
     });
     fx.current = d;
+    // Dithered exposes no redraw(); hot() repaints, so re-assert the current state.
+    const off = onRendition(() => d.hot(isHot.current));
     return () => {
+      off();
       d.destroy();
       fx.current = null;
     };
@@ -136,7 +161,9 @@ export function Orb({ className, size = 40, speed = 0.6, pulse = 0, level = 0 }:
     if (!el || !canvasOK()) return;
     const o = orb(el, { size, speed });
     fx.current = o;
+    const off = onRendition(o.redraw);
     return () => {
+      off();
       o.destroy();
       fx.current = null;
     };
@@ -165,7 +192,11 @@ export function Crackle({ className }: CrackleProps) {
     const el = ref.current;
     if (!el || !canvasOK()) return;
     const fx = crackle(el);
-    return () => fx.destroy();
+    const off = onRendition(fx.redraw);
+    return () => {
+      off();
+      fx.destroy();
+    };
   }, []);
 
   return <canvas ref={ref} className={cls(className)} aria-hidden="true" />;

@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#060708" />
     <meta name="color-scheme" content="dark light" />
+    <!-- Put the stored rendition on <html> before the canvases paint their first
+         frame (the only frame under reduced motion). Legacy ids are left to
+         ThemeProvider.tsx, which migrates them. -->
+    <script>
+      try {
+        var t = localStorage.getItem("theme");
+        if (["night", "night-hc", "xerox", "xerox-hc"].indexOf(t) > -1) document.documentElement.classList.add(t);
+      } catch (e) {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/a-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
