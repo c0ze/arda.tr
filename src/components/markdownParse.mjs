@@ -19,6 +19,18 @@ const INLINE =
   /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/g;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const flanked = (ch) => ch !== undefined && FLANK.test(ch);
+// The neighbours are read as whole code points, so a letter outside the BMP
+// (𠮷, 𝑥) counts as a letter instead of half a surrogate pair.
+const charBefore = (s, i) => {
+  if (i <= 0) return undefined;
+  const lo = s.charCodeAt(i - 1);
+  if (lo >= 0xdc00 && lo <= 0xdfff && i >= 2) {
+    const hi = s.charCodeAt(i - 2);
+    if (hi >= 0xd800 && hi <= 0xdbff) return s.slice(i - 2, i);
+  }
+  return s[i - 1];
+};
+const charAfter = (s, i) => (i < s.length ? String.fromCodePoint(s.codePointAt(i)) : undefined);
 
 function tokenizeInline(input) {
   const s = String(input == null ? "" : input);
@@ -31,7 +43,7 @@ function tokenizeInline(input) {
     const m = INLINE.exec(s);
     if (!m) break;
     const end = m.index + m[0].length;
-    if ((m[8] != null || m[10] != null) && (flanked(s[m.index - 1]) || flanked(s[end]))) {
+    if ((m[8] != null || m[10] != null) && (flanked(charBefore(s, m.index)) || flanked(charAfter(s, end)))) {
       INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
       continue;
     }

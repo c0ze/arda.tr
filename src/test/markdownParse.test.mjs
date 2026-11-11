@@ -13,6 +13,12 @@ describe("chat markdown emphasis", () => {
     plain("MAX_RETRY_COUNT and __init__");
   });
 
+  it("treats letters outside the BMP as letters next to a marker", () => {
+    plain("𠮷_name_");
+    plain("_name_𠮷");
+    plain("𝑥*value*");
+  });
+
   it("keeps arithmetic and stray asterisks as text", () => {
     plain("2 * 3 * 4 = 24");
     plain("2*3*4 = 24");
