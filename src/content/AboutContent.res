@@ -1,23 +1,8 @@
-type highlightIcon =
-  | Code2
-  | Globe
-  | Lightbulb
-
-type highlight = {
-  icon: highlightIcon,
-  title: string,
-  description: string,
-}
-
 // A bio paragraph is a sequence of segments; `emphasis` ones render as accented spans.
 type segment = {
   text: string,
   emphasis: bool,
 }
-
-let eyebrow = "01 — About"
-let title = "About"
-let description = "A pragmatic programmer who enjoys tinkering, hacking, and exploring new languages and frameworks."
 
 let bio: array<array<segment>> = [
   [
@@ -42,24 +27,6 @@ let bio: array<array<segment>> = [
       emphasis: false,
     },
   ],
-]
-
-let highlights: array<highlight> = [
-  {
-    icon: Code2,
-    title: "Technical Excellence",
-    description: "Proficient in Ruby, Go, Python, and modern web technologies. Hands-on with AWS, Kubernetes, and microservices.",
-  },
-  {
-    icon: Globe,
-    title: "Multilingual",
-    description: "Native Turkish speaker with near-native English and business-level Japanese proficiency.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Pragmatic Approach",
-    description: "Early adopter of CI/CD, TDD, and Agile methodologies. Always exploring new frameworks and ideas.",
-  },
 ]
 
 // Quick-facts panel shown alongside the bio.
