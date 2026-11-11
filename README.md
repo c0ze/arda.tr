@@ -50,7 +50,7 @@ npm run preview
 Command notes:
 
 - `npm run dev` generates the site config bridge, starts the ReScript compiler in watch mode, and runs Vite
-- `npm run test` runs a small regression test against the app shell
+- `npm run test` runs the Vitest suite: the app shell, the chat transport, voice and markdown, the canvas mounts, deep links, the sitemap and the Tailwind config
 - `npm run verify` runs lint + typecheck + test
 - `npm run build` creates the production bundle and regenerates `dist/sitemap.xml`
 - `npm run generate:sitemap` can be run separately if only metadata changed

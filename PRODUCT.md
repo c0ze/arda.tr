@@ -79,8 +79,10 @@ breadth is not clutter to be managed — it is the differentiating claim
   worth shipping.", "Open to interesting problems, collaborations, and the
   occasional jam session.", "Built in Tokyo". No hype register, no growth-copy.
 - The professional and creative halves must read as one coherent person.
-- No Dracula Pro–derived values remain (One Bit Forest, 2026-09-23), so the
-  footer no longer carries its attribution.
+- The renditions carry no Dracula Pro–derived values (One Bit Forest,
+  2026-09-23), so the footer no longer carries its attribution. Only the
+  frozen v1 contract, `config/themes.v1.json`, kept for old readers, still
+  holds them.
 
 ## Evidence on Hand
 

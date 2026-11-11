@@ -1,6 +1,6 @@
-# AGENTS.md
+# PROJECT.md
 
-Codex working notes for this repository.
+Working notes for agents in this repository (the rules are in CLAUDE.md).
 
 ## Purpose
 
@@ -124,20 +124,3 @@ mise exec node@24.14.0 -- npm run verify
 - Keep metadata, JSON-LD, OG/Twitter tags, and footer/profile links aligned.
 - Ensure `robots.txt`, sitemap generation, and canonical URLs stay correct.
 - Keep image paths in metadata in sync with actual assets in `public/`.
-- Current follow-up worth remembering:
-  - consider adding Bluesky to the JSON-LD `sameAs` list if structured data should mirror the footer exactly
-
-
-
-<!-- ============================================================
-UNRECONCILED — 6 lines that existed only in CLAUDE.md when CLAUDE.md and
-AGENTS.md were consolidated (2026-08-08). Fold anything useful into the
-sections above, then delete this block.
-============================================================ -->
-
-Claude Code there.
-# CLAUDE.md
-`*Content.res` content pattern, guardrails, accessibility, and SEO).
-guidance (stack, architecture, the ReScript/TypeScript boundary, the
-Read **AGENTS.md** first — it is canonical. This file only exists to point
-This repository uses **[AGENTS.md](./AGENTS.md)** as the single source of agent
