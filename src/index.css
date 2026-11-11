@@ -305,7 +305,8 @@
   .meta-r { display: flex; gap: 12px; }
   .st.live { color: var(--signal); }
   .st.live::before { content: "● "; }
-  .src { position: relative; z-index: 2; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
+  /* Padded out to a 24px target over the card link; the negative margin keeps it in place. */
+  .src { position: relative; z-index: 2; padding: 7px 2px; margin: -7px -2px; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
   .src:hover { color: var(--signal); }
 
   /* ── record ─────────────────────────────────────────────────────────────── */
