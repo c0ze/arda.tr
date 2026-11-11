@@ -407,7 +407,6 @@
   .chat-form input { flex: 1; min-width: 0; background: transparent; border: 0; padding: 13px 0; font: 14px/1 theme("fontFamily.mono"); color: var(--fg); caret-color: var(--signal); }
   .chat-form input::placeholder { color: var(--fg-2); }
   .chat-form input:focus-visible { outline: none; }
-  .chat-form input:disabled { opacity: .6; }
   .chat-send { font: 12px/1 theme("fontFamily.mono"); color: var(--bg); background: var(--signal); padding: 8px 10px; }
   .chat-send:disabled { background: transparent; color: var(--fg-2); }
   .chat-hint { font: 10.5px/1.4 theme("fontFamily.mono"); color: var(--fg-2); padding: 0 14px 12px; margin-top: -4px; }

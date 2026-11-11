@@ -67,3 +67,31 @@ it("closes on Escape and hands focus back to the launcher", async () => {
   expect(screen.queryByRole("dialog")).toBeNull();
   await waitFor(() => expect(screen.getByRole("button", { name: "Ask about Arda" })).toHaveFocus());
 });
+
+it("keeps the input usable and focused while a reply is on its way", async () => {
+  // A disabled input loses keyboard focus (Chromium moves it to <body>) and
+  // nothing hands it back, so every question cost the visitor their place.
+  let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+  const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  const input = screen.getByRole("textbox");
+  await waitFor(() => expect(input).toHaveFocus());
+  fireEvent.change(input, { target: { value: "First question" } });
+  fireEvent.submit(input.closest("form")!);
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+
+  expect(input).toBeEnabled();
+  expect(input).toHaveFocus();
+  // Busy still guards sending: typing ahead is fine, a second request is not.
+  fireEvent.change(input, { target: { value: "Second question" } });
+  expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+  fireEvent.submit(input.closest("form")!);
+  expect(fetch).toHaveBeenCalledTimes(1);
+
+  emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Answer"}\n\n') });
+  expect(await screen.findByText("Answer")).toBeVisible();
+  expect(input).toHaveFocus();
+  expect(input).toHaveValue("Second question");
+});

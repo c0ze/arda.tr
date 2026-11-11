@@ -633,7 +633,6 @@ let make = () => {
               }}
               placeholder={placeholder}
               ariaLabel={inputLabel}
-              disabled={busy}
             />
             <button type_="submit" ariaLabel={sendLabel} disabled={!canSend} className="chat-send">
               {React.string(sendText)}
