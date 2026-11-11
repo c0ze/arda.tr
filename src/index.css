@@ -253,10 +253,10 @@
     display: flex;
     gap: 10px;
   }
-  .kinds button em { font-style: normal; opacity: .6; }
+  /* Counts at full strength: dimmed by opacity they fell under 4.5:1. */
+  .kinds button em { font-style: normal; }
   .kinds button:hover { color: var(--fg); }
   .kinds button[aria-pressed="true"] { background: var(--signal); color: var(--bg); }
-  .kinds button[aria-pressed="true"] em { opacity: .75; }
   .kinds button:focus-visible { outline-offset: -4px; outline-color: var(--fg); }
   .works-status {
     display: flex;
