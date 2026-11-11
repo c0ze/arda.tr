@@ -454,6 +454,20 @@
   .chat-launch { padding: 0 8px; }
 }
 
+/* The bar never wraps or scrolls sideways. Below 400px "xerox-hc ▾" used to be
+   clipped: the caret goes and the gaps tighten, then the type steps to 10px. */
+@media (max-width: 400px) {
+  .bar { gap: 10px; padding: 0 10px; }
+  .bar nav { gap: 9px; }
+  .rend { padding: 3px 5px; }
+  .rend-caret { display: none; }
+}
+@media (max-width: 359px) {
+  .bar { gap: 6px; padding: 0 8px; font-size: 10px; }
+  .bar nav { gap: 7px; }
+  .rend { padding: 3px 4px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .prompt .cur { animation: none; }

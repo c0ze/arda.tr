@@ -34,7 +34,11 @@ export function ThemeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button type="button" className="rend" aria-label="Select rendition">
-          {current.id} ▾
+          {current.id}
+          <span className="rend-caret" aria-hidden="true">
+            {" "}
+            ▾
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

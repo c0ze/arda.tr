@@ -107,7 +107,9 @@ the prompt cursor from blinking.
 
 ## Mobile (≤ 700px)
 
-- The bar drops the path and the clock.
+- The bar drops the path and the clock. Under 400px the rendition switch
+  loses its ▾ and the gaps tighten; under 360px the bar's type steps down to
+  10px, so the switch stays on the bar at 320px.
 - The name scales down to about 16.5vw.
 - The Pagan plate shrinks.
 - The kind filter becomes a 2-column grid.
