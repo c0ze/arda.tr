@@ -293,7 +293,6 @@ let entries: array<entry> = [
     year: "2026",
     status: "LIVE",
     href: "https://tracker.coze.org",
-    repo: "https://github.com/c0ze/cozy-tracker",
     image: "/cozy-tracker.webp",
   },
   {
