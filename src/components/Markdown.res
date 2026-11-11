@@ -18,9 +18,9 @@ let tHref: inlineTok => string = %raw(`function (t) { return t.href || ""; }`)
 
 // Only allow link schemes that can't execute script (drop javascript:, data:, …).
 let safeHref = href =>
-  Js.String2.startsWith(href, "https://") ||
-  Js.String2.startsWith(href, "http://") ||
-  Js.String2.startsWith(href, "mailto:")
+  String.startsWith(href, "https://") ||
+  String.startsWith(href, "http://") ||
+  String.startsWith(href, "mailto:")
 
 let renderInline = toks =>
   toks
