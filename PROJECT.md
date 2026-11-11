@@ -88,7 +88,9 @@ mise exec node@24.14.0 -- npm run verify
   `npm run generate:themes-contract` after touching theme CSS or theme
   metadata; the `theme-contract.yml` workflow fails if it drifts.
   `config/themes.v1.json` is the frozen v1 contract, kept for old readers.
-- `scripts/generate-sitemap.mjs` regenerates the sitemap during builds.
+- `scripts/generate-sitemap.mjs` regenerates the sitemap during builds. Its
+  `<lastmod>` is the date of the last commit touching the content, so the
+  deploy checks out full history (`fetch-depth: 0`).
 - `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only before receiving text. The stream deadline is 45 s without data. Unless muted, requests carry `voice: true, lang: "en"` (from `voice.js` `requestFields`); one speaker per reply gates the visible text to what has been spoken, drives the orb's `level`, and is stopped on close, on a new question and on mute. The header's ♪ "Voice" toggle persists the choice site-wide (localStorage `voice`). Transport and React Strict Mode regressions run under `npm run verify` with mocked responses. `ChatWidget.voice.test.tsx` covers the voice path with a fake AudioContext and mocked speech events.
 
 ## Frontend Guardrails
