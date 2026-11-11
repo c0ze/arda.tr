@@ -36,7 +36,8 @@ boundary. Stay inside this split:
 - **TypeScript (`.tsx`/`.ts`)** — only the interop shell: the entry/provider
   (`main.tsx`, `App.tsx`, `ThemeProvider.tsx`, `ThemeToggle.tsx`,
   `TokyoClock.tsx`), the React `ErrorBoundary`, the Radix dropdown in
-  `components/ui/`, `lib/utils.ts`, and `OneBit.tsx`, which mounts the canvas
+  `components/ui/`, `lib/utils.ts`, `lib/deepLink.ts` (lands the URL's
+  `#fragment` after the client-side render), and `OneBit.tsx`, which mounts the canvas
   effects (bound for ReScript in `bindings/OneBit.res`). Don't grow this layer
   without a real reason.
 - **`src/lib/onebit.js`** is the family's shared 1-bit engine, copied verbatim
