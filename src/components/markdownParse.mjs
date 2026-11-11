@@ -11,33 +11,39 @@ const UL = /^\s*[-*+]\s+(.*)$/;
 const OL = /^\s*\d+\.\s+(.*)$/;
 const FENCE = /^\s*```/;
 const HEADING = /^\s*#{1,6}\s+/;
+// *italic* and _italic_ need non-blank text just inside the markers (regex)
+// and no letter, digit, "_" or "*" just outside them (checked in code, since
+// lookbehind would break the bundle in Safari before 16.4). So rust_on_rails,
+// URLs with underscores and 2 * 3 * 4 stay text.
 const INLINE =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^*\n]+?)\*)|(_([^_\n]+?)_)/;
+  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/g;
+const FLANK = /[\p{L}\p{N}_*]/u;
+const flanked = (ch) => ch !== undefined && FLANK.test(ch);
 
 function tokenizeInline(input) {
   const s = String(input == null ? "" : input);
   const tokens = [];
-  let rest = s;
+  let pos = 0; // start of text not yet emitted
   let guard = 0;
-  while (rest.length > 0) {
-    // Safety bound: preserve the remainder as text rather than dropping it.
-    if (guard++ >= 5000) {
-      tokens.push({ t: "text", v: rest });
-      break;
+  INLINE.lastIndex = 0;
+  // Safety bound: past it, the remainder is kept as text rather than dropped.
+  while (guard++ < 5000) {
+    const m = INLINE.exec(s);
+    if (!m) break;
+    const end = m.index + m[0].length;
+    if ((m[8] != null || m[10] != null) && (flanked(s[m.index - 1]) || flanked(s[end]))) {
+      INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
+      continue;
     }
-    const m = INLINE.exec(rest);
-    if (!m) {
-      tokens.push({ t: "text", v: rest });
-      break;
-    }
-    if (m.index > 0) tokens.push({ t: "text", v: rest.slice(0, m.index) });
+    if (m.index > pos) tokens.push({ t: "text", v: s.slice(pos, m.index) });
     if (m[1] != null) tokens.push({ t: "bold", v: m[2] });
     else if (m[3] != null) tokens.push({ t: "code", v: m[4] });
     else if (m[5] != null) tokens.push({ t: "link", v: m[6], href: m[7] });
     else if (m[8] != null) tokens.push({ t: "italic", v: m[9] });
     else if (m[10] != null) tokens.push({ t: "italic", v: m[11] });
-    rest = rest.slice(m.index + m[0].length);
+    pos = end;
   }
+  if (pos < s.length) tokens.push({ t: "text", v: s.slice(pos) });
   if (tokens.length === 0) tokens.push({ t: "text", v: "" });
   return tokens;
 }
