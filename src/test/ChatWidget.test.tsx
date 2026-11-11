@@ -117,3 +117,11 @@ it("marks the log busy while a reply streams, so it is announced once, complete"
   expect(await screen.findByText("Half an answer.")).toBeVisible();
   expect(log).not.toHaveAttribute("aria-busy", "true");
 });
+
+// The bot rejects a message over 20,000 characters with a 400, which the
+// widget can only show as a connection error; the input stops there instead.
+it("caps the question at the length the bot accepts", () => {
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  expect(screen.getByRole("textbox")).toHaveAttribute("maxlength", "20000");
+});
