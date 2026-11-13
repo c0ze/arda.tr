@@ -47,12 +47,15 @@ boundary. Stay inside this split:
   `voice.d.ts`, bound for ReScript in `bindings/Voice.res`), copied verbatim
   from `design-previews/onebit/voice.js` under the same rule. Its header
   documents the SSE voice protocol.
-- **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
+- **Page copy lives in `src/content/*Content.res`.**
   `CatalogContent.res` is the catalogue itself: every entry, its band (kind),
   and its catalogue number (the card's anchor id). `HeroContent.res` carries the
   status bar, the hero and the section prompts. `AboutContent.res` and
   `FooterContent.res` carry the record and contact. Keep it that way when
-  editing text.
+  editing text. The exceptions are small: section titles, row keys and UI
+  labels (`Works.res`, `Record.res`, `WorkCard.res`: "Works", "Record",
+  "featured", "src", "clear filter", ...) sit in their components, and the
+  chat's copy is the block of constants at the top of `ChatWidget.res`.
 - `src/config/site.generated.ts` is generated from `config/site.config.json` by
   `scripts/generate-site-config-module.mjs` (run via the `prepare` hook and the
   build); it is gitignored — edit the JSON, not the generated file.

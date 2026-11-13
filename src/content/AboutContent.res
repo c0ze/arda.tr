@@ -1,4 +1,4 @@
-// A bio paragraph is a sequence of segments; `emphasis` ones render as accented spans.
+// A bio paragraph is a sequence of segments; `emphasis` ones render as <strong>.
 type segment = {
   text: string,
   emphasis: bool,
@@ -42,7 +42,7 @@ let facts: array<fact> = [
   {label: "Past", value: "Gaussy · Robotfund · Mobilous"},
 ]
 
-// Scrolling tech ribbon (decorative — same skills are described above).
+// The stack, joined with " · " into the Record's "stack" row.
 let tech = [
   "Ruby",
   "Go",
@@ -62,8 +62,8 @@ let tech = [
   "Linux",
 ]
 
-// Maker-record fields. These live here, not in Record.res — AGENTS.md requires
-// all copy to sit in *Content.res so text edits never touch layout.
+// Maker-record fields. These live here, not in Record.res — PROJECT.md keeps
+// page copy in *Content.res so text edits never touch layout.
 let recordCat = "AK 0-0001"
 let recordName = "Arda Karaduman"
 let recordLanguages = "Turkish (native) · English (near-native) · Japanese (business)"
