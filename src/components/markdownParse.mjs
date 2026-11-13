@@ -4,7 +4,7 @@
 // inside a ReScript %raw template) to keep the regex escapes intact.
 //
 // Supported subset (what the ai.arda.tr bot actually emits):
-//   **bold**, *italic* / _italic_, `code`, [text](url),
+//   **bold**, *italic* / _italic_, `code`, [text](url), nested one level,
 //   "-" / "*" / "+" bullet lists, "1." ordered lists, ``` fenced code, paragraphs.
 
 const UL = /^\s*[-*+]\s+(.*)$/;
@@ -17,8 +17,8 @@ const HEADING = /^\s*#{1,6}\s+/;
 // underscores and 2 * 3 * 4 stay text. For "_" a word character is any letter
 // or digit, "_" or "*"; for "*" only an ASCII letter or digit, "_" or "*", as in
 // CommonMark: Japanese has no spaces, so これは*重要*です must be emphasis.
-const INLINE =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/g;
+const INLINE_SRC =
+  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);
@@ -35,12 +35,22 @@ const charBefore = (s, i) => {
 };
 const charAfter = (s, i) => (i < s.length ? String.fromCodePoint(s.codePointAt(i)) : undefined);
 
-function tokenizeInline(input) {
+// The text inside bold, italic and a link label is tokenized once more (into
+// `c`, only when it holds marks of its own), so **[label](url)** and
+// [**label**](url) render as written. One level is enough; a label cannot hold
+// a link, since it cannot hold "]".
+function nest(tok, depth) {
+  if (depth > 0) return tok;
+  const c = tokenizeInline(tok.v, depth + 1);
+  return c.length === 1 && c[0].t === "text" ? tok : { ...tok, c };
+}
+
+function tokenizeInline(input, depth = 0) {
   const s = String(input == null ? "" : input);
   const tokens = [];
   let pos = 0; // start of text not yet emitted
   let guard = 0;
-  INLINE.lastIndex = 0;
+  const INLINE = new RegExp(INLINE_SRC.source, "g"); // per call: nested calls run mid-scan
   // Safety bound: past it, the remainder is kept as text rather than dropped.
   while (guard++ < 5000) {
     const m = INLINE.exec(s);
@@ -52,11 +62,11 @@ function tokenizeInline(input) {
       continue;
     }
     if (m.index > pos) tokens.push({ t: "text", v: s.slice(pos, m.index) });
-    if (m[1] != null) tokens.push({ t: "bold", v: m[2] });
+    if (m[1] != null) tokens.push(nest({ t: "bold", v: m[2] }, depth));
     else if (m[3] != null) tokens.push({ t: "code", v: m[4] });
-    else if (m[5] != null) tokens.push({ t: "link", v: m[6], href: m[7] });
-    else if (m[8] != null) tokens.push({ t: "italic", v: m[9] });
-    else if (m[10] != null) tokens.push({ t: "italic", v: m[11] });
+    else if (m[5] != null) tokens.push(nest({ t: "link", v: m[6], href: m[7] }, depth));
+    else if (m[8] != null) tokens.push(nest({ t: "italic", v: m[9] }, depth));
+    else if (m[10] != null) tokens.push(nest({ t: "italic", v: m[11] }, depth));
     pos = end;
   }
   if (pos < s.length) tokens.push({ t: "text", v: s.slice(pos) });

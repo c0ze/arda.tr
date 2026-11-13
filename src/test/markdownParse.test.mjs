@@ -80,6 +80,31 @@ describe("chat markdown emphasis", () => {
     plain("ファイル_名_");
   });
 
+  // Models often wrap a link in bold or bold its label: one level of nesting.
+  it("tokenizes the inside of bold, italic and link labels", () => {
+    expect(inline("see **[golem](https://x.y)** now")).toEqual([
+      { t: "text", v: "see " },
+      { t: "bold", v: "[golem](https://x.y)", c: [{ t: "link", v: "golem", href: "https://x.y" }] },
+      { t: "text", v: " now" },
+    ]);
+    expect(inline("[**label**](https://x.y)")).toEqual([
+      { t: "link", v: "**label**", href: "https://x.y", c: [{ t: "bold", v: "label" }] },
+    ]);
+    expect(inline("*an `api` call*")).toEqual([
+      { t: "italic", v: "an `api` call", c: [{ t: "text", v: "an " }, { t: "code", v: "api" }, { t: "text", v: " call" }] },
+    ]);
+  });
+
+  it("nests one level only", () => {
+    expect(inline("**a *b `c`* d**")).toEqual([
+      {
+        t: "bold",
+        v: "a *b `c`* d",
+        c: [{ t: "text", v: "a " }, { t: "italic", v: "b `c`" }, { t: "text", v: " d" }],
+      },
+    ]);
+  });
+
   it("returns only plain data: markup in the reply stays text", () => {
     expect(inline("<img src=x onerror=alert(1)> *<b>x</b>*")).toEqual([
       { t: "text", v: "<img src=x onerror=alert(1)> " },

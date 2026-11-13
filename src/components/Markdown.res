@@ -15,6 +15,8 @@ let bInline: block => array<inlineTok> = %raw(`function (b) { return b.inline ||
 let tKind: inlineTok => string = %raw(`function (t) { return t.t; }`)
 let tVal: inlineTok => string = %raw(`function (t) { return t.v || ""; }`)
 let tHref: inlineTok => string = %raw(`function (t) { return t.href || ""; }`)
+// The marks inside bold, italic or a link label, when it has any (one level).
+let tKids: inlineTok => option<array<inlineTok>> = %raw(`function (t) { return Array.isArray(t.c) ? t.c : undefined; }`)
 
 // Only allow link schemes that can't execute script (drop javascript:, data:, …).
 let safeHref = href =>
@@ -22,13 +24,17 @@ let safeHref = href =>
   String.startsWith(href, "http://") ||
   String.startsWith(href, "mailto:")
 
-let renderInline = toks =>
+let rec renderInline = toks =>
   toks
   ->Array.mapWithIndex((tok, i) => {
     let key = Int.toString(i)
+    let inner = switch tKids(tok) {
+    | Some(kids) => renderInline(kids)
+    | None => React.string(tVal(tok))
+    }
     switch tKind(tok) {
-    | "bold" => <strong key className="font-semibold"> {React.string(tVal(tok))} </strong>
-    | "italic" => <em key className="italic"> {React.string(tVal(tok))} </em>
+    | "bold" => <strong key className="font-semibold"> inner </strong>
+    | "italic" => <em key className="italic"> inner </em>
     | "code" =>
       <code key className="bg-surface px-1 py-0.5 font-mono text-[0.85em] text-signal">
         {React.string(tVal(tok))}
@@ -41,9 +47,9 @@ let renderInline = toks =>
             target="_blank"
             rel="noopener noreferrer"
             className="text-signal underline underline-offset-2 hover:no-underline">
-            {React.string(tVal(tok))}
+            inner
           </a>
-        : <React.Fragment key> {React.string(tVal(tok))} </React.Fragment>
+        : <React.Fragment key> inner </React.Fragment>
     | _ => <React.Fragment key> {React.string(tVal(tok))} </React.Fragment>
     }
   })
