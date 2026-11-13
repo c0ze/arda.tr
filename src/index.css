@@ -404,7 +404,8 @@
   .qp { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
   .qp button { font: 12px/1.3 theme("fontFamily.mono"); border: 1px solid var(--rule); padding: 8px 10px; color: var(--fg-2); text-align: left; }
   .qp button:hover { border-color: var(--signal); color: var(--signal); }
-  .qp button em { font-style: normal; opacity: .6; margin-right: 8px; }
+  /* Numbers at full strength: dimmed by opacity they fell under 4.5:1. */
+  .qp button em { font-style: normal; margin-right: 8px; }
   .chat-form { display: flex; align-items: center; gap: 10px; margin: 0 12px 12px; border: 1px solid var(--rule); padding: 0 6px 0 12px; }
   .chat-form:focus-within { border-color: var(--signal); }
   .chat-form b { color: var(--signal); font: 14px/1 theme("fontFamily.mono"); font-weight: 400; }
