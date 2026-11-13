@@ -167,6 +167,30 @@ it("hands focus back to the control that opened it, such as the hero's ask butto
   await waitFor(() => expect(screen.getByRole("button", { name: "Ask about Arda" })).toHaveFocus());
 });
 
+// A mouse click need not move focus (Safari never focuses a clicked button),
+// so the opener is passed with the request; a second request while the chat
+// is open must not replace it with the chat's own input.
+it("returns focus to the opener it was given, even when the click did not focus it", async () => {
+  const before = document.createElement("a");
+  before.href = "#x";
+  before.textContent = "somewhere else";
+  const ask = document.createElement("button");
+  ask.textContent = "ask ▸";
+  ask.addEventListener("click", () => openChat(ask));
+  document.body.append(before, ask);
+  render(<ChatWidget />);
+  before.focus();
+  fireEvent.click(ask);
+  await waitFor(() => expect(screen.getByRole("textbox")).toHaveFocus());
+  // Asked again while open (focus is in the chat input now).
+  openChat();
+  fireEvent.click(ask);
+  fireEvent.keyDown(document, { key: "Escape" });
+  await waitFor(() => expect(ask).toHaveFocus());
+  before.remove();
+  ask.remove();
+});
+
 it("keeps the input usable and focused while a reply is on its way", async () => {
   // A disabled input loses keyboard focus (Chromium moves it to <body>) and
   // nothing hands it back, so every question cost the visitor their place.

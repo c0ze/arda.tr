@@ -206,13 +206,6 @@ let scrollToBottom: Dom.element => unit = %raw(`function (el) { if (el) el.scrol
 // Within about 40px of the bottom counts as following the conversation.
 let nearBottom: Dom.element => bool = %raw(`function (el) { return el.scrollHeight - el.scrollTop - el.clientHeight <= 40; }`)
 let focusEl: Dom.element => unit = %raw(`function (el) { if (el) el.focus(); }`)
-// The element that had focus when the chat was asked to open (null for none).
-let activeEl: unit => Nullable.t<Dom.element> = %raw(`
-  function () {
-    var a = typeof document !== "undefined" ? document.activeElement : null;
-    return a && a !== document.body ? a : null;
-  }
-`)
 // Focus `el` if it is still on the page, else `fallback`.
 let focusBack: (Nullable.t<Dom.element>, Nullable.t<Dom.element>) => unit = %raw(`
   function (el, fallback) {
@@ -232,18 +225,22 @@ let onEscape: (unit => unit) => (unit => unit) = %raw(`
 `)
 
 // Lets any other part of the page open the widget (e.g. a hero/nav CTA) without
-// sharing React state — a tiny window-event bus.
-let openChat: unit => unit = %raw(`
-  function () {
+// sharing React state — a tiny window-event bus. `opener` is the control that
+// asked (focus goes back to it on close); without one, whatever has focus at
+// dispatch. A mouse click does not always focus the button it hits.
+let openChat: Nullable.t<Dom.element> => unit = %raw(`
+  function (opener) {
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("arda:open-chat"));
+      var el = opener || document.activeElement;
+      if (el === document.body) el = null;
+      window.dispatchEvent(new CustomEvent("arda:open-chat", { detail: { opener: el || null } }));
     }
   }
 `)
 
-let listenForOpen: (unit => unit) => (unit => unit) = %raw(`
+let listenForOpen: (Nullable.t<Dom.element> => unit) => (unit => unit) = %raw(`
   function (cb) {
-    function handler() { cb(); }
+    function handler(e) { cb((e && e.detail && e.detail.opener) || null); }
     window.addEventListener("arda:open-chat", handler);
     return function () { window.removeEventListener("arda:open-chat", handler); };
   }
@@ -323,11 +320,16 @@ let make = () => {
   let listRef = React.useRef(Nullable.null)
   let inputRef = React.useRef(Nullable.null)
   let launcherRef = React.useRef(Nullable.null)
-  // Where focus goes back to on close: whatever opened the chat (the launcher,
-  // or the hero's `ask ▸`).
+  // Where focus goes back to on close: the control that opened the chat (the
+  // launcher, or the hero's `ask ▸`). Kept while the chat is open, so asking
+  // again from inside it cannot replace it.
   let returnRef = React.useRef(Nullable.null)
-  let openFromFocus = () => {
-    returnRef.current = activeEl()
+  let openRef = React.useRef(false)
+  let openFrom = opener => {
+    if !openRef.current {
+      openRef.current = true
+      returnRef.current = opener
+    }
     setIsOpen(_ => true)
   }
   // Voice: the visitor's choice (shared site-wide through voice.js), the
@@ -437,6 +439,7 @@ let make = () => {
   // to the launcher (non-modal widget — restore focus, not trap).
   React.useEffect1(() => {
     if isOpen {
+      openRef.current = true
       switch inputRef.current->Nullable.toOption {
       | Some(el) => focusEl(el)
       | None => ()
@@ -451,8 +454,8 @@ let make = () => {
           followRef.current = true
           // Closing the widget silences it.
           stopSpeech()
+          openRef.current = false
           focusBack(returnRef.current, launcherRef.current)
-          returnRef.current = Nullable.null
         },
       )
     } else {
@@ -461,7 +464,7 @@ let make = () => {
   }, [isOpen])
 
   // Open when another part of the page requests it.
-  React.useEffect0(() => Some(listenForOpen(openFromFocus)))
+  React.useEffect0(() => Some(listenForOpen(openFrom)))
 
   // Follow the mute toggle (a muting speaker stops itself and reveals all).
   React.useEffect0(() => Some(Voice.onVoiceChange(on => setVoiceOn(_ => on))))
@@ -610,7 +613,7 @@ let make = () => {
       : <button
           ref={ReactDOM.Ref.domRef(launcherRef)}
           type_="button"
-          onClick={_ => openFromFocus()}
+          onClick={e => openFrom(Nullable.make(ReactEvent.Mouse.currentTarget(e)->Obj.magic))}
           ariaLabel={launcherLabel}
           ariaHaspopup=#dialog
           className="chat-launch">

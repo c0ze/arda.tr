@@ -58,7 +58,7 @@ let make = () => {
           type_="button"
           className="cta ghost"
           ariaLabel=HeroContent.askLabel
-          onClick={_ => ChatWidget.openChat()}>
+          onClick={e => ChatWidget.openChat(Nullable.make(ReactEvent.Mouse.currentTarget(e)->Obj.magic))}>
           {HeroContent.askCta->React.string}
           <span ariaHidden=true> {" ▸"->React.string} </span>
         </button>
