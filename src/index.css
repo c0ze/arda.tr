@@ -448,6 +448,8 @@
   .foot-bar { padding: 18px 16px 72px; }
   .foot-bar .colophon { text-align: left; }
   .chat { left: 0; right: 0; bottom: 0; width: auto; max-height: 85vh; border-width: 1px 0 0; }
+  /* Under 16px iOS Safari zooms the page when the input takes focus on open. */
+  .chat-form input { font-size: 16px; }
 }
 @media (max-width: 560px) {
   .grid-works { grid-template-columns: minmax(0, 1fr); }
