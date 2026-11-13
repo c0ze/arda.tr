@@ -14,7 +14,12 @@
     <script>
       try {
         var t = localStorage.getItem("theme");
-        if (["night", "night-hc", "xerox", "xerox-hc"].indexOf(t) > -1) document.documentElement.className = t;
+        var grounds = { night: "#060708", "night-hc": "#000000", xerox: "#efede6", "xerox-hc": "#ffffff" };
+        if (Object.prototype.hasOwnProperty.call(grounds, t)) {
+          document.documentElement.className = t;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", grounds[t]);
+        }
       } catch (e) {}
     </script>
     <style>

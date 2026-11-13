@@ -29,6 +29,20 @@ describe("404 page", () => {
     }
   });
 
+  it("sets theme-color to the stored rendition's ground", () => {
+    const meta = document.createElement("meta");
+    meta.name = "theme-color";
+    meta.content = "#060708";
+    document.head.append(meta);
+    const grounds = { night: "#060708", "night-hc": "#000000", xerox: "#efede6", "xerox-hc": "#ffffff" };
+    for (const [id, ground] of Object.entries(grounds)) {
+      window.localStorage.setItem("theme", id);
+      run();
+      expect(meta.content).toBe(ground);
+    }
+    meta.remove();
+  });
+
   it("ignores unknown ids and blocked storage", () => {
     window.localStorage.setItem("theme", "x onclick=alert(1)");
     run();
