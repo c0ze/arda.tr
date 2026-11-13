@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parse, plainText } from "../components/markdownParse.mjs";
+import { closeOpenMarks, parse, plainText, revealPrefix } from "../components/markdownParse.mjs";
 
 // Chat replies talk about code, so identifiers, URLs and arithmetic must come
 // through as written; only deliberate emphasis turns into <em>.
@@ -160,7 +160,55 @@ describe("chat markdown on adversarial input", () => {
       const t0 = performance.now();
       parse(text);
       plainText(text);
+      closeOpenMarks(text);
+      revealPrefix(text, text.length >> 1);
       expect(performance.now() - t0).toBeLessThan(1000);
     });
   }
+});
+
+// While a reply streams (or is revealed as it is spoken), its unfinished
+// tail is repaired so open markers do not show raw. Code is never touched.
+describe("repairing a reply that is still being written", () => {
+  const same = (text) => expect(closeOpenMarks(text)).toBe(text);
+
+  it("closes an open ** or ` and shows a half-typed link as its label", () => {
+    expect(closeOpenMarks("He builds **golem and `rust_on")).toBe("He builds **golem and `rust_on`**");
+    expect(closeOpenMarks("see [the docs](https://x")).toBe("see the docs");
+    expect(closeOpenMarks("see [the do")).toBe("see the do");
+    expect(closeOpenMarks("an opener with nothing after it: **")).toBe("an opener with nothing after it: ");
+    expect(closeOpenMarks("a `")).toBe("a ");
+  });
+
+  it("leaves code spans and fenced code alone", () => {
+    same("Use `**` syntax");
+    same("Use `a [b` syntax");
+    same("```\ncode **x and [y\n");
+    expect(closeOpenMarks("```\na**b\n```\nThen **bo")).toBe("```\na**b\n```\nThen **bo**");
+    expect(closeOpenMarks("Use `**` and **bo")).toBe("Use `**` and **bo**");
+  });
+
+  it("repairs only the block being written", () => {
+    expect(closeOpenMarks("**a stray opener\n\nthen **bo")).toBe("**a stray opener\n\nthen **bo**");
+    expect(closeOpenMarks("- one\n- two **th")).toBe("- one\n- two **th**");
+  });
+
+  it("closes a trailing *italic or _italic opener, but not arithmetic or identifiers", () => {
+    expect(closeOpenMarks("This is *impor")).toBe("This is *impor*");
+    expect(closeOpenMarks("call _init")).toBe("call _init_");
+    expect(closeOpenMarks("**bold _it")).toBe("**bold _it_**");
+    expect(closeOpenMarks("*a **b** c")).toBe("*a **b** c*");
+    expect(closeOpenMarks("_a **b** c")).toBe("_a **b** c_");
+    for (const text of ["2 * 3", "2*3", "2 *", "snake_ca", "a *b ", "* item", "a*b", "**bold *it**", "**bold _it**"]) same(text);
+    // A lone * inside an open ** would read as ***: left to the ** repair.
+    expect(closeOpenMarks("**bold *it")).toBe("**bold *it**");
+  });
+
+  it("repairs the revealed part of a spoken reply, even once speech has caught up", () => {
+    expect(revealPrefix("**golem", 7)).toBe("**golem**");
+    expect(revealPrefix("**golem**", 3)).toBe("**g**");
+    expect(revealPrefix("a **b**", 3)).toBe("a ");
+    expect(revealPrefix("Use `**` here", 8)).toBe("Use `**`");
+    expect(revealPrefix("𠮷x", 1)).toBe("");
+  });
 });

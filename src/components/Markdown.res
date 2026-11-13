@@ -8,6 +8,10 @@ type inlineTok
 
 @module("./markdownParse.mjs") external parse: string => array<block> = "parse"
 @module("./markdownParse.mjs") external plainText: string => string = "plainText"
+// For the reply still being written: its last block repaired so open markers
+// do not show raw (code untouched), and the part the voice has reached.
+@module("./markdownParse.mjs") external closeOpenMarks: string => string = "closeOpenMarks"
+@module("./markdownParse.mjs") external revealPrefix: (string, int) => string = "revealPrefix"
 
 let bType: block => string = %raw(`function (b) { return b.type; }`)
 let bText: block => string = %raw(`function (b) { return b.text || ""; }`)

@@ -11,6 +11,7 @@ const UL = /^\s*[-*+]\s+(.*)$/;
 const OL = /^\s*\d+\.\s+(.*)$/;
 const FENCE = /^\s*```/;
 const HEADING = /^\s*#{1,6}\s+/;
+const blankLine = (l) => l.trim() === "";
 // *italic* and _italic_ need non-blank text just inside the markers (regex)
 // and no word character just outside them (checked in code, since lookbehind
 // would break the bundle in Safari before 16.4). So rust_on_rails, URLs with
@@ -84,7 +85,7 @@ export function parse(src) {
   const lines = text.split("\n");
   const blocks = [];
   let i = 0;
-  const blank = (l) => l.trim() === "";
+  const blank = blankLine;
 
   while (i < lines.length) {
     const line = lines[i];
@@ -149,4 +150,102 @@ export function plainText(src) {
   return parse(src)
     .map((b) => (b.type === "code" ? b.text : b.type === "p" ? inlineText(b.inline) : b.items.map(inlineText).join("\n")))
     .join("\n");
+}
+
+// ── Replies still being written ──────────────────────────────────────────
+// While a reply streams, or is revealed as it is spoken, its last block is
+// repaired before it is parsed: a half-typed link shows as its label, and an
+// open **, ` or a trailing *italic / _italic opener is closed, so the words
+// after it are not framed by raw markers until the closing half arrives.
+// Code spans and fenced code are never changed, and earlier blocks are left
+// as they are (each block is parsed on its own).
+
+const isBlank = (ch) => ch === undefined || /\s/.test(ch);
+
+// Character offsets of `t` inside code spans (backticks paired in order); an
+// unpaired last backtick opens code to the end. Returns the masked text, with
+// code replaced by \u0001, and that opener's offset (or -1).
+function maskCode(t) {
+  const ticks = [];
+  for (let i = 0; i < t.length; i++) if (t[i] === "`") ticks.push(i);
+  const open = ticks.length % 2 ? ticks[ticks.length - 1] : -1;
+  const chars = t.split("");
+  for (let k = 0; k + 1 < ticks.length; k += 2) for (let i = ticks[k]; i <= ticks[k + 1]; i++) chars[i] = "\u0001";
+  if (open >= 0) for (let i = open; i < t.length; i++) chars[i] = "\u0001";
+  return { m: chars.join(""), open };
+}
+
+// The last single `ch` (not part of a run like **), if it opens emphasis:
+// text right after it, and no word character before it. Being the last, it
+// has nothing to close it. Otherwise -1.
+function loneOpener(m, ch, flank) {
+  let at = m.length - 1;
+  while (at >= 0) {
+    if (m[at] !== ch) { at--; continue; }
+    let start = at;
+    while (start > 0 && m[start - 1] === ch) start--;
+    if (start === at) break;
+    at = start - 1;
+  }
+  if (at < 0 || isBlank(m[at + 1]) || flanked(charBefore(m, at), flank)) return -1;
+  return at;
+}
+
+function repairInline(text) {
+  let t = text;
+  // A half-typed link (outside code) shows as its label.
+  const link = /\[([^[\]\n]*)(\]\([^)\n]*)?$/.exec(maskCode(t).m);
+  if (link) t = t.slice(0, link.index) + t.slice(link.index + 1, link.index + 1 + link[1].length);
+
+  const { m, open: code } = maskCode(t);
+  const bolds = m.match(/\*\*/g) || [];
+  const bold = bolds.length % 2 ? m.lastIndexOf("**") : -1;
+  const boldsBefore = (at) => (m.slice(0, at).match(/\*\*/g) || []).length;
+  const openers = [];
+  if (code >= 0) openers.push({ at: code, mark: "`" });
+  if (bold >= 0) openers.push({ at: bold, mark: "**" });
+  if (!isBlank(t[t.length - 1])) {
+    // Inside a bold pair a closing * would read as ***: left alone.
+    const star = loneOpener(m, "*", FLANK_STAR);
+    if (star >= 0 && boldsBefore(star) % 2 === 0) openers.push({ at: star, mark: "*" });
+    // _ may close inside an open bold, but not inside one already closed.
+    const under = loneOpener(m, "_", FLANK);
+    if (under >= 0 && !(boldsBefore(under) % 2 === 1 && m.indexOf("**", under) >= 0)) openers.push({ at: under, mark: "_" });
+  }
+  // Innermost (opened last) first; an opener with nothing after it yet is
+  // dropped, not closed: "**" + "**" would show as "****".
+  openers.sort((a, b) => b.at - a.at);
+  for (const { at, mark } of openers) t = at === t.length - mark.length ? t.slice(0, at) : t + mark;
+  return t;
+}
+
+export function closeOpenMarks(src) {
+  const s = String(src == null ? "" : src);
+  const lines = s.split("\n");
+  let fences = 0;
+  for (const l of lines) if (FENCE.test(l)) fences++;
+  const last = lines.length - 1;
+  // Inside an open fence the rest is code; after a blank line or a closing
+  // fence the block being written has not started yet.
+  if (fences % 2 || blankLine(lines[last]) || FENCE.test(lines[last])) return s;
+  let i = last;
+  if (!UL.test(lines[i]) && !OL.test(lines[i])) {
+    while (i > 0 && !blankLine(lines[i - 1]) && !UL.test(lines[i - 1]) && !OL.test(lines[i - 1]) && !FENCE.test(lines[i - 1])) i--;
+  }
+  const tail = repairInline(lines.slice(i).join("\n"));
+  return i > 0 ? lines.slice(0, i).join("\n") + "\n" + tail : tail;
+}
+
+// The part of a reply the voice has reached (`n` UTF-16 units of it), repaired
+// as above: never half a surrogate pair or half a ** marker.
+export function revealPrefix(text, n) {
+  let s = String(text == null ? "" : text);
+  if (n >= 0 && n < s.length) {
+    const full = s;
+    s = s.slice(0, n);
+    const lastCode = s.charCodeAt(s.length - 1);
+    if (lastCode >= 0xd800 && lastCode <= 0xdbff) s = s.slice(0, -1);
+    if (s.endsWith("*") && full.charAt(s.length) === "*") s = s.slice(0, -1); // half a ** marker
+  }
+  return closeOpenMarks(s);
 }
