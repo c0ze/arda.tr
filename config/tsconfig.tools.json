@@ -7,6 +7,6 @@
     "strict": true,
     "tsBuildInfoFile": "../.cache/tsconfig.tools.tsbuildinfo"
   },
-  "include": ["./vite.config.ts"]
+  "include": ["./vite.config.ts", "./vitest.config.ts"]
 }
 

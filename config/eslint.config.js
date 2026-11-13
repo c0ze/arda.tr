@@ -18,6 +18,17 @@ export default tseslint.config(
     },
   },
   {
+    // Hand-written modules (the markdown parser, tests); not ReScript output.
+    ...js.configs.recommended,
+    files: ["src/**/*.mjs"],
+    ignores: ["**/*.res.mjs"],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "module",
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
+  {
     files: ["src/**/*.{ts,tsx}"],
     extends: [...tseslint.configs.recommended],
     languageOptions: {
