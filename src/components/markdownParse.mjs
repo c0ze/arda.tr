@@ -31,8 +31,10 @@ const blankLine = (l) => l.trim() === "";
 // each unmatched "[" rescanned the rest of the reply (quadratic on "[[[[…").
 // An optional quoted title after the URL ("…" or '…') is accepted and dropped.
 // An *italic* may hold **bold** pairs (*a **b** c*); a single "*" still ends it.
+// ***x*** is bold wrapping italic; it is tried before bold, which would
+// otherwise take "*x" as its text and leave a stray "*".
 const INLINE_SRC =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
+  /(\*\*\*([^\s*](?:[^*\n]*?[^\s*])?)\*\*\*)|(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);
@@ -75,17 +77,18 @@ function tokenizeInline(input, depth = 0, live = false) {
     const m = INLINE.exec(s);
     if (!m) break;
     const end = m.index + m[0].length;
-    const flank = m[8] != null ? FLANK_STAR : m[10] != null ? FLANK : null;
+    const flank = m[1] != null || m[10] != null ? FLANK_STAR : m[12] != null ? FLANK : null;
     if (flank && (flanked(charBefore(s, m.index), flank) || flanked(charAfter(s, end), flank))) {
       INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
       continue;
     }
     if (m.index > pos) push({ t: "text", v: s.slice(pos, m.index) }, pos);
-    if (m[1] != null) push(nest({ t: "bold", v: m[2] }, depth), m.index);
-    else if (m[3] != null) push({ t: "code", v: m[4] }, m.index);
-    else if (m[5] != null) push(nest({ t: "link", v: m[6], href: m[7] }, depth), m.index);
-    else if (m[8] != null) push(nest({ t: "italic", v: m[9] }, depth), m.index);
+    if (m[1] != null) push({ t: "bold", v: `*${m[2]}*`, c: [{ t: "italic", v: m[2] }] }, m.index);
+    else if (m[3] != null) push(nest({ t: "bold", v: m[4] }, depth), m.index);
+    else if (m[5] != null) push({ t: "code", v: m[6] }, m.index);
+    else if (m[7] != null) push(nest({ t: "link", v: m[8], href: m[9] }, depth), m.index);
     else if (m[10] != null) push(nest({ t: "italic", v: m[11] }, depth), m.index);
+    else if (m[12] != null) push(nest({ t: "italic", v: m[13] }, depth), m.index);
     pos = end;
   }
   if (pos < s.length) push({ t: "text", v: s.slice(pos) }, pos);

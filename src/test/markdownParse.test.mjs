@@ -119,6 +119,15 @@ describe("chat markdown emphasis", () => {
     }
   });
 
+  it("reads ***x*** as bold wrapping italic", () => {
+    expect(inline("a ***b c*** d")).toEqual([
+      { t: "text", v: "a " },
+      { t: "bold", v: "*b c*", c: [{ t: "italic", v: "b c" }] },
+      { t: "text", v: " d" },
+    ]);
+    expect(plainText("***x***")).toBe("x");
+  });
+
   it("accepts a quoted link title and ignores it", () => {
     for (const title of ['"Documentation"', "'Documentation'", '"a (b) \'c\'"']) {
       expect(inline(`[Docs](https://example.com ${title}) here`)).toEqual([

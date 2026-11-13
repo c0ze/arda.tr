@@ -25,6 +25,12 @@ describe("chat markdown rendering", () => {
     expect(container.textContent).toBe("Docs x");
   });
 
+  it("renders ***x*** as bold wrapping italic", () => {
+    const { container } = render(<Markdown text={"***x***"} />);
+    expect(container.querySelector("strong > em")).toHaveTextContent(/^x$/);
+    expect(container.textContent).toBe("x");
+  });
+
   it("renders bold inside italic", () => {
     const { container } = render(<Markdown text={"*a **b** c*"} />);
     expect(container.querySelector("em > strong")).toHaveTextContent(/^b$/);
