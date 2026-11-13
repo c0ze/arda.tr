@@ -12,13 +12,16 @@ const OL = /^\s*\d+\.\s+(.*)$/;
 const FENCE = /^\s*```/;
 const HEADING = /^\s*#{1,6}\s+/;
 // *italic* and _italic_ need non-blank text just inside the markers (regex)
-// and no letter, digit, "_" or "*" just outside them (checked in code, since
-// lookbehind would break the bundle in Safari before 16.4). So rust_on_rails,
-// URLs with underscores and 2 * 3 * 4 stay text.
+// and no word character just outside them (checked in code, since lookbehind
+// would break the bundle in Safari before 16.4). So rust_on_rails, URLs with
+// underscores and 2 * 3 * 4 stay text. For "_" a word character is any letter
+// or digit, "_" or "*"; for "*" only an ASCII letter or digit, "_" or "*", as in
+// CommonMark: Japanese has no spaces, so これは*重要*です must be emphasis.
 const INLINE =
   /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/g;
 const FLANK = /[\p{L}\p{N}_*]/u;
-const flanked = (ch) => ch !== undefined && FLANK.test(ch);
+const FLANK_STAR = /^[A-Za-z0-9_*]$/;
+const flanked = (ch, re) => ch !== undefined && re.test(ch);
 // The neighbours are read as whole code points, so a letter outside the BMP
 // (𠮷, 𝑥) counts as a letter instead of half a surrogate pair.
 const charBefore = (s, i) => {
@@ -43,7 +46,8 @@ function tokenizeInline(input) {
     const m = INLINE.exec(s);
     if (!m) break;
     const end = m.index + m[0].length;
-    if ((m[8] != null || m[10] != null) && (flanked(charBefore(s, m.index)) || flanked(charAfter(s, end)))) {
+    const flank = m[8] != null ? FLANK_STAR : m[10] != null ? FLANK : null;
+    if (flank && (flanked(charBefore(s, m.index), flank) || flanked(charAfter(s, end), flank))) {
       INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
       continue;
     }

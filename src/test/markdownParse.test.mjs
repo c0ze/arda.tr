@@ -16,7 +16,7 @@ describe("chat markdown emphasis", () => {
   it("treats letters outside the BMP as letters next to a marker", () => {
     plain("𠮷_name_");
     plain("_name_𠮷");
-    plain("𝑥*value*");
+    plain("𝑥_value_");
   });
 
   it("keeps arithmetic and stray asterisks as text", () => {
@@ -51,6 +51,33 @@ describe("chat markdown emphasis", () => {
       { t: "text", v: "snake_case and " },
       { t: "italic", v: "real" },
     ]);
+  });
+
+  // Japanese has no spaces, so the word-boundary rule for "*" counts only ASCII
+  // letters and digits (as CommonMark does); "_" keeps the full Unicode rule.
+  it("renders *emphasis* inside Japanese text", () => {
+    expect(inline("これは*重要*です")).toEqual([
+      { t: "text", v: "これは" },
+      { t: "italic", v: "重要" },
+      { t: "text", v: "です" },
+    ]);
+    expect(inline("漢字**太字**と*斜体*。")).toEqual([
+      { t: "text", v: "漢字" },
+      { t: "bold", v: "太字" },
+      { t: "text", v: "と" },
+      { t: "italic", v: "斜体" },
+      { t: "text", v: "。" },
+    ]);
+    expect(inline("𠮷*強調*𠮷")).toEqual([
+      { t: "text", v: "𠮷" },
+      { t: "italic", v: "強調" },
+      { t: "text", v: "𠮷" },
+    ]);
+  });
+
+  it("keeps _ inside Japanese words as text", () => {
+    plain("これは_重要_です");
+    plain("ファイル_名_");
   });
 
   it("returns only plain data: markup in the reply stays text", () => {
