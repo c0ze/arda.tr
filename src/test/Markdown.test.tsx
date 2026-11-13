@@ -16,6 +16,13 @@ describe("chat markdown rendering", () => {
     expect(container.textContent).not.toContain("*");
   });
 
+  it("renders bold inside italic", () => {
+    const { container } = render(<Markdown text={"*a **b** c*"} />);
+    expect(container.querySelector("em > strong")).toHaveTextContent(/^b$/);
+    expect(container.querySelector("em")).toHaveTextContent(/^a b c$/);
+    expect(container.textContent).not.toContain("*");
+  });
+
   it("keeps unsafe hrefs and markup inert inside nested marks", () => {
     const { container } = render(<Markdown text={"**[x](javascript:alert(1))** [*<img src=x onerror=alert(1)>*](https://a.b)"} />);
     expect(container.querySelector("a[href^='javascript']")).toBeNull();

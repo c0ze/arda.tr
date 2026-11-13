@@ -105,6 +105,20 @@ describe("chat markdown emphasis", () => {
     ]);
   });
 
+  it("lets italic hold bold", () => {
+    expect(inline("so *a **b** c* then")).toEqual([
+      { t: "text", v: "so " },
+      { t: "italic", v: "a **b** c", c: [{ t: "text", v: "a " }, { t: "bold", v: "b" }, { t: "text", v: " c" }] },
+      { t: "text", v: " then" },
+    ]);
+    expect(inline("*__x__ **b***")[0]).toMatchObject({ t: "italic", v: "__x__ **b**" });
+    expect(plainText("*a **b** c*")).toBe("a b c");
+    // The ASCII boundary rule still applies to the italic's own markers.
+    for (const text of ["x*a **b** c*y", "2 * 3 **x** 4 * 5"]) {
+      expect(inline(text).map((t) => t.t)).toEqual(["text", "bold", "text"]);
+    }
+  });
+
   it("keeps one balanced pair of parentheses in a link URL", () => {
     expect(inline("[Foo](https://en.wikipedia.org/wiki/Foo_(bar)) here")).toEqual([
       { t: "link", v: "Foo", href: "https://en.wikipedia.org/wiki/Foo_(bar)" },

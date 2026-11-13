@@ -21,8 +21,9 @@ const HEADING = /^\s*#{1,6}\s+/;
 // parentheses beyond one balanced pair (Wikipedia's Foo_(bar)), so every scan
 // for a link stops at the next bracket or stray parenthesis: without that,
 // each unmatched "[" rescanned the rest of the reply (quadratic on "[[[[…").
+// An *italic* may hold **bold** pairs (*a **b** c*); a single "*" still ends it.
 const INLINE_SRC =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
+  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);
