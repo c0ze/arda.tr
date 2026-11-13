@@ -63,7 +63,8 @@ Fonts load from Google Fonts in `index.html`.
   over the forest.
 - Rules are 1px `--rule`. Grids are drawn as 1px gaps over a `--rule` ground.
 - Focus ring: 2px solid `--signal`, offset 2px. Inside the bone contact bar it
-  uses `--bg`.
+  uses `--bg`, and so does the ring inset on the pressed (signal-filled) kind
+  filter button.
 - Any text over imagery sits on a solid `--bg` backing: the kicker, the intro,
   the mast tag and the Pagan plate. On screens under 900px the name gets a
   backing too.

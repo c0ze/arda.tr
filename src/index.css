@@ -258,6 +258,9 @@
   .kinds button:hover { color: var(--fg); }
   .kinds button[aria-pressed="true"] { background: var(--signal); color: var(--bg); }
   .kinds button:focus-visible { outline-offset: -4px; outline-color: var(--fg); }
+  /* The ring sits inside the signal fill of the pressed button, where --fg is
+     1.1-2.6:1; --bg is 6.3-18:1. */
+  .kinds button[aria-pressed="true"]:focus-visible { outline-color: var(--bg); }
   .works-status {
     display: flex;
     flex-wrap: wrap;
