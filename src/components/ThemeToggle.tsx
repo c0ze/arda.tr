@@ -4,7 +4,8 @@ import { themes } from "@/config/site";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -33,7 +34,7 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="rend" aria-label="Select rendition">
+        <button type="button" className="rend" aria-label={`Rendition: ${current.id}`}>
           {current.id}
           <span className="rend-caret" aria-hidden="true">
             {" "}
@@ -42,13 +43,16 @@ export function ThemeToggle() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        {themes.map((t) => (
-          <DropdownMenuItem key={t.id} onClick={() => setTheme(t.id)} className={theme === t.id ? "text-signal" : ""}>
-            <span className="inline-block h-3 w-3 border border-fg-2" style={{ backgroundColor: t.color }} aria-hidden="true" />
-            <span>{t.id}</span>
-            <span className="ml-auto text-fg-2">{theme === t.id ? "● on" : t.hint}</span>
-          </DropdownMenuItem>
-        ))}
+        {/* menuitemradio + aria-checked carry the state; "● on" is its visible twin. */}
+        <DropdownMenuRadioGroup value={current.id} onValueChange={setTheme}>
+          {themes.map((t) => (
+            <DropdownMenuRadioItem key={t.id} value={t.id} className={current.id === t.id ? "text-signal" : ""}>
+              <span className="inline-block h-3 w-3 border border-fg-2" style={{ backgroundColor: t.color }} aria-hidden="true" />
+              <span>{t.id}</span>
+              <span className="ml-auto text-fg-2">{current.id === t.id ? "● on" : t.hint}</span>
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -55,7 +55,7 @@ let make = (~entry: CatalogContent.entry, ~index: int) => {
               className="src"
               href=entry.repo
               rel="noopener noreferrer"
-              ariaLabel={`Source for ${entry.name}`}>
+              ariaLabel={`src: source for ${entry.name}`}>
               {"src"->React.string}
             </a>
           : React.null}

@@ -22,7 +22,7 @@ it("shows streamed replies under Strict Mode and keeps them in subsequent histor
   const input = screen.getByRole("textbox");
   await waitFor(() => expect(input).toBeEnabled());
   fireEvent.change(input, { target: { value: "Follow up" } });
-  fireEvent.click(screen.getByRole("button", { name: "Send" }));
+  fireEvent.click(screen.getByRole("button", { name: "Send (enter)" }));
   expect(JSON.parse(fetch.mock.calls[1][1].body).history).toContainEqual({ role: "model", content: "Visible answer" });
   await waitFor(() => expect(read).toHaveBeenCalledTimes(3));
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Second answer"}\n\n') });
@@ -185,7 +185,7 @@ it("keeps the input usable and focused while a reply is on its way", async () =>
   expect(input).toHaveFocus();
   // Busy still guards sending: typing ahead is fine, a second request is not.
   fireEvent.change(input, { target: { value: "Second question" } });
-  expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+  expect(screen.getByRole("button", { name: "Send (enter)" })).toBeDisabled();
   fireEvent.submit(input.closest("form")!);
   expect(fetch).toHaveBeenCalledTimes(1);
 

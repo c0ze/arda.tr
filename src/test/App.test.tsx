@@ -25,7 +25,8 @@ describe("App", () => {
     expect(h1s).toHaveLength(1);
     expect(h1s[0]).toHaveTextContent(/Arda\s+Karaduman/);
 
-    expect(screen.getByRole("button", { name: "Select rendition" })).toBeInTheDocument();
+    // The name says the current rendition, as the chip does (label in name).
+    expect(screen.getByRole("button", { name: "Rendition: night" })).toHaveTextContent(/^night/);
     expect(screen.getByRole("link", { name: "ls ~/works ↓" })).toHaveAttribute("href", "#catalogue");
     // llms.txt deep-links these three sections.
     for (const id of ["catalogue", "record", "contact"]) {
@@ -58,7 +59,7 @@ describe("App", () => {
       } else {
         expect(within(card).queryByRole("link", { name: e.name })).toBeNull();
       }
-      const src = within(card).queryByRole("link", { name: `Source for ${e.name}` });
+      const src = within(card).queryByRole("link", { name: `src: source for ${e.name}` });
       if (e.href && e.repo) expect(src).toHaveAttribute("href", e.repo);
       else expect(src).toBeNull();
     }
@@ -122,5 +123,25 @@ describe("App", () => {
     expect(screen.queryByRole("dialog", { name: "Ask about Arda" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Ask Arda's AI" }));
     expect(screen.getByRole("dialog", { name: "Ask about Arda" })).toBeInTheDocument();
+  });
+
+  it("offers the renditions as a radio menu that marks the current one", async () => {
+    render(<App />);
+    const trigger = screen.getByRole("button", { name: "Rendition: night" });
+    fireEvent.keyDown(trigger, { key: "Enter" });
+    const items = await screen.findAllByRole("menuitemradio");
+    expect(items.map((i) => i.textContent)).toEqual([
+      expect.stringMatching(/^night/),
+      expect.stringMatching(/^night-hc/),
+      expect.stringMatching(/^xerox/),
+      expect.stringMatching(/^xerox-hc/),
+    ]);
+    expect(items.filter((i) => i.getAttribute("aria-checked") === "true")).toEqual([items[0]]);
+
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /^xerox(?!-hc)/ }));
+    expect(document.documentElement).toHaveClass("xerox");
+    expect(await screen.findByRole("button", { name: "Rendition: xerox" })).toBeInTheDocument();
+    window.localStorage.clear();
+    document.documentElement.className = "";
   });
 });
