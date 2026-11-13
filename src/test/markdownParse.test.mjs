@@ -119,6 +119,19 @@ describe("chat markdown emphasis", () => {
     }
   });
 
+  it("accepts a quoted link title and ignores it", () => {
+    for (const title of ['"Documentation"', "'Documentation'", '"a (b) \'c\'"']) {
+      expect(inline(`[Docs](https://example.com ${title}) here`)).toEqual([
+        { t: "link", v: "Docs", href: "https://example.com" },
+        { t: "text", v: " here" },
+      ]);
+    }
+    // Still only http(s)/mailto hrefs render as links (Markdown.res), and the
+    // title is never emitted.
+    expect(inline('[x](javascript:alert(1) "t")')[0]).toEqual({ t: "link", v: "x", href: "javascript:alert(1)" });
+    plain('[Docs](https://example.com "unterminated)');
+  });
+
   it("keeps one balanced pair of parentheses in a link URL", () => {
     expect(inline("[Foo](https://en.wikipedia.org/wiki/Foo_(bar)) here")).toEqual([
       { t: "link", v: "Foo", href: "https://en.wikipedia.org/wiki/Foo_(bar)" },
@@ -148,6 +161,8 @@ describe("chat markdown on adversarial input", () => {
     "label then brackets": "[a](" + "x[".repeat(N / 2),
     "unfinished link targets": "[a](".repeat(N / 4) + ")!",
     "closed labels": "](".repeat(N / 2),
+    "unclosed titles": '[a](u "'.repeat(N / 7),
+    "spaces before a title": "[a](u" + " ".repeat(N),
     asterisks: "*".repeat(N),
     "word asterisks": "x*".repeat(N / 2),
     "spaced asterisks": "* a ".repeat(N / 4),

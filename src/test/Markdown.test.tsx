@@ -16,6 +16,15 @@ describe("chat markdown rendering", () => {
     expect(container.textContent).not.toContain("*");
   });
 
+  it("renders a titled link without the title, under the same allow-list", () => {
+    const { container } = render(<Markdown text={'[Docs](https://example.com "Documentation") [x](javascript:alert(1) "t")'} />);
+    const links = container.querySelectorAll("a");
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "https://example.com");
+    expect(links[0]).not.toHaveAttribute("title");
+    expect(container.textContent).toBe("Docs x");
+  });
+
   it("renders bold inside italic", () => {
     const { container } = render(<Markdown text={"*a **b** c*"} />);
     expect(container.querySelector("em > strong")).toHaveTextContent(/^b$/);

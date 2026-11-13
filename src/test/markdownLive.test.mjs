@@ -37,6 +37,7 @@ const replies = [
   "これは*重要*です。**太字**と`コード`、そして_斜体_。",
   "1. First `x * y`\n2. Second [docs](https://x.y/a_(b)) _it_\n\nDone.",
   "Plain text with snake_case and rust_on_rails, then *emphasis with `code` inside* and **bold with `code`**.",
+  'Titled [docs](https://example.com "Documentation") and [more](https://x.y \'More\').',
   "A [**bold label**](https://example.com) and `[not a link](x)` here.\n\n```\nunclosed fence **x",
 ];
 
@@ -61,6 +62,7 @@ describe("live parsing of a reply still being written", () => {
     expect(inline("see [the docs](https://x")).toEqual([{ t: "text", v: "see " }, { t: "text", v: "the docs" }]);
     expect(inline("see [**the** docs](")).toEqual([{ t: "text", v: "see " }, { t: "bold", v: "the" }, { t: "text", v: " docs" }]);
     expect(inline("see [the do")).toEqual([{ t: "text", v: "see [the do" }]);
+    expect(inline('see [the docs](https://x.y "Docum')).toEqual([{ t: "text", v: "see " }, { t: "text", v: "the docs" }]);
   });
 
   it("hides a marker with nothing after it yet, outside code", () => {

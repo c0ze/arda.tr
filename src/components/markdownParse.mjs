@@ -29,9 +29,10 @@ const blankLine = (l) => l.trim() === "";
 // parentheses beyond one balanced pair (Wikipedia's Foo_(bar)), so every scan
 // for a link stops at the next bracket or stray parenthesis: without that,
 // each unmatched "[" rescanned the rest of the reply (quadratic on "[[[[…").
+// An optional quoted title after the URL ("…" or '…') is accepted and dropped.
 // An *italic* may hold **bold** pairs (*a **b** c*); a single "*" still ends it.
 const INLINE_SRC =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
+  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);
@@ -97,8 +98,8 @@ function tokenizeInline(input, depth = 0, live = false) {
 
 const isBlank = (ch) => ch === undefined || /\s/.test(ch);
 // From the last "[" to the end: a label that is closed and a link target that
-// is not ("[label](", "[label](https://partial").
-const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?$/;
+// is not ("[label](", "[label](https://partial", "[label](url "Tit").
+const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?(?:\s+(?:"[^"\n]*"?|'[^'\n]*'?)?)?$/;
 
 // The first opener in the plain text left over by the scan that nothing after
 // it can close: a backtick with no backtick after it; a ** with no ** after it;
