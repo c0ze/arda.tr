@@ -343,7 +343,8 @@
     font: 12px/1.6 theme("fontFamily.mono");
   }
   .foot-bar h2 { font: 900 30px/.95 theme("fontFamily.display"); text-transform: uppercase; margin-bottom: 10px; }
-  .foot-bar ul { display: flex; flex-wrap: wrap; gap: 4px 0; }
+  /* Rows 24px apart at least when the links wrap (target spacing, WCAG 2.5.8). */
+  .foot-bar ul { display: flex; flex-wrap: wrap; gap: 6px 0; }
   .foot-bar li:not(:last-child)::after { content: "·"; padding: 0 8px; opacity: .6; }
   .foot-bar a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .foot-bar a:hover { text-decoration-thickness: 2px; }
