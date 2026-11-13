@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#060708" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Not found · arda.tr</title>
+    <link rel="icon" type="image/svg+xml" href="/a-favicon.svg" />
+    <!-- GitHub Pages serves this for any unknown path. Self-contained: night
+         by default, or the rendition stored by the site (same ids and tokens
+         as src/index.css). Radius 0, no shadows. Not in the sitemap. -->
+    <script>
+      try {
+        var t = localStorage.getItem("theme");
+        if (["night", "night-hc", "xerox", "xerox-hc"].indexOf(t) > -1) document.documentElement.className = t;
+      } catch (e) {}
+    </script>
+    <style>
+      :root, .night { color-scheme: dark; --bg: #060708; --fg: #e4e0d4; --fg-2: #9d998e; --rule: #22252a; --signal: #c6ff3a; }
+      .night-hc { color-scheme: dark; --bg: #000000; --fg: #ffffff; --fg-2: #d0cdc4; --rule: #8a8a8a; --signal: #d4ff5c; }
+      .xerox { color-scheme: light; --bg: #efede6; --fg: #111210; --fg-2: #5d5b55; --rule: #cfccc2; --signal: #3f5f00; }
+      .xerox-hc { color-scheme: light; --bg: #ffffff; --fg: #000000; --fg-2: #2e2e2e; --rule: #1a1a1a; --signal: #2b4200; }
+      * { box-sizing: border-box; margin: 0; border-radius: 0; }
+      html, body { background: var(--bg); color: var(--fg); }
+      body { min-height: 100vh; padding: 0 20px; font: 14px/1.6 "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; }
+      header { display: flex; align-items: center; height: 34px; border-bottom: 1px solid var(--rule); }
+      main { padding: 64px 0; max-width: 40rem; }
+      a { color: inherit; }
+      .mark { display: flex; gap: 8px; align-items: center; font-size: 12px; text-decoration: none; }
+      .mark i { width: 8px; height: 14px; background: var(--signal); }
+      h1 { font: 900 72px/.9 "Big Shoulders Display", Impact, "Arial Narrow", sans-serif; text-transform: uppercase; }
+      p { margin-top: 18px; color: var(--fg-2); }
+      p a { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
+      :focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="mark" href="/"><i aria-hidden="true"></i>arda.tr</a>
+    </header>
+    <main>
+      <h1>404</h1>
+      <p>This page does not exist.</p>
+      <p><a href="/">Go to arda.tr</a></p>
+    </main>
+  </body>
+</html>
