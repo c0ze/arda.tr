@@ -147,3 +147,81 @@ it("closes open markers in the reply that is still streaming", async () => {
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"2 ** 3"}\n\n') });
   expect(await screen.findByText("2 ** 3")).toBeVisible();
 });
+
+// jsdom has no layout: give the log a 1000px transcript in a 200px window.
+function fakeLogScroll() {
+  const tops = new WeakMap<Element, number>();
+  const isLog = (el: Element) => el.classList.contains("chat-log");
+  Object.defineProperties(HTMLElement.prototype, {
+    scrollHeight: { configurable: true, get() { return isLog(this) ? 1000 : 0; } },
+    clientHeight: { configurable: true, get() { return isLog(this) ? 200 : 0; } },
+    scrollTop: {
+      configurable: true,
+      get() { return tops.get(this) ?? 0; },
+      set(v: number) { tops.set(this, Math.max(0, Math.min(v, isLog(this) ? 800 : 0))); },
+    },
+  });
+  return () => {
+    for (const k of ["scrollHeight", "clientHeight", "scrollTop"]) delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
+  };
+}
+
+it("reopens at the latest message when a reply finished while it was closed", async () => {
+  const restore = fakeLogScroll();
+  try {
+    let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+    const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+    render(<ChatWidget />);
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+    fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+    fireEvent.keyDown(document, { key: "Escape" });
+    emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"A long answer"}\n\n') });
+    await new Promise((r) => setTimeout(r, 0));
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+    expect(await screen.findByText("A long answer")).toBeInTheDocument();
+    expect(screen.getByRole("log").scrollTop).toBe(800);
+  } finally {
+    restore();
+  }
+});
+
+it("does not pull a visitor who scrolled up back down, until they send", async () => {
+  const restore = fakeLogScroll();
+  try {
+    let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+    const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+    render(<ChatWidget />);
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+    fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+    const log = screen.getByRole("log");
+    emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":"First words"}\n\n') });
+    expect(await screen.findByText("First words")).toBeInTheDocument();
+    expect(log.scrollTop).toBe(800);
+
+    // Within 40px of the bottom still counts as following along.
+    log.scrollTop = 770;
+    fireEvent.scroll(log);
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+    emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":" and more"}\n\n') });
+    expect(await screen.findByText("First words and more")).toBeInTheDocument();
+    expect(log.scrollTop).toBe(800);
+
+    log.scrollTop = 100;
+    fireEvent.scroll(log);
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(3));
+    emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"First words and more, done."}\n\n') });
+    expect(await screen.findByText("First words and more, done.")).toBeInTheDocument();
+    expect(log.scrollTop).toBe(100);
+
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Next" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() => expect(log.scrollTop).toBe(800));
+  } finally {
+    restore();
+  }
+});

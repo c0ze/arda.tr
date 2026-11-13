@@ -196,6 +196,8 @@ let postChatStream: (
 `)
 
 let scrollToBottom: Dom.element => unit = %raw(`function (el) { if (el) el.scrollTop = el.scrollHeight; }`)
+// Within about 40px of the bottom counts as following the conversation.
+let nearBottom: Dom.element => bool = %raw(`function (el) { return el.scrollHeight - el.scrollTop - el.clientHeight <= 40; }`)
 let focusEl: Dom.element => unit = %raw(`function (el) { if (el) el.focus(); }`)
 
 // A reply still being written, made safe for the Markdown renderer: a
@@ -315,20 +317,25 @@ let make = () => {
     id
   }
 
-  // Keep the transcript pinned to the latest message / thinking indicator. The
-  // key folds in the last message's length so streaming updates (same message,
-  // growing content) keep the view scrolled to the bottom.
+  // Keep the transcript pinned to the latest message / thinking indicator
+  // while the visitor follows along (`followRef`: at the bottom when they last
+  // scrolled, just sent a question, or (re)opened the panel). The key folds in
+  // the last message's length and the voice's progress, so streaming and
+  // spoken replies keep the view at the bottom, and `isOpen`, so a reply that
+  // finished while the panel was closed is in view when it reopens.
+  let followRef = React.useRef(true)
   let lastLen = switch messages->Array.get(Array.length(messages) - 1) {
   | Some(m) => String.length(m.content)
   | None => 0
   }
   React.useEffect1(() => {
     switch listRef.current->Nullable.toOption {
-    | Some(el) => scrollToBottom(el)
-    | None => ()
+    | Some(el) if followRef.current => scrollToBottom(el)
+    | _ => ()
     }
     None
   }, [
+    (isOpen ? "open:" : "closed:") ++
     Int.toString(Array.length(messages)) ++
     ":" ++
     Int.toString(lastLen) ++
@@ -412,6 +419,8 @@ let make = () => {
       Some(
         () => {
           removeEscape()
+          // It reopens at the latest message.
+          followRef.current = true
           // Closing the widget silences it.
           stopSpeech()
           switch launcherRef.current->Nullable.toOption {
@@ -464,6 +473,8 @@ let make = () => {
         Array.concat(prev, [{id: userId, role: "user", content: trimmed, isError: false}])
       )
       setInput(_ => "")
+      // Asking brings the conversation back into view.
+      followRef.current = true
       setBusy(_ => true)
       setStreaming(_ => false)
       // A new question interrupts the previous reply's voice. Still inside the
@@ -593,6 +604,11 @@ let make = () => {
             role="log"
             ariaLive=#polite
             ariaBusy={liveId != -1}
+            onScroll={_ =>
+              switch listRef.current->Nullable.toOption {
+              | Some(el) => followRef.current = nearBottom(el)
+              | None => ()
+              }}
             className="chat-log">
             <div className="msg bot">
               <p className="msg-who">
