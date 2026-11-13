@@ -17,8 +17,12 @@ const HEADING = /^\s*#{1,6}\s+/;
 // underscores and 2 * 3 * 4 stay text. For "_" a word character is any letter
 // or digit, "_" or "*"; for "*" only an ASCII letter or digit, "_" or "*", as in
 // CommonMark: Japanese has no spaces, so これは*重要*です must be emphasis.
+// A link's label holds no "[" or "]" and its URL no brackets, blanks or
+// parentheses beyond one balanced pair (Wikipedia's Foo_(bar)), so every scan
+// for a link stops at the next bracket or stray parenthesis: without that,
+// each unmatched "[" rescanned the rest of the reply (quadratic on "[[[[…").
 const INLINE_SRC =
-  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^\]]+?)\]\(([^)\s]+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
+  /(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)\))|(\*([^\s*](?:[^*\n]*?[^\s*])?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);

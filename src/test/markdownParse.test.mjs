@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parse } from "../components/markdownParse.mjs";
+import { parse, plainText } from "../components/markdownParse.mjs";
 
 // Chat replies talk about code, so identifiers, URLs and arithmetic must come
 // through as written; only deliberate emphasis turns into <em>.
@@ -105,10 +105,48 @@ describe("chat markdown emphasis", () => {
     ]);
   });
 
+  it("keeps one balanced pair of parentheses in a link URL", () => {
+    expect(inline("[Foo](https://en.wikipedia.org/wiki/Foo_(bar)) here")).toEqual([
+      { t: "link", v: "Foo", href: "https://en.wikipedia.org/wiki/Foo_(bar)" },
+      { t: "text", v: " here" },
+    ]);
+  });
+
   it("returns only plain data: markup in the reply stays text", () => {
     expect(inline("<img src=x onerror=alert(1)> *<b>x</b>*")).toEqual([
       { t: "text", v: "<img src=x onerror=alert(1)> " },
       { t: "italic", v: "<b>x</b>" },
     ]);
   });
+});
+
+// Streaming re-parses the whole reply on every chunk, so parsing must stay
+// linear on hostile or broken input. Each case is 200,000 characters: linear
+// parsing takes a few milliseconds, a quadratic scan several seconds.
+describe("chat markdown on adversarial input", () => {
+  const N = 200_000;
+  const cases = {
+    "open brackets": "[".repeat(N),
+    "bold around open brackets": "**" + "[".repeat(N) + "**",
+    "unclosed link targets": "[a](".repeat(N / 4),
+    "parens after a label": "[a]" + "(".repeat(N),
+    "parens inside a link target": "[a](" + "(x".repeat(N / 2),
+    "label then brackets": "[a](" + "x[".repeat(N / 2),
+    asterisks: "*".repeat(N),
+    "word asterisks": "x*".repeat(N / 2),
+    "spaced asterisks": "* a ".repeat(N / 4),
+    underscores: "_".repeat(N),
+    "word underscores": "a_".repeat(N / 2),
+    backticks: "`".repeat(N),
+    "unclosed italic over bold": "*a " + "**b** ".repeat(N / 6),
+    "rejected italics over bold": ("x*a **b** c*y ").repeat(N / 14),
+  };
+  for (const [name, text] of Object.entries(cases)) {
+    it(`parses ${name} in linear time`, () => {
+      const t0 = performance.now();
+      parse(text);
+      plainText(text);
+      expect(performance.now() - t0).toBeLessThan(1000);
+    });
+  }
 });
