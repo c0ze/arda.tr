@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { afterEach, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { make as ChatWidget, openChat } from "@/components/ChatWidget.res.mjs";
 
 const encoder = new TextEncoder();
@@ -294,8 +294,11 @@ it("reopens at the latest message when a reply finished while it was closed", as
     fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
     await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
     fireEvent.keyDown(document, { key: "Escape" });
-    emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"A long answer"}\n\n') });
-    await new Promise((r) => setTimeout(r, 0));
+    // The reply lands while the panel is closed.
+    await act(async () => {
+      emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"A long answer"}\n\n') });
+      await new Promise((r) => setTimeout(r, 0));
+    });
     fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
     expect(await screen.findByText("A long answer", { selector: "p" })).toBeInTheDocument();
     expect(screen.getByRole("log").scrollTop).toBe(800);
