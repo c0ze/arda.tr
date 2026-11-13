@@ -93,7 +93,9 @@ Fonts load from Google Fonts in `index.html`.
 4. **Contact** (`Colophon.res`, `footer#contact`): a `treeline()` strip drifting
    at about 6px/s, then a bone bar with the mailto link, profiles and the
    colophon line.
-5. **Chat** (`ChatWidget.res`): the launcher sits bottom-left.
+5. **Chat** (`ChatWidget.res`): the launcher sits bottom-left. On viewports
+   under 480px tall (200% zoom, landscape phones) it is just its orb,
+   bottom-right, clear of the hero's CTAs.
    - The panel carries a revolving `orb()` that sizzles on every streamed chunk.
    - Messages are labelled `construct ▸` / `you ▸`, and a `crackle()` cursor
      trails the streaming reply.
