@@ -139,6 +139,9 @@ describe("chat markdown emphasis", () => {
     // title is never emitted.
     expect(inline('[x](javascript:alert(1) "t")')[0]).toEqual({ t: "link", v: "x", href: "javascript:alert(1)" });
     plain('[Docs](https://example.com "unterminated)');
+    for (const text of ['[a](https://x.y "t" )', "[a](https://x.y  )"]) {
+      expect(inline(text)).toEqual([{ t: "link", v: "a", href: "https://x.y" }]);
+    }
   });
 
   it("keeps one balanced pair of parentheses in a link URL", () => {

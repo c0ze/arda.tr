@@ -34,7 +34,7 @@ const blankLine = (l) => l.trim() === "";
 // ***x*** is bold wrapping italic; it is tried before bold, which would
 // otherwise take "*x" as its text and leave a stray "*".
 const INLINE_SRC =
-  /(\*\*\*([^\s*](?:[^*\n]*?[^\s*])?)\*\*\*)|(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
+  /(\*\*\*([^\s*](?:[^*\n]*?[^\s*])?)\*\*\*)|(\*\*([\s\S]+?)\*\*)|(`([^`]+?)`)|(\[([^[\]]+?)\]\(((?:[^()[\]\s]|\([^()[\]\s]*\))+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\s*\))|(\*((?:[^\s*]|\*\*[^*\n]+?\*\*)(?:(?:[^*\n]|\*\*[^*\n]+?\*\*)*?(?:[^\s*]|\*\*[^*\n]+?\*\*))?)\*)|(_([^\s_](?:[^_\n]*?[^\s_])?)_)/;
 const FLANK = /[\p{L}\p{N}_*]/u;
 const FLANK_STAR = /^[A-Za-z0-9_*]$/;
 const flanked = (ch, re) => ch !== undefined && re.test(ch);
@@ -116,7 +116,7 @@ function tokenizeInline(input, depth = 0, live = false) {
 const isBlank = (ch) => ch === undefined || /\s/.test(ch);
 // From the last "[" to the end: a label that is closed and a link target that
 // is not ("[label](", "[label](https://partial", "[label](url "Tit").
-const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?(?:\s+(?:"[^"\n]*"?|'[^'\n]*'?)?)?$/;
+const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?(?:\s+(?:"[^"\n]*"?\s*|'[^'\n]*'?\s*)?)?$/;
 
 // Where the run of one marker character (*, _ or `) that ends `s` starts, or
 // s.length. A _ right after a word character (snake_) cannot open or close
