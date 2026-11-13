@@ -6,11 +6,9 @@
 type block
 type inlineTok
 
-@module("./markdownParse.mjs") external parse: string => array<block> = "parse"
+@module("./markdownParse.mjs") external parse: (string, {"live": bool}) => array<block> = "parse"
 @module("./markdownParse.mjs") external plainText: string => string = "plainText"
-// For the reply still being written: its last block repaired so open markers
-// do not show raw (code untouched), and the part the voice has reached.
-@module("./markdownParse.mjs") external closeOpenMarks: string => string = "closeOpenMarks"
+// The part of a reply the voice has reached (cut only; render it with ~live).
 @module("./markdownParse.mjs") external revealPrefix: (string, int) => string = "revealPrefix"
 
 let bType: block => string = %raw(`function (b) { return b.type; }`)
@@ -68,9 +66,12 @@ let renderItems = items =>
 // `trailing` (e.g. the streaming cursor) is set inline at the end of the last
 // paragraph, so it trails the final word; after a list or code block it goes
 // underneath instead.
+// `live` is for the reply still being written: its last block ends as the
+// parser's live mode describes (unclosed marks open to the end, no raw
+// markers), without changing the text.
 @react.component
-let make = (~text, ~trailing: option<React.element>=?) => {
-  let blocks = parse(text)
+let make = (~text, ~live=false, ~trailing: option<React.element>=?) => {
+  let blocks = parse(text, {"live": live})
   let last = Array.length(blocks) - 1
   let tail = trailing->Option.getOr(React.null)
   let isPara = b => !(["ul", "ol", "code"]->Array.includes(bType(b)))

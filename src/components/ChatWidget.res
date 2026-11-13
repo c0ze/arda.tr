@@ -296,9 +296,9 @@ let bubble = (msg: chatMsg, ~live: bool, ~shown: option<int>) => {
         ? <Markdown
             text={switch shown {
             | Some(n) => Markdown.revealPrefix(msg.content, n)
-            | None if live => Markdown.closeOpenMarks(msg.content)
             | None => msg.content
             }}
+            live
             trailing=?{live ? Some(<OneBit.Crackle className="cursor" />) : None}
           />
         : React.string(msg.content)}

@@ -6,6 +6,13 @@
 // Supported subset (what the ai.arda.tr bot actually emits):
 //   **bold**, *italic* / _italic_, `code`, [text](url), nested one level,
 //   "-" / "*" / "+" bullet lists, "1." ordered lists, ``` fenced code, paragraphs.
+//
+// parse(src, { live: true }) is for the reply still being written (streamed,
+// or revealed as it is spoken). It reads the same text, never rewrites it, and
+// only changes how the LAST block ends: an opener that is merely unclosed at
+// the end marks everything after it (**bold, *italic, _italic, `code), an
+// unfinished link shows its label, and a marker with nothing after it yet is
+// hidden. An unclosed fence is already a code block to the end.
 
 const UL = /^\s*[-*+]\s+(.*)$/;
 const OL = /^\s*\d+\.\s+(.*)$/;
@@ -51,12 +58,17 @@ function nest(tok, depth) {
   return c.length === 1 && c[0].t === "text" ? tok : { ...tok, c };
 }
 
-function tokenizeInline(input, depth = 0) {
+function tokenizeInline(input, depth = 0, live = false) {
   const s = String(input == null ? "" : input);
   const tokens = [];
+  const starts = []; // offset of each token in s
   let pos = 0; // start of text not yet emitted
   let guard = 0;
   const INLINE = new RegExp(INLINE_SRC.source, "g"); // per call: nested calls run mid-scan
+  const push = (tok, at) => {
+    tokens.push(tok);
+    starts.push(at);
+  };
   // Safety bound: past it, the remainder is kept as text rather than dropped.
   while (guard++ < 5000) {
     const m = INLINE.exec(s);
@@ -67,25 +79,114 @@ function tokenizeInline(input, depth = 0) {
       INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
       continue;
     }
-    if (m.index > pos) tokens.push({ t: "text", v: s.slice(pos, m.index) });
-    if (m[1] != null) tokens.push(nest({ t: "bold", v: m[2] }, depth));
-    else if (m[3] != null) tokens.push({ t: "code", v: m[4] });
-    else if (m[5] != null) tokens.push(nest({ t: "link", v: m[6], href: m[7] }, depth));
-    else if (m[8] != null) tokens.push(nest({ t: "italic", v: m[9] }, depth));
-    else if (m[10] != null) tokens.push(nest({ t: "italic", v: m[11] }, depth));
+    if (m.index > pos) push({ t: "text", v: s.slice(pos, m.index) }, pos);
+    if (m[1] != null) push(nest({ t: "bold", v: m[2] }, depth), m.index);
+    else if (m[3] != null) push({ t: "code", v: m[4] }, m.index);
+    else if (m[5] != null) push(nest({ t: "link", v: m[6], href: m[7] }, depth), m.index);
+    else if (m[8] != null) push(nest({ t: "italic", v: m[9] }, depth), m.index);
+    else if (m[10] != null) push(nest({ t: "italic", v: m[11] }, depth), m.index);
     pos = end;
   }
-  if (pos < s.length) tokens.push({ t: "text", v: s.slice(pos) });
-  if (tokens.length === 0) tokens.push({ t: "text", v: "" });
-  return tokens;
+  if (pos < s.length) push({ t: "text", v: s.slice(pos) }, pos);
+  const out = live ? liveEnd(s, tokens, starts, depth) : tokens;
+  if (out.length === 0) out.push({ t: "text", v: "" });
+  return out;
 }
 
-export function parse(src) {
+// ── Live mode ────────────────────────────────────────────────────────────
+
+const isBlank = (ch) => ch === undefined || /\s/.test(ch);
+// From the last "[" to the end: a label that is closed and a link target that
+// is not ("[label](", "[label](https://partial").
+const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?$/;
+
+// The first opener in the plain text left over by the scan that nothing after
+// it can close: a backtick with no backtick after it; a ** with no ** after it;
+// a single * or _ that is the last one and opens emphasis by the boundary
+// rules above (text after it, no word character before it); or the last "["
+// starting an unfinished link. Every test is a lookup against offsets found
+// in one pass, so this stays linear.
+function pendingOpener(s, tokens, starts) {
+  const lastTick = s.lastIndexOf("`");
+  const lastDouble = s.lastIndexOf("**");
+  const lastUnder = s.lastIndexOf("_");
+  const lastBracket = s.lastIndexOf("[");
+  let lastSingle = -1;
+  for (let i = s.length - 1; i >= 0; i--) {
+    if (s[i] === "*" && s[i - 1] !== "*" && s[i + 1] !== "*") {
+      lastSingle = i;
+      break;
+    }
+  }
+  for (let k = 0; k < tokens.length; k++) {
+    if (tokens[k].t !== "text") continue;
+    const end = starts[k] + tokens[k].v.length;
+    for (let p = starts[k]; p < end; p++) {
+      const ch = s[p];
+      if (ch === "`") {
+        if (p === lastTick) return { k, p, kind: "code", len: 1 };
+      } else if (ch === "*") {
+        let run = 1;
+        while (s[p + run] === "*") run++;
+        if (run === 1) {
+          if (p === lastSingle && !isBlank(s[p + 1]) && !flanked(charBefore(s, p), FLANK_STAR)) return { k, p, kind: "italic", len: 1 };
+        } else {
+          if (lastDouble <= p + run - 2 && !isBlank(s[p + 2])) return { k, p, kind: "bold", len: 2 };
+          p += run - 1;
+        }
+      } else if (ch === "_") {
+        if (p === lastUnder && s[p - 1] !== "_" && !isBlank(s[p + 1]) && !flanked(charBefore(s, p), FLANK)) {
+          return { k, p, kind: "italic", len: 1 };
+        }
+      } else if (ch === "[" && p === lastBracket) {
+        const m = UNFINISHED_LINK.exec(s.slice(p));
+        if (m) return { k, p, kind: "label", label: m[1] };
+      }
+    }
+  }
+  return null;
+}
+
+const hideTrailingMarker = (v) => v.replace(/[*_`]+$/, "");
+
+function liveEnd(s, tokens, starts, depth) {
+  const hit = pendingOpener(s, tokens, starts);
+  let out = tokens;
+  if (hit) {
+    out = tokens.slice(0, hit.k);
+    if (hit.p > starts[hit.k]) out.push({ t: "text", v: s.slice(starts[hit.k], hit.p) });
+    if (hit.kind === "label") {
+      // Its label as plain text, with the label's own marks.
+      out.push(...tokenizeInline(hit.label, depth + 1).filter((t) => t.v !== ""));
+    } else {
+      const rest = s.slice(hit.p + hit.len);
+      if (hit.kind === "code") {
+        if (rest !== "") out.push({ t: "code", v: rest });
+      } else if (depth > 0) {
+        const v = hideTrailingMarker(rest);
+        if (v !== "") out.push({ t: hit.kind, v });
+      } else {
+        const c = tokenizeInline(rest, depth + 1, true);
+        out.push(c.length === 1 && c[0].t === "text" ? { t: hit.kind, v: c[0].v } : { t: hit.kind, v: rest, c });
+      }
+    }
+  }
+  // A marker with nothing after it yet ("**", "a `", "2 *") is hidden.
+  const last = out[out.length - 1];
+  if (last && last.t === "text") {
+    const v = hideTrailingMarker(last.v);
+    out = v === "" ? out.slice(0, -1) : [...out.slice(0, -1), { t: "text", v }];
+  }
+  return out;
+}
+
+export function parse(src, { live = false } = {}) {
   const text = String(src == null ? "" : src);
   const lines = text.split("\n");
   const blocks = [];
   let i = 0;
   const blank = blankLine;
+  let lastRaw = null; // the inline text of the last paragraph or list item
 
   while (i < lines.length) {
     const line = lines[i];
@@ -102,6 +203,9 @@ export function parse(src) {
         i++;
       }
       if (i < lines.length) i++; // consume the closing fence
+      // Live, an unclosed fence's last line may be the start of the closing
+      // fence ("", "`", "``"): not shown yet.
+      else if (live && code.length > 0 && /^\s*`{0,2}$/.test(code[code.length - 1])) code.pop();
       blocks.push({ type: "code", text: code.join("\n") });
       continue;
     }
@@ -109,7 +213,8 @@ export function parse(src) {
     if (UL.test(line)) {
       const items = [];
       while (i < lines.length && UL.test(lines[i])) {
-        items.push(tokenizeInline(lines[i].replace(UL, "$1")));
+        lastRaw = lines[i].replace(UL, "$1");
+        items.push(tokenizeInline(lastRaw));
         i++;
       }
       blocks.push({ type: "ul", items });
@@ -119,7 +224,8 @@ export function parse(src) {
     if (OL.test(line)) {
       const items = [];
       while (i < lines.length && OL.test(lines[i])) {
-        items.push(tokenizeInline(lines[i].replace(OL, "$1")));
+        lastRaw = lines[i].replace(OL, "$1");
+        items.push(tokenizeInline(lastRaw));
         i++;
       }
       blocks.push({ type: "ol", items });
@@ -137,7 +243,17 @@ export function parse(src) {
       para.push(lines[i].replace(HEADING, ""));
       i++;
     }
-    blocks.push({ type: "p", inline: tokenizeInline(para.join(" ")) });
+    lastRaw = para.join(" ");
+    blocks.push({ type: "p", inline: tokenizeInline(lastRaw) });
+  }
+  // Live: the last block, if it is still open, ends as described above. A
+  // blank line ends a paragraph, a line break a list item.
+  const block = blocks[blocks.length - 1];
+  if (live && block && block.type !== "code") {
+    let trailing = 0;
+    while (trailing < lines.length && blank(lines[lines.length - 1 - trailing])) trailing++;
+    if (block.type === "p" && trailing <= 1) block.inline = tokenizeInline(lastRaw, 0, true);
+    if (block.type !== "p" && trailing === 0) block.items[block.items.length - 1] = tokenizeInline(lastRaw, 0, true);
   }
   return blocks;
 }
@@ -152,100 +268,12 @@ export function plainText(src) {
     .join("\n");
 }
 
-// ── Replies still being written ──────────────────────────────────────────
-// While a reply streams, or is revealed as it is spoken, its last block is
-// repaired before it is parsed: a half-typed link shows as its label, and an
-// open **, ` or a trailing *italic / _italic opener is closed, so the words
-// after it are not framed by raw markers until the closing half arrives.
-// Code spans and fenced code are never changed, and earlier blocks are left
-// as they are (each block is parsed on its own).
-
-const isBlank = (ch) => ch === undefined || /\s/.test(ch);
-
-// Character offsets of `t` inside code spans (backticks paired in order); an
-// unpaired last backtick opens code to the end. Returns the masked text, with
-// code replaced by \u0001, and that opener's offset (or -1).
-function maskCode(t) {
-  const ticks = [];
-  for (let i = 0; i < t.length; i++) if (t[i] === "`") ticks.push(i);
-  const open = ticks.length % 2 ? ticks[ticks.length - 1] : -1;
-  const chars = t.split("");
-  for (let k = 0; k + 1 < ticks.length; k += 2) for (let i = ticks[k]; i <= ticks[k + 1]; i++) chars[i] = "\u0001";
-  if (open >= 0) for (let i = open; i < t.length; i++) chars[i] = "\u0001";
-  return { m: chars.join(""), open };
-}
-
-// The last single `ch` (not part of a run like **), if it opens emphasis:
-// text right after it, and no word character before it. Being the last, it
-// has nothing to close it. Otherwise -1.
-function loneOpener(m, ch, flank) {
-  let at = m.length - 1;
-  while (at >= 0) {
-    if (m[at] !== ch) { at--; continue; }
-    let start = at;
-    while (start > 0 && m[start - 1] === ch) start--;
-    if (start === at) break;
-    at = start - 1;
-  }
-  if (at < 0 || isBlank(m[at + 1]) || flanked(charBefore(m, at), flank)) return -1;
-  return at;
-}
-
-function repairInline(text) {
-  let t = text;
-  // A half-typed link (outside code) shows as its label.
-  const link = /\[([^[\]\n]*)(\]\([^)\n]*)?$/.exec(maskCode(t).m);
-  if (link) t = t.slice(0, link.index) + t.slice(link.index + 1, link.index + 1 + link[1].length);
-
-  const { m, open: code } = maskCode(t);
-  const bolds = m.match(/\*\*/g) || [];
-  const bold = bolds.length % 2 ? m.lastIndexOf("**") : -1;
-  const boldsBefore = (at) => (m.slice(0, at).match(/\*\*/g) || []).length;
-  const openers = [];
-  if (code >= 0) openers.push({ at: code, mark: "`" });
-  if (bold >= 0) openers.push({ at: bold, mark: "**" });
-  if (!isBlank(t[t.length - 1])) {
-    // Inside a bold pair a closing * would read as ***: left alone.
-    const star = loneOpener(m, "*", FLANK_STAR);
-    if (star >= 0 && boldsBefore(star) % 2 === 0) openers.push({ at: star, mark: "*" });
-    // _ may close inside an open bold, but not inside one already closed.
-    const under = loneOpener(m, "_", FLANK);
-    if (under >= 0 && !(boldsBefore(under) % 2 === 1 && m.indexOf("**", under) >= 0)) openers.push({ at: under, mark: "_" });
-  }
-  // Innermost (opened last) first; an opener with nothing after it yet is
-  // dropped, not closed: "**" + "**" would show as "****".
-  openers.sort((a, b) => b.at - a.at);
-  for (const { at, mark } of openers) t = at === t.length - mark.length ? t.slice(0, at) : t + mark;
-  return t;
-}
-
-export function closeOpenMarks(src) {
-  const s = String(src == null ? "" : src);
-  const lines = s.split("\n");
-  let fences = 0;
-  for (const l of lines) if (FENCE.test(l)) fences++;
-  const last = lines.length - 1;
-  // Inside an open fence the rest is code; after a blank line or a closing
-  // fence the block being written has not started yet.
-  if (fences % 2 || blankLine(lines[last]) || FENCE.test(lines[last])) return s;
-  let i = last;
-  if (!UL.test(lines[i]) && !OL.test(lines[i])) {
-    while (i > 0 && !blankLine(lines[i - 1]) && !UL.test(lines[i - 1]) && !OL.test(lines[i - 1]) && !FENCE.test(lines[i - 1])) i--;
-  }
-  const tail = repairInline(lines.slice(i).join("\n"));
-  return i > 0 ? lines.slice(0, i).join("\n") + "\n" + tail : tail;
-}
-
-// The part of a reply the voice has reached (`n` UTF-16 units of it), repaired
-// as above: never half a surrogate pair or half a ** marker.
+// The part of a reply the voice has reached: its first `n` UTF-16 units,
+// never half a surrogate pair. Parse it in live mode; nothing is rewritten.
 export function revealPrefix(text, n) {
-  let s = String(text == null ? "" : text);
-  if (n >= 0 && n < s.length) {
-    const full = s;
-    s = s.slice(0, n);
-    const lastCode = s.charCodeAt(s.length - 1);
-    if (lastCode >= 0xd800 && lastCode <= 0xdbff) s = s.slice(0, -1);
-    if (s.endsWith("*") && full.charAt(s.length) === "*") s = s.slice(0, -1); // half a ** marker
-  }
-  return closeOpenMarks(s);
+  const s = String(text == null ? "" : text);
+  if (n < 0 || n >= s.length) return s;
+  const cut = s.slice(0, n);
+  const last = cut.charCodeAt(cut.length - 1);
+  return last >= 0xd800 && last <= 0xdbff ? cut.slice(0, -1) : cut;
 }
