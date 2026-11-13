@@ -58,6 +58,47 @@ it("keeps partial text and reports interruption without automatically resubmitti
   expect(screen.getByRole("textbox")).toBeEnabled();
 });
 
+// A question that ended in an error bubble got no answer: sending it (and a
+// cut-off reply) with later questions shows the model a conversation that
+// never happened.
+it("leaves failed questions and their partial replies out of later history", async () => {
+  const sse = (...frames: string[]) => {
+    const read = vi.fn();
+    for (const f of frames) read.mockResolvedValueOnce({ done: false, value: encoder.encode(f) });
+    read.mockResolvedValue({ done: true });
+    return { ok: true, status: 200, body: { getReader: () => ({ read, cancel: async () => {} }) } };
+  };
+  const fetch = vi.fn()
+    .mockResolvedValueOnce(sse('data: {"type":"done","text":"Answer one"}\n\n'))
+    .mockResolvedValueOnce(sse('data: {"type":"chunk","text":"Cut off"}\n\n'))
+    .mockRejectedValueOnce(new TypeError("offline"))
+    .mockRejectedValueOnce(new TypeError("offline"))
+    .mockResolvedValueOnce(sse('data: {"type":"done","text":"Answer four"}\n\n'));
+  vi.stubGlobal("fetch", fetch);
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  const input = screen.getByRole("textbox");
+  const ask = async (q: string) => {
+    await waitFor(() => expect(screen.getByRole("textbox")).toBeEnabled());
+    await waitFor(() => expect(screen.queryByText("Thinking…")).toBeNull());
+    fireEvent.change(input, { target: { value: q } });
+    fireEvent.submit(input.closest("form")!);
+  };
+  await ask("One");
+  expect(await screen.findByText("Answer one", { selector: "p" })).toBeVisible();
+  await ask("Two");
+  expect(await screen.findByText("Cut off", { selector: "p" })).toBeVisible();
+  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
+  await ask("Three");
+  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
+  await ask("Four");
+  await waitFor(() => expect(fetch).toHaveBeenCalledTimes(5));
+  expect(JSON.parse(fetch.mock.calls[4][1].body).history).toEqual([
+    { role: "user", content: "One" },
+    { role: "model", content: "Answer one" },
+  ]);
+});
+
 it("closes on Escape and hands focus back to the launcher", async () => {
   render(<ChatWidget />);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));

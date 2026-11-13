@@ -275,6 +275,35 @@ let listenForOpen: (unit => unit) => (unit => unit) = %raw(`
   }
 `)
 
+// The conversation sent with a new question: every exchange that got an
+// answer. A question whose reply ended in an error bubble (a total failure, or
+// a reply cut off midway) is left out with its partial reply, so the model
+// never sees an unanswered turn or a truncated one; error bubbles never go.
+let answeredHistory = (messages: array<chatMsg>) => {
+  let out = []
+  let turn = ref([])
+  let failed = ref(false)
+  let flush = () => {
+    if !failed.contents {
+      out->Array.pushMany(turn.contents)
+    }
+    turn := []
+    failed := false
+  }
+  messages->Array.forEach(m => {
+    if m.role == "user" {
+      flush()
+    }
+    if m.isError {
+      failed := true
+    } else {
+      turn := Array.concat(turn.contents, [m])
+    }
+  })
+  flush()
+  out
+}
+
 // How far the voice has got through reply `id`: `shown` UTF-16 units of it.
 type speech = {id: int, shown: int}
 
@@ -477,8 +506,7 @@ let make = () => {
   let submit = text => {
     let trimmed = String.trim(text)
     if trimmed !== "" && !busy {
-      // Don't replay client-side error bubbles back to the model as history.
-      let history = messages->Array.filter(m => !m.isError)
+      let history = answeredHistory(messages)
       let modelId = nextId()
       let started = ref(false)
       let addOrUpdate = full => {
