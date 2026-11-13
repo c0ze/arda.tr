@@ -172,6 +172,8 @@ describe("chat markdown on adversarial input", () => {
     "closed labels": "](".repeat(N / 2),
     "unclosed titles": '[a](u "'.repeat(N / 7),
     "spaces before a title": "[a](u" + " ".repeat(N),
+    "a pending italic over a run of stars": "*a " + "**".repeat(N / 2) + "b",
+    "triple stars closed by two": "***b c**".repeat(N / 8),
     asterisks: "*".repeat(N),
     "word asterisks": "x*".repeat(N / 2),
     "spaced asterisks": "* a ".repeat(N / 4),

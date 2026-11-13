@@ -68,6 +68,10 @@ function tokenizeInline(input, depth = 0, live = false) {
   let pos = 0; // start of text not yet emitted
   let guard = 0;
   const INLINE = new RegExp(INLINE_SRC.source, "g"); // per call: nested calls run mid-scan
+  // Live: a run of one marker character at the very end may be half a mark
+  // with nothing after it yet ("**bold _it_*"); the boundary rules read it as
+  // the end of the text, and it is hidden below unless code holds it.
+  const cut = live ? trailingRun(s) : s.length;
   const push = (tok, at) => {
     tokens.push(tok);
     starts.push(at);
@@ -78,7 +82,8 @@ function tokenizeInline(input, depth = 0, live = false) {
     if (!m) break;
     const end = m.index + m[0].length;
     const flank = m[1] != null || m[10] != null ? FLANK_STAR : m[12] != null ? FLANK : null;
-    if (flank && (flanked(charBefore(s, m.index), flank) || flanked(charAfter(s, end), flank))) {
+    const after = end === cut ? undefined : charAfter(s, end);
+    if (flank && (flanked(charBefore(s, m.index), flank) || flanked(after, flank))) {
       INLINE.lastIndex = m.index + 1; // not emphasis: look again one character on
       continue;
     }
@@ -92,7 +97,16 @@ function tokenizeInline(input, depth = 0, live = false) {
     pos = end;
   }
   if (pos < s.length) push({ t: "text", v: s.slice(pos) }, pos);
-  const out = live ? liveEnd(s, tokens, starts, depth) : tokens;
+  // Live: "***b c**" is ***b c*** on its way, not bold "*b c": when the scan
+  // closed a longer run of stars with the trailing run, read it without that
+  // run (hidden) instead.
+  if (live && cut < s.length && s[cut] === "*" && pos === s.length && tokens.length > 0) {
+    const at = starts[starts.length - 1];
+    let open = 0;
+    while (s[at + open] === "*") open++;
+    if (tokens[tokens.length - 1].t !== "text" && open > s.length - cut) return tokenizeInline(s.slice(0, cut), depth, true);
+  }
+  const out = live ? liveEnd(s, tokens, starts, depth, cut) : tokens;
   if (out.length === 0) out.push({ t: "text", v: "" });
   return out;
 }
@@ -104,42 +118,55 @@ const isBlank = (ch) => ch === undefined || /\s/.test(ch);
 // is not ("[label](", "[label](https://partial", "[label](url "Tit").
 const UNFINISHED_LINK = /^\[([^[\]\n]*)\]\((?:[^()[\]\s]|\([^()[\]\s]*\))*(?:\([^()[\]\s]*)?(?:\s+(?:"[^"\n]*"?|'[^'\n]*'?)?)?$/;
 
-// The first opener in the plain text left over by the scan that nothing after
-// it can close: a backtick with no backtick after it; a ** with no ** after it;
-// a single * or _ that is the last one and opens emphasis by the boundary
-// rules above (text after it, no word character before it); or the last "["
-// starting an unfinished link. Every test is a lookup against offsets found
-// in one pass, so this stays linear.
-function pendingOpener(s, tokens, starts) {
-  const lastTick = s.lastIndexOf("`");
-  const lastDouble = s.lastIndexOf("**");
-  const lastUnder = s.lastIndexOf("_");
-  const lastBracket = s.lastIndexOf("[");
+// Where the run of one marker character (*, _ or `) that ends `s` starts, or
+// s.length. A _ right after a word character (snake_) cannot open or close
+// emphasis, so it is not a pending marker.
+function trailingRun(s) {
+  const ch = s[s.length - 1];
+  if (ch !== "*" && ch !== "_" && ch !== "`") return s.length;
+  let i = s.length - 1;
+  while (i > 0 && s[i - 1] === ch) i--;
+  if (ch === "_" && flanked(charBefore(s, i), FLANK)) return s.length;
+  return i;
+}
+
+// The first opener in the text the scan left over (before the trailing run)
+// that the rest could still close: a backtick with no backtick after it; a **
+// with no ** after it; a single * or _ that opens by the boundary rules (text
+// after it, no word character before it) with no single * (an italic holds
+// none) or no _ after it; or the last "[" starting an unfinished link. Each
+// test is a lookup against offsets found in one pass, so this stays linear.
+function pendingOpener(s, tokens, starts, cut) {
+  const sp = s.slice(0, cut);
+  const lastTick = sp.lastIndexOf("`");
+  const lastDouble = sp.lastIndexOf("**");
+  const lastUnder = sp.lastIndexOf("_");
+  const lastBracket = sp.lastIndexOf("[");
   let lastSingle = -1;
-  for (let i = s.length - 1; i >= 0; i--) {
-    if (s[i] === "*" && s[i - 1] !== "*" && s[i + 1] !== "*") {
+  for (let i = sp.length - 1; i >= 0; i--) {
+    if (sp[i] === "*" && sp[i - 1] !== "*" && sp[i + 1] !== "*") {
       lastSingle = i;
       break;
     }
   }
   for (let k = 0; k < tokens.length; k++) {
     if (tokens[k].t !== "text") continue;
-    const end = starts[k] + tokens[k].v.length;
+    const end = Math.min(starts[k] + tokens[k].v.length, cut);
     for (let p = starts[k]; p < end; p++) {
-      const ch = s[p];
+      const ch = sp[p];
       if (ch === "`") {
         if (p === lastTick) return { k, p, kind: "code", len: 1 };
       } else if (ch === "*") {
         let run = 1;
-        while (s[p + run] === "*") run++;
+        while (sp[p + run] === "*") run++;
         if (run === 1) {
-          if (p === lastSingle && !isBlank(s[p + 1]) && !flanked(charBefore(s, p), FLANK_STAR)) return { k, p, kind: "italic", len: 1 };
+          if (p === lastSingle && !isBlank(sp[p + 1]) && !flanked(charBefore(sp, p), FLANK_STAR)) return { k, p, kind: "italic", len: 1 };
         } else {
-          if (lastDouble <= p + run - 2 && !isBlank(s[p + 2])) return { k, p, kind: "bold", len: 2 };
+          if (lastDouble <= p + run - 2 && !isBlank(sp[p + 2])) return { k, p, kind: "bold", len: 2 };
           p += run - 1;
         }
       } else if (ch === "_") {
-        if (p === lastUnder && s[p - 1] !== "_" && !isBlank(s[p + 1]) && !flanked(charBefore(s, p), FLANK)) {
+        if (p === lastUnder && sp[p - 1] !== "_" && !isBlank(sp[p + 1]) && !flanked(charBefore(sp, p), FLANK)) {
           return { k, p, kind: "italic", len: 1 };
         }
       } else if (ch === "[" && p === lastBracket) {
@@ -151,36 +178,38 @@ function pendingOpener(s, tokens, starts) {
   return null;
 }
 
-const hideTrailingMarker = (v) => v.replace(/[*_`]+$/, "");
-
-function liveEnd(s, tokens, starts, depth) {
-  const hit = pendingOpener(s, tokens, starts);
-  let out = tokens;
-  if (hit) {
-    out = tokens.slice(0, hit.k);
-    if (hit.p > starts[hit.k]) out.push({ t: "text", v: s.slice(starts[hit.k], hit.p) });
-    if (hit.kind === "label") {
-      // Its label as plain text, with the label's own marks.
-      out.push(...tokenizeInline(hit.label, depth + 1).filter((t) => t.v !== ""));
-    } else {
-      const rest = s.slice(hit.p + hit.len);
-      if (hit.kind === "code") {
-        if (rest !== "") out.push({ t: "code", v: rest });
-      } else if (depth > 0) {
-        const v = hideTrailingMarker(rest);
-        if (v !== "") out.push({ t: hit.kind, v });
-      } else {
-        const c = tokenizeInline(rest, depth + 1, true);
-        out.push(c.length === 1 && c[0].t === "text" ? { t: hit.kind, v: c[0].v } : { t: hit.kind, v: rest, c });
-      }
+function liveEnd(s, tokens, starts, depth, cut) {
+  const hit = pendingOpener(s, tokens, starts, cut);
+  if (!hit) {
+    // The trailing run, if the scan left it as text, has nothing after it yet.
+    const k = tokens.length - 1;
+    if (cut < s.length && k >= 0 && tokens[k].t === "text" && starts[k] <= cut) {
+      const v = s.slice(starts[k], cut);
+      return v === "" ? tokens.slice(0, k) : [...tokens.slice(0, k), { t: "text", v }];
     }
+    return tokens;
   }
-  // A marker with nothing after it yet ("**", "a `", "2 *") is hidden.
-  const last = out[out.length - 1];
-  if (last && last.t === "text") {
-    const v = hideTrailingMarker(last.v);
-    out = v === "" ? out.slice(0, -1) : [...out.slice(0, -1), { t: "text", v }];
+  const out = tokens.slice(0, hit.k);
+  if (hit.p > starts[hit.k]) out.push({ t: "text", v: s.slice(starts[hit.k], hit.p) });
+  if (hit.kind === "label") {
+    // Its label as plain text, with the label's own marks, read live too.
+    out.push(...tokenizeInline(hit.label, depth + 1, true).filter((t) => t.v !== ""));
+    return out;
   }
+  // The rest is the mark's content, read live in turn (at the top level), so
+  // its own trailing run is hidden there, unless a code span in it holds it.
+  const rest = s.slice(hit.p + hit.len);
+  if (hit.kind === "code") {
+    if (rest !== "") out.push({ t: "code", v: rest });
+    return out;
+  }
+  // Below the top level it is read once more without live mode (one level of
+  // nesting, and a bound on the work: each live level rescans its text).
+  const c = depth > 0 ? tokenizeInline(s.slice(hit.p + hit.len, cut), depth + 1) : tokenizeInline(rest, depth + 1, true);
+  const shown = inlineText(c);
+  if (shown === "") return out;
+  if (depth > 0 || (c.length === 1 && c[0].t === "text")) out.push({ t: hit.kind, v: shown });
+  else out.push({ t: hit.kind, v: s.slice(hit.p + hit.len, cut), c });
   return out;
 }
 
@@ -208,8 +237,8 @@ export function parse(src, { live = false } = {}) {
       }
       if (i < lines.length) i++; // consume the closing fence
       // Live, an unclosed fence's last line may be the start of the closing
-      // fence ("", "`", "``"): not shown yet.
-      else if (live && code.length > 0 && /^\s*`{0,2}$/.test(code[code.length - 1])) code.pop();
+      // fence ("`", "``"): not shown yet.
+      else if (live && code.length > 0 && /^\s*`{1,2}$/.test(code[code.length - 1])) code.pop();
       blocks.push({ type: "code", text: code.join("\n") });
       continue;
     }
