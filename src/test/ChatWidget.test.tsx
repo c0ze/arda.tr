@@ -125,3 +125,25 @@ it("caps the question at the length the bot accepts", () => {
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   expect(screen.getByRole("textbox")).toHaveAttribute("maxlength", "20000");
 });
+
+// Without voice the reply streams in as it arrives; an opened ** or ` must not
+// show as raw markers until its closing half turns up in a later chunk.
+it("closes open markers in the reply that is still streaming", async () => {
+  let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+  const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+  const { container } = render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+  emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":"He builds **golem and `rust_on"}\n\n') });
+  const last = () => [...container.querySelectorAll(".msg-txt")].at(-1)!;
+  await waitFor(() => expect(last().querySelector("strong > code")).toHaveTextContent(/^rust_on$/));
+  expect(last().querySelector("strong")).toHaveTextContent(/^golem and rust_on$/);
+  expect(last().textContent).not.toMatch(/[*`]/);
+
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+  // The finished reply is shown as written: nothing is closed for it.
+  emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"2 ** 3"}\n\n') });
+  expect(await screen.findByText("2 ** 3")).toBeVisible();
+});

@@ -198,10 +198,28 @@ let postChatStream: (
 let scrollToBottom: Dom.element => unit = %raw(`function (el) { if (el) el.scrollTop = el.scrollHeight; }`)
 let focusEl: Dom.element => unit = %raw(`function (el) { if (el) el.focus(); }`)
 
-// The part of a reply the voice has reached, safe to hand to the Markdown
-// renderer: never half a surrogate pair, a half-typed link shows as its label,
-// and an open ** or ` is closed so the word being spoken is not framed by
-// markers. `n` indexes the raw reply in UTF-16 units (JS string indices).
+// A reply still being written, made safe for the Markdown renderer: a
+// half-typed link shows as its label, and an open ** or ` is closed so the
+// words after it are not framed by raw markers until the closing half arrives.
+let closeOpenMarks: string => string = %raw(`
+  function (s) {
+    s = s.replace(/\[([^\]\n]*)(\]\([^)\n]*)?$/, "$1");
+    var open = [];
+    if ((s.match(/\*\*/g) || []).length % 2) open.push({ m: "**", at: s.lastIndexOf("**") });
+    if ((s.match(/\`/g) || []).length % 2) open.push({ m: "\`", at: s.lastIndexOf("\`") });
+    // innermost (opened last) first; an opener with nothing after it yet is
+    // dropped, not closed: "**" + "**" would show as "****"
+    open.sort(function (a, b) { return b.at - a.at; });
+    for (var i = 0; i < open.length; i++) {
+      s = s.endsWith(open[i].m) && open[i].at === s.length - open[i].m.length ? s.slice(0, open[i].at) : s + open[i].m;
+    }
+    return s;
+  }
+`)
+
+// The part of a reply the voice has reached, closed as above: never half a
+// surrogate pair or half a ** marker. `n` indexes the raw reply in UTF-16
+// units (JS string indices).
 let revealPrefix: (string, int) => string = %raw(`
   function (text, n) {
     if (n < 0 || n >= text.length) return text;
@@ -209,11 +227,7 @@ let revealPrefix: (string, int) => string = %raw(`
     var last = s.charCodeAt(s.length - 1);
     if (last >= 0xd800 && last <= 0xdbff) s = s.slice(0, -1);
     if (s.endsWith("*") && text.charAt(s.length) === "*") s = s.slice(0, -1); // half a ** marker
-    s = s.replace(/\[([^\]\n]*)(\]\([^)\n]*)?$/, "$1");
-    // an opener with nothing after it yet is dropped, not closed: "**" + "**" would show as "****"
-    if ((s.match(/\*\*/g) || []).length % 2) s = s.endsWith("**") ? s.slice(0, -2) : s + "**";
-    if ((s.match(/\`/g) || []).length % 2) s = s.endsWith("\`") ? s.slice(0, -1) : s + "\`";
-    return s;
+    return closeOpenMarks(s);
   }
 `)
 
@@ -266,6 +280,7 @@ let bubble = (msg: chatMsg, ~live: bool, ~shown: option<int>) => {
         ? <Markdown
             text={switch shown {
             | Some(n) => revealPrefix(msg.content, n)
+            | None if live => closeOpenMarks(msg.content)
             | None => msg.content
             }}
             trailing=?{live ? Some(<OneBit.Crackle className="cursor" />) : None}
