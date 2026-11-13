@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { afterEach, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { make as ChatWidget } from "@/components/ChatWidget.res.mjs";
+import { make as ChatWidget, openChat } from "@/components/ChatWidget.res.mjs";
 
 const encoder = new TextEncoder();
 afterEach(() => vi.unstubAllGlobals());
@@ -65,6 +65,26 @@ it("closes on Escape and hands focus back to the launcher", async () => {
   expect(screen.getByRole("log")).toBeInTheDocument();
   fireEvent.keyDown(document, { key: "Escape" });
   expect(screen.queryByRole("dialog")).toBeNull();
+  await waitFor(() => expect(screen.getByRole("button", { name: "Ask about Arda" })).toHaveFocus());
+});
+
+it("hands focus back to the control that opened it, such as the hero's ask button", async () => {
+  const ask = document.createElement("button");
+  ask.textContent = "ask ▸";
+  ask.addEventListener("click", () => openChat());
+  document.body.append(ask);
+  render(<ChatWidget />);
+  ask.focus();
+  fireEvent.click(ask);
+  await waitFor(() => expect(screen.getByRole("textbox")).toHaveFocus());
+  fireEvent.click(screen.getByRole("button", { name: "Close" }));
+  await waitFor(() => expect(ask).toHaveFocus());
+
+  // Gone by the time the chat closes: the launcher takes focus instead.
+  ask.focus();
+  fireEvent.click(ask);
+  ask.remove();
+  fireEvent.keyDown(document, { key: "Escape" });
   await waitFor(() => expect(screen.getByRole("button", { name: "Ask about Arda" })).toHaveFocus());
 });
 

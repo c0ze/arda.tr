@@ -199,6 +199,20 @@ let scrollToBottom: Dom.element => unit = %raw(`function (el) { if (el) el.scrol
 // Within about 40px of the bottom counts as following the conversation.
 let nearBottom: Dom.element => bool = %raw(`function (el) { return el.scrollHeight - el.scrollTop - el.clientHeight <= 40; }`)
 let focusEl: Dom.element => unit = %raw(`function (el) { if (el) el.focus(); }`)
+// The element that had focus when the chat was asked to open (null for none).
+let activeEl: unit => Nullable.t<Dom.element> = %raw(`
+  function () {
+    var a = typeof document !== "undefined" ? document.activeElement : null;
+    return a && a !== document.body ? a : null;
+  }
+`)
+// Focus `el` if it is still on the page, else `fallback`.
+let focusBack: (Nullable.t<Dom.element>, Nullable.t<Dom.element>) => unit = %raw(`
+  function (el, fallback) {
+    if (el && el.isConnected && typeof el.focus === "function") el.focus();
+    else if (fallback) fallback.focus();
+  }
+`)
 
 // A reply still being written, made safe for the Markdown renderer: a
 // half-typed link shows as its label, and an open ** or ` is closed so the
@@ -306,6 +320,13 @@ let make = () => {
   let listRef = React.useRef(Nullable.null)
   let inputRef = React.useRef(Nullable.null)
   let launcherRef = React.useRef(Nullable.null)
+  // Where focus goes back to on close: whatever opened the chat (the launcher,
+  // or the hero's `ask ▸`).
+  let returnRef = React.useRef(Nullable.null)
+  let openFromFocus = () => {
+    returnRef.current = activeEl()
+    setIsOpen(_ => true)
+  }
   // Voice: the visitor's choice (shared site-wide through voice.js), the
   // speaker for the reply being spoken, how far it has got and how loud it is.
   let (voiceOn, setVoiceOn) = React.useState(() => Voice.voiceEnabled())
@@ -409,7 +430,8 @@ let make = () => {
   }
 
   // On open: focus the input and wire Escape-to-close. On close, the cleanup
-  // returns focus to the launcher (non-modal widget — restore focus, not trap).
+  // returns focus to whatever opened the chat if it is still on the page, else
+  // to the launcher (non-modal widget — restore focus, not trap).
   React.useEffect1(() => {
     if isOpen {
       switch inputRef.current->Nullable.toOption {
@@ -426,10 +448,8 @@ let make = () => {
           followRef.current = true
           // Closing the widget silences it.
           stopSpeech()
-          switch launcherRef.current->Nullable.toOption {
-          | Some(el) => focusEl(el)
-          | None => ()
-          }
+          focusBack(returnRef.current, launcherRef.current)
+          returnRef.current = Nullable.null
         },
       )
     } else {
@@ -438,7 +458,7 @@ let make = () => {
   }, [isOpen])
 
   // Open when another part of the page requests it.
-  React.useEffect0(() => Some(listenForOpen(() => setIsOpen(_ => true))))
+  React.useEffect0(() => Some(listenForOpen(openFromFocus)))
 
   // Follow the mute toggle (a muting speaker stops itself and reveals all).
   React.useEffect0(() => Some(Voice.onVoiceChange(on => setVoiceOn(_ => on))))
@@ -583,7 +603,7 @@ let make = () => {
       : <button
           ref={ReactDOM.Ref.domRef(launcherRef)}
           type_="button"
-          onClick={_ => setIsOpen(_ => true)}
+          onClick={_ => openFromFocus()}
           ariaLabel={launcherLabel}
           ariaHaspopup=#dialog
           className="chat-launch">
