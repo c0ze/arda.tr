@@ -227,6 +227,33 @@ it("announces each finished reply once, as plain text, through a status node", a
   expect(status).toHaveTextContent(/^$/);
 });
 
+// A live region only speaks when its text changes while it is on the page:
+// one inserted with text already in it is not read. So the status node lives
+// as long as the widget, and a reply that finishes while the chat is closed
+// is announced when it reopens.
+it("announces a reply that finished while the chat was closed when it reopens", async () => {
+  let emit: (value: { done: boolean; value?: Uint8Array }) => void;
+  const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
+  render(<ChatWidget />);
+  const status = screen.getByRole("status");
+  expect(status).toHaveTextContent(/^$/);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+  fireEvent.keyDown(document, { key: "Escape" });
+  await act(async () => {
+    emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Answered while closed"}\n\n') });
+    await new Promise((r) => setTimeout(r, 0));
+  });
+  expect(screen.getByRole("status")).toBe(status);
+  expect(status).toHaveTextContent(/^$/);
+
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  await waitFor(() => expect(status).toHaveTextContent(/^Answered while closed$/));
+  expect(screen.getByRole("status")).toBe(status);
+});
+
 it("announces a failed reply's error", async () => {
   vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
   render(<ChatWidget />);

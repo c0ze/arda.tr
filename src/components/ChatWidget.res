@@ -580,10 +580,11 @@ let make = () => {
 
   // A reply is announced once it is whole: streamed to the end and, with
   // voice on, spoken to the end (or it failed). Its plain text goes to the
-  // status node, which is cleared when the next question is sent.
+  // status node, which is cleared when the next question is sent. One that
+  // finishes while the chat is closed waits until it reopens.
   React.useEffect1(() => {
     switch messages->Array.get(Array.length(messages) - 1) {
-    | Some(m) if !busy && liveId == -1 && m.role != "user" && m.id != announcedRef.current =>
+    | Some(m) if isOpen && !busy && liveId == -1 && m.role != "user" && m.id != announcedRef.current =>
       announcedRef.current = m.id
       setAnnouncement(_ => m.isError ? m.content : Markdown.plainText(m.content))
     | _ => ()
@@ -596,10 +597,14 @@ let make = () => {
     ":" ++
     (busy ? "1" : "0") ++
     ":" ++
-    Int.toString(liveId),
+    Int.toString(liveId) ++
+    (isOpen ? ":open" : ":closed"),
   ])
 
   <>
+    // On the page for the widget's whole life, outside the panel: a live
+    // region inserted with text already in it is not read out.
+    <div role="status" className="sr-only"> {React.string(announcement)} </div>
     {isOpen
       ? React.null
       : <button
@@ -644,7 +649,7 @@ let make = () => {
           </div>
 
           // The log changes on every chunk and voice step, so it is not a live
-          // region; the status node after it announces each finished reply once.
+          // region; the status node announces each finished reply once.
           <div
             ref={ReactDOM.Ref.domRef(listRef)}
             role="log"
@@ -699,7 +704,6 @@ let make = () => {
                 </div>
               : React.null}
           </div>
-          <div role="status" className="sr-only"> {React.string(announcement)} </div>
 
           <form
             onSubmit={e => {
