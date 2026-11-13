@@ -103,13 +103,13 @@ it("asks for voice by default and reveals the reply only as far as it is spoken"
   await emit({ type: "speech_end", upto: 12 }, { type: "done", text });
   expect(screen.getByRole("textbox")).toBeEnabled();
   expect(reply().textContent).toBe("Hello ");
-  // Still being written into the log as it is spoken: announce it once, whole.
-  expect(screen.getByRole("log")).toHaveAttribute("aria-busy", "true");
+  // Still being revealed as it is spoken: announced once, whole, when it ends.
+  expect(screen.getByRole("status")).toHaveTextContent(/^$/);
 
   clock.now = 2; // the clip has played: everything shows
   await tick();
   expect(reply().textContent).toBe(text);
-  expect(screen.getByRole("log")).toHaveAttribute("aria-busy", "false");
+  expect(screen.getByRole("status")).toHaveTextContent(text);
 });
 
 it("sends a text-only request when muted, and the toggle persists", async () => {

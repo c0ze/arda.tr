@@ -26,7 +26,7 @@ it("shows streamed replies under Strict Mode and keeps them in subsequent histor
   expect(JSON.parse(fetch.mock.calls[1][1].body).history).toContainEqual({ role: "model", content: "Visible answer" });
   await waitFor(() => expect(read).toHaveBeenCalledTimes(3));
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Second answer"}\n\n') });
-  expect(await screen.findByText("Second answer")).toBeVisible();
+  expect(await screen.findByText("Second answer", { selector: "p" })).toBeVisible();
 });
 
 it("uses the fallback when streaming ends without a reply", async () => {
@@ -37,7 +37,7 @@ it("uses the fallback when streaming ends without a reply", async () => {
   render(<ChatWidget />);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
-  expect(await screen.findByText("Fallback answer")).toBeVisible();
+  expect(await screen.findByText("Fallback answer", { selector: "p" })).toBeVisible();
   expect(fetch).toHaveBeenCalledTimes(2);
   expect(fetch.mock.calls[1][0]).toMatch(/\/api\/chat$/);
   expect(screen.getByRole("textbox")).toBeEnabled();
@@ -91,31 +91,49 @@ it("keeps the input usable and focused while a reply is on its way", async () =>
   expect(fetch).toHaveBeenCalledTimes(1);
 
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Answer"}\n\n') });
-  expect(await screen.findByText("Answer")).toBeVisible();
+  expect(await screen.findByText("Answer", { selector: "p" })).toBeVisible();
   expect(input).toHaveFocus();
   expect(input).toHaveValue("Second question");
 });
 
-it("marks the log busy while a reply streams, so it is announced once, complete", async () => {
+// The visible log is not a live region: it changes on every chunk, and an
+// aria-busy that flips back to false changes no text, so some screen readers
+// never read the reply. One hidden status node gets the finished reply's plain
+// text once, and is cleared when the next question is sent.
+it("announces each finished reply once, as plain text, through a status node", async () => {
   let emit: (value: { done: boolean; value?: Uint8Array }) => void;
   const read = vi.fn(() => new Promise((resolve) => { emit = resolve; }));
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, body: { getReader: () => ({ read, cancel: async () => {} }) } }));
   render(<ChatWidget />);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   const log = screen.getByRole("log");
-  expect(log).toHaveAttribute("aria-live", "polite");
-  expect(log).not.toHaveAttribute("aria-busy", "true");
+  expect(log).toHaveAttribute("aria-live", "off");
+  expect(log).not.toHaveAttribute("aria-busy");
+  const status = screen.getByRole("status");
+  expect(status).toHaveTextContent(/^$/);
   fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
   await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
 
   emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":"Half an"}\n\n') });
   expect(await screen.findByText("Half an")).toBeVisible();
-  expect(log).toHaveAttribute("aria-busy", "true");
+  expect(status).toHaveTextContent(/^$/);
 
   await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
-  emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Half an answer."}\n\n') });
-  expect(await screen.findByText("Half an answer.")).toBeVisible();
-  expect(log).not.toHaveAttribute("aria-busy", "true");
+  emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Half an **answer** with [a link](https://x.y)."}\n\n') });
+  await waitFor(() => expect(status).toHaveTextContent(/^Half an answer with a link\.$/));
+
+  const input = screen.getByRole("textbox");
+  fireEvent.change(input, { target: { value: "Again" } });
+  fireEvent.submit(input.closest("form")!);
+  expect(status).toHaveTextContent(/^$/);
+});
+
+it("announces a failed reply's error", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(/couldn't reach the assistant/));
 });
 
 // The bot rejects a message over 20,000 characters with a 400, which the
@@ -145,7 +163,7 @@ it("closes open markers in the reply that is still streaming", async () => {
   await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
   // The finished reply is shown as written: nothing is closed for it.
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"2 ** 3"}\n\n') });
-  expect(await screen.findByText("2 ** 3")).toBeVisible();
+  expect(await screen.findByText("2 ** 3", { selector: "p" })).toBeVisible();
 });
 
 // jsdom has no layout: give the log a 1000px transcript in a 200px window.
@@ -180,7 +198,7 @@ it("reopens at the latest message when a reply finished while it was closed", as
     emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"A long answer"}\n\n') });
     await new Promise((r) => setTimeout(r, 0));
     fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
-    expect(await screen.findByText("A long answer")).toBeInTheDocument();
+    expect(await screen.findByText("A long answer", { selector: "p" })).toBeInTheDocument();
     expect(screen.getByRole("log").scrollTop).toBe(800);
   } finally {
     restore();
@@ -214,7 +232,7 @@ it("does not pull a visitor who scrolled up back down, until they send", async (
     fireEvent.scroll(log);
     await waitFor(() => expect(read).toHaveBeenCalledTimes(3));
     emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"First words and more, done."}\n\n') });
-    expect(await screen.findByText("First words and more, done.")).toBeInTheDocument();
+    expect(await screen.findByText("First words and more, done.", { selector: "p" })).toBeInTheDocument();
     expect(log.scrollTop).toBe(100);
 
     const input = screen.getByRole("textbox");

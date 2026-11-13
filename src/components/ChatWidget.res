@@ -299,6 +299,9 @@ let make = () => {
   let (messages, setMessages) = React.useState(() => [])
   let (busy, setBusy) = React.useState(() => false)
   let (streaming, setStreaming) = React.useState(() => false)
+  // What the hidden status node says: the last finished reply, once.
+  let (announcement, setAnnouncement) = React.useState(() => "")
+  let announcedRef = React.useRef(-1)
   let idRef = React.useRef(0)
   let listRef = React.useRef(Nullable.null)
   let inputRef = React.useRef(Nullable.null)
@@ -473,6 +476,7 @@ let make = () => {
         Array.concat(prev, [{id: userId, role: "user", content: trimmed, isError: false}])
       )
       setInput(_ => "")
+      setAnnouncement(_ => "")
       // Asking brings the conversation back into view.
       followRef.current = true
       setBusy(_ => true)
@@ -552,6 +556,27 @@ let make = () => {
   | _ => -1
   }
 
+  // A reply is announced once it is whole: streamed to the end and, with
+  // voice on, spoken to the end (or it failed). Its plain text goes to the
+  // status node, which is cleared when the next question is sent.
+  React.useEffect1(() => {
+    switch messages->Array.get(Array.length(messages) - 1) {
+    | Some(m) if !busy && liveId == -1 && m.role != "user" && m.id != announcedRef.current =>
+      announcedRef.current = m.id
+      setAnnouncement(_ => m.isError ? m.content : Markdown.plainText(m.content))
+    | _ => ()
+    }
+    None
+  }, [
+    Int.toString(Array.length(messages)) ++
+    ":" ++
+    Int.toString(lastLen) ++
+    ":" ++
+    (busy ? "1" : "0") ++
+    ":" ++
+    Int.toString(liveId),
+  ])
+
   <>
     {isOpen
       ? React.null
@@ -596,14 +621,12 @@ let make = () => {
             </button>
           </div>
 
-          // Busy while a reply is still being written into the log (streamed, or
-          // revealed as it is spoken), so screen readers announce it once, whole,
-          // instead of on every chunk.
+          // The log changes on every chunk and voice step, so it is not a live
+          // region; the status node after it announces each finished reply once.
           <div
             ref={ReactDOM.Ref.domRef(listRef)}
             role="log"
-            ariaLive=#polite
-            ariaBusy={liveId != -1}
+            ariaLive=#off
             onScroll={_ =>
               switch listRef.current->Nullable.toOption {
               | Some(el) => followRef.current = nearBottom(el)
@@ -654,6 +677,7 @@ let make = () => {
                 </div>
               : React.null}
           </div>
+          <div role="status" className="sr-only"> {React.string(announcement)} </div>
 
           <form
             onSubmit={e => {

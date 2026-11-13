@@ -7,6 +7,7 @@ type block
 type inlineTok
 
 @module("./markdownParse.mjs") external parse: string => array<block> = "parse"
+@module("./markdownParse.mjs") external plainText: string => string = "plainText"
 
 let bType: block => string = %raw(`function (b) { return b.type; }`)
 let bText: block => string = %raw(`function (b) { return b.text || ""; }`)

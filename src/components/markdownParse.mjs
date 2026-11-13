@@ -135,3 +135,13 @@ export function parse(src) {
   }
   return blocks;
 }
+
+// The reply as plain text, for the chat's screen-reader announcement: marks
+// dropped, link labels without their URLs, blocks on their own lines.
+const inlineText = (toks) => toks.map((t) => (t.c ? inlineText(t.c) : t.v)).join("");
+
+export function plainText(src) {
+  return parse(src)
+    .map((b) => (b.type === "code" ? b.text : b.type === "p" ? inlineText(b.inline) : b.items.map(inlineText).join("\n")))
+    .join("\n");
+}
