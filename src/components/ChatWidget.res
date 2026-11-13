@@ -79,7 +79,12 @@ let postChat: (string, array<chatMsg>, string => unit, unit => unit) => unit = %
 
 // Streaming variant: POSTs to the SSE /api/chat/stream endpoint and calls
 // onChunk(fullTextSoFar) as tokens arrive, onDone(fullText) at the end, or
-// onError() if the stream fails (caller falls back only before any token).
+// onError(retry) if the stream fails. `retry` says whether the request most
+// likely never reached the model, so /api/chat may be tried instead: a
+// network error, a deadline or a dropped connection before any byte, HTTP 413
+// or a 5xx. Any other HTTP error, an SSE `error` event and any failure after
+// the first byte are final: a fallback would pay for the reply twice, or
+// spend a rate-limited visitor's next slot.
 // `extra` fields (the voice request, if any) are merged into the body, and
 // every parsed event goes to onEvent (the speaker) before it is handled here.
 // Aborts after 45s without data. SSE shape: `data: {"type":"thinking"|"chunk"|
@@ -89,7 +94,7 @@ let postChatStream: (
   array<chatMsg>,
   string => unit,
   string => unit,
-  unit => unit,
+  bool => unit,
   Dict.t<JSON.t>,
   JSON.t => unit,
 ) => unit = %raw(`
@@ -108,22 +113,23 @@ let postChatStream: (
     // An inactivity deadline: a spoken reply streams for longer than a plain one.
     function arm() {
       clearTimeout(timer);
-      timer = setTimeout(function () { controller.abort(); fail(); }, 45000);
+      timer = setTimeout(function () { controller.abort(); fail(!gotBytes); }, 45000);
     }
     arm();
     var settled = false;
+    var gotBytes = false;
     var reader;
     function closeReader() {
       if (reader) {
         try { Promise.resolve(reader.cancel()).catch(function () {}); } catch (e) {}
       }
     }
-    function fail() {
+    function fail(retry) {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
       closeReader();
-      onError();
+      onError(!!retry);
     }
     function finish(full) {
       if (settled) return;
@@ -139,7 +145,8 @@ let postChatStream: (
       signal: controller.signal,
     })
       .then(function (res) {
-        if (!res.ok || !res.body) { fail(); return; }
+        if (!res.ok) { fail(res.status === 413 || res.status >= 500); return; }
+        if (!res.body) { fail(true); return; }
         reader = res.body.getReader();
         if (settled) { closeReader(); return; }
         var decoder = new TextDecoder();
@@ -151,7 +158,7 @@ let postChatStream: (
             if (r.done) {
               buffer += decoder.decode(); // flush any trailing multi-byte char
             } else {
-              if (r.value && r.value.byteLength > 0) arm();
+              if (r.value && r.value.byteLength > 0) { gotBytes = true; arm(); }
               buffer += decoder.decode(r.value, { stream: true });
             }
             // SSE events are blank-line separated; tolerate LF or CRLF framing.
@@ -180,18 +187,18 @@ let postChatStream: (
                 finish(full);
                 return;
               } else if (obj.type === "error") {
-                fail();
+                fail(false);
                 return;
               }
             }
             // EOF without completion is a failed request, even after partial text.
-            if (r.done) { fail(); return; }
+            if (r.done) { fail(!gotBytes); return; }
             return pump();
           });
         }
         return pump();
       })
-      .catch(function () { fail(); });
+      .catch(function () { fail(!gotBytes); });
   }
 `)
 
@@ -557,9 +564,9 @@ let make = () => {
           setStreaming(_ => false)
           setBusy(_ => false)
         },
-        () => {
+        retry => {
           silence()
-          if started.contents {
+          if started.contents || !retry {
             let errorId = nextId()
             setMessages(prev =>
               Array.concat(prev, [{id: errorId, role: "model", content: errorLabel, isError: true}])

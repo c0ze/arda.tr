@@ -43,6 +43,44 @@ it("uses the fallback when streaming ends without a reply", async () => {
   expect(screen.getByRole("textbox")).toBeEnabled();
 });
 
+// A definitive answer from the server is not retried on /api/chat: that would
+// pay for a blocked reply twice, or spend a rate-limited visitor's next slot.
+it("shows the error without a fallback after HTTP 429 or an SSE error event", async () => {
+  const fetch = vi.fn()
+    .mockResolvedValueOnce({ ok: false, status: 429, body: null })
+    .mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      body: { getReader: () => ({ read: vi.fn().mockResolvedValueOnce({ done: false, value: encoder.encode('data: {"type":"error","message":"no"}\n\n') }), cancel: async () => {} }) },
+    });
+  vi.stubGlobal("fetch", fetch);
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
+  expect(fetch).toHaveBeenCalledTimes(1);
+
+  const input = screen.getByRole("textbox");
+  await waitFor(() => expect(input).toBeEnabled());
+  fireEvent.change(input, { target: { value: "Again" } });
+  fireEvent.submit(input.closest("form")!);
+  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
+  expect(fetch).toHaveBeenCalledTimes(2);
+  expect(fetch.mock.calls.every(([url]) => /\/api\/chat\/stream$/.test(url))).toBe(true);
+});
+
+it("falls back to /api/chat after a 503 from the stream", async () => {
+  const fetch = vi.fn()
+    .mockResolvedValueOnce({ ok: false, status: 503, body: null })
+    .mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ reply: "Fallback answer" }) });
+  vi.stubGlobal("fetch", fetch);
+  render(<ChatWidget />);
+  fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
+  fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
+  expect(await screen.findByText("Fallback answer", { selector: "p" })).toBeVisible();
+  expect(fetch.mock.calls[1][0]).toMatch(/\/api\/chat$/);
+});
+
 it("keeps partial text and reports interruption without automatically resubmitting", async () => {
   const read = vi.fn()
     .mockResolvedValueOnce({ done: false, value: encoder.encode('data: {"type":"chunk","text":"Partial answer"}\n\n') })

@@ -10,7 +10,7 @@ const end = source.search(/(?:var|let|const) scrollToBottom =/);
 assert.ok(start >= 0 && end > start, 'compiled chat transport boundaries must exist');
 const transport = source.slice(start, end) + '\nthis.postChat = postChat; this.postChatStream = postChatStream;';
 
-async function request(parts, { method = 'postChatStream', ok = true, timeout = false, extra, onEvent } = {}) {
+async function request(parts, { method = 'postChatStream', ok = true, status = ok ? 200 : 500, timeout = false, offline = false, extra, onEvent } = {}) {
   const events = [];
   let body;
   let cancelled = 0;
@@ -29,17 +29,19 @@ async function request(parts, { method = 'postChatStream', ok = true, timeout = 
     fetch(_url, options) {
       signal = options.signal;
       body = JSON.parse(options.body);
+      if (offline) return Promise.reject(new TypeError('Failed to fetch'));
       if (timeout) return new Promise((_resolve, reject) => {
         signal.addEventListener('abort', () => reject(new Error('aborted')));
         queueMicrotask(() => deadline());
       });
-      return Promise.resolve({ ok, body: { getReader: () => reader }, json: async () => ({ reply: 'untrusted error body' }) });
+      return Promise.resolve({ ok, status, body: { getReader: () => reader }, json: async () => ({ reply: 'untrusted error body' }) });
     },
   });
   vm.runInContext(transport, context);
   await new Promise((resolve) => {
     const done = (text) => { events.push(['done', text]); resolve(); };
-    const error = () => { events.push(['error']); resolve(); };
+    // postChatStream says whether the failure may fall back to /api/chat.
+    const error = (retry) => { events.push(retry === undefined ? ['error'] : ['error', retry]); resolve(); };
     if (method === 'postChat') context.postChat('hello', [], done, error);
     else context.postChatStream('hello', [], (text) => events.push(['chunk', text]), done, error, extra, onEvent);
   });
@@ -48,12 +50,12 @@ async function request(parts, { method = 'postChatStream', ok = true, timeout = 
 }
 
 test('empty stream reports failure instead of inserting an empty reply', async () => {
-  assert.deepEqual((await request([])).events, [['error']]);
+  assert.deepEqual((await request([])).events, [['error', true]]);
 });
 
 test('interrupted reply reports failure after preserving its received text', async () => {
   assert.deepEqual((await request(['data: {"type":"chunk","text":"partial"}\n\n'])).events,
-    [['chunk', 'partial'], ['error']]);
+    [['chunk', 'partial'], ['error', false]]);
 });
 
 test('completion closes the reader and ignores following events', async () => {
@@ -64,7 +66,7 @@ test('completion closes the reader and ignores following events', async () => {
 
 test('server error closes the reader', async () => {
   const result = await request(['data: {"type":"error","message":"failed"}\n\n']);
-  assert.deepEqual(result.events, [['error']]);
+  assert.deepEqual(result.events, [['error', false]]);
   assert.equal(result.cancelled, 1);
 });
 
@@ -79,12 +81,12 @@ test('malformed payloads cannot prevent a later valid completion', async () => {
 });
 
 test('unterminated final event is not accepted as completion', async () => {
-  assert.deepEqual((await request(['data: {"type":"done","text":"incomplete frame"}'])).events, [['error']]);
+  assert.deepEqual((await request(['data: {"type":"done","text":"incomplete frame"}'])).events, [['error', false]]);
 });
 
 test('deadline aborts a stalled request and reports failure once', async () => {
   const result = await request([], { timeout: true });
-  assert.deepEqual(result.events, [['error']]);
+  assert.deepEqual(result.events, [['error', true]]);
   assert.equal(result.signal.aborted, true);
 });
 
@@ -115,3 +117,62 @@ test('a throwing onEvent cannot break the stream', async () => {
     { onEvent: () => { throw new Error('boom'); } });
   assert.deepEqual(result.events, [['chunk', 'a'], ['done', 'a']]);
 });
+
+// A fallback is a second paid request: it is only for failures where the
+// stream request most likely never reached the model.
+test('falls back only on a network error, 413 or a 5xx before any byte', async () => {
+  assert.deepEqual((await request([], { offline: true })).events, [['error', true]]);
+  for (const status of [413, 500, 502, 503]) {
+    assert.deepEqual((await request([], { ok: false, status })).events, [['error', true]], `HTTP ${status}`);
+  }
+});
+
+test('treats other HTTP errors as final: no second request for a blocked or rate-limited visitor', async () => {
+  for (const status of [400, 401, 403, 404, 415, 429]) {
+    assert.deepEqual((await request([], { ok: false, status })).events, [['error', false]], `HTTP ${status}`);
+  }
+});
+
+test('an SSE error event before any text is final', async () => {
+  const result = await request(['data: {"type":"thinking"}\n\ndata: {"type":"error","message":"blocked"}\n\n']);
+  assert.deepEqual(result.events, [['error', false]]);
+});
+
+test('once the server has answered with bytes, a broken or stalled stream is final', async () => {
+  const context = vm.createContext({
+    TextDecoder, AbortController, setTimeout: (fn) => { context.deadline = fn; return 1; }, clearTimeout() {},
+    fetch: (_url, options) => {
+      let calls = 0;
+      const reader = {
+        read() {
+          calls++;
+          if (calls === 1) return Promise.resolve({ done: false, value: new TextEncoder().encode('data: {"type":"thinking"}\n\n') });
+          if (context.mode === 'reset') return Promise.reject(new TypeError('network error'));
+          return new Promise((_r, reject) => options.signal.addEventListener('abort', () => reject(new Error('aborted'))));
+        },
+        cancel: async () => {},
+      };
+      return Promise.resolve({ ok: true, status: 200, body: { getReader: () => reader } });
+    },
+  });
+  vm.runInContext(transport, context);
+  for (const mode of ['reset', 'stall']) {
+    context.mode = mode;
+    const retry = await new Promise((resolve) => {
+      context.postChatStream('hello', [], () => {}, () => resolve('done'), resolve, {}, undefined);
+      if (mode === 'stall') setTimeout(() => context.deadline(), 5);
+    });
+    assert.equal(retry, false, mode);
+  }
+});
+
+test('a broken connection before any byte may fall back', async () => {
+  const context = vm.createContext({
+    TextDecoder, AbortController, setTimeout: () => 1, clearTimeout() {},
+    fetch: () => Promise.resolve({ ok: true, status: 200, body: { getReader: () => ({ read: () => Promise.reject(new TypeError('network error')), cancel: async () => {} }) } }),
+  });
+  vm.runInContext(transport, context);
+  const retry = await new Promise((resolve) => context.postChatStream('hello', [], () => {}, () => resolve('done'), resolve, {}, undefined));
+  assert.equal(retry, true);
+});
+
