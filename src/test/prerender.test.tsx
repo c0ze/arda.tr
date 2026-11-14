@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { render } from "@/entry-server";
 import { TokyoClock } from "@/components/TokyoClock";
 import * as Catalog from "@/content/CatalogContent.res.mjs";
-import { injectAppHtml } from "../../scripts/prerender.mjs";
+import { injectAppHtml, ssrServerOptions } from "../../scripts/prerender.mjs";
 
 // The build prerenders the page into dist/index.html so that crawlers and
 // readers without JavaScript get the text and the links. This runs in Node,
@@ -49,5 +49,13 @@ describe("injectAppHtml", () => {
 
   it("fails when the placeholder is missing", () => {
     expect(() => injectAppHtml("<body><div id=root></div></body>", "<p>x</p>")).toThrow(/placeholder/);
+  });
+});
+
+describe("the prerender's Vite server", () => {
+  it("opens no socket and watches nothing: it renders once and closes", () => {
+    // A WebSocket on 24678 could clash with a running `npm run dev` or
+    // another build on the shared CI runner.
+    expect(ssrServerOptions).toMatchObject({ middlewareMode: true, hmr: false, ws: false, watch: null });
   });
 });

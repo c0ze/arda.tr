@@ -19,6 +19,9 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 const indexFile = path.join(projectRoot, "dist", "index.html");
 const PLACEHOLDER = '<div id="root"></div>';
 
+/** One render and done: no HMR, no WebSocket (Vite would bind 24678), no watcher. */
+export const ssrServerOptions = { middlewareMode: true, hmr: false, ws: false, watch: null };
+
 /**
  * Puts the markup inside <div id="root">. A function replacer, because a
  * string replacement would expand `$&`, `$1`, `$$` in the rendered text.
@@ -35,7 +38,7 @@ async function renderApp() {
   const server = await createServer({
     root: projectRoot,
     configFile: path.join(projectRoot, "config/vite.config.ts"),
-    server: { middlewareMode: true, hmr: false, watch: null },
+    server: ssrServerOptions,
     appType: "custom",
     optimizeDeps: { noDiscovery: true, include: [] },
     logLevel: "warn",
