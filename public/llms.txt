@@ -8,14 +8,23 @@
 - [Record](https://arda.tr/#record): Career background: Systems Architect at Veltra, Keio University, earlier roles
 - [Contact](https://arda.tr/#contact): Email and social links
 
+## Sites
+
+- [Résumé](https://resume.arda.tr/): Work history, skills and education, with PDF, DOCX and JSON downloads in English, Japanese and Turkish
+- [Blog](https://blog.arda.tr/): Coze, posts on AI tooling, Go, DevOps, home networking and generative music since 2010
+- [AI chat](https://ai.arda.tr/): Answers questions about Arda's work, projects and music
+- [Arda](https://lind.arda.tr/): Songs in Tolkien's Sindarin, with Tengwar lyrics and English translations
+
 ## Projects
 
 - [Gand](https://gand.tr/): Independent software studio
 - [Gand Games](https://gand.games/): Games label of Gand
-- [COMMIT!!!](https://commit.gand.tr/): Software-career sim. The legacy monolith is the final boss. On Steam and Android
 - [G Copy](https://g-copy.gand.games/): Floppy-disk copying business game after X-Copy, playable in the browser
+- [King](https://king.arda.tr/): Turkish trick-taking card game, 20 hands of penalties and trumps against three computer players, in the browser
 - [Gage](https://gage.coze.org/): Chess on X with no Twitter API, via a browser extension
 - [Skriv.ist](https://skriv.ist/): Multiplatform ebook reader
+- [Skrivist Books](https://books.skriv.ist/): Local-only EPUB and PDF reader with OPDS and an offline PWA, no accounts
+- [Armarium](https://armarium.skriv.ist/): Small self-hosted library server for comics and ebooks, with OPDS, a JSON API and a web reader
 - [Fablespun](https://fable.tr/): Illustrated fables for kids, generated with AI
 - [Vigil Today](https://vigil.today/): Reminder widget PWA for recurring tasks
 - [SUDONE](https://sudone.jp/): Scan a shelf barcode in a shop and check whether the price beats online
@@ -33,3 +42,4 @@
 - [LinkedIn](https://www.linkedin.com/in/ardakaraduman)
 - [Mastodon](https://mastodon.world/@arda)
 - [Bluesky](https://bsky.app/profile/arda-karaduman.bsky.social)
+- [coze.org](https://coze.org/)
