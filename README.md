@@ -96,7 +96,7 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
   - canonical URL
   - Open Graph tags
   - Twitter card tags
-  - JSON-LD person schema
+  - JSON-LD: a WebSite, ProfilePage and Person graph
 
 ## Deployment
 
