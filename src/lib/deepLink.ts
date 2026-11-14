@@ -1,8 +1,11 @@
 /**
- * Lands the URL's #fragment on first load. The page renders client-side, after
- * the browser has already looked for the fragment's element and not found it,
- * so #record, #contact, #catalogue and card ids (#AK-5-0158) would otherwise
- * stay at the top. In-page links after that are the browser's own job.
+ * Lands the URL's #fragment on first load. The build prerenders the page, so
+ * the browser's own jump finds #record, #contact, #catalogue and card ids
+ * (#AK-5-0158) in the static HTML; but then createRoot replaces that markup
+ * with the client render and the canvases and fonts settle, which can leave
+ * the target off-screen. (Under `npm run dev` there is no static markup, and
+ * this is the only landing.) In-page links after that are the browser's own
+ * job.
  *
  * The forest, the canvases and the web fonts settle after mount and can push
  * the target down, so it is landed again on every body resize until the

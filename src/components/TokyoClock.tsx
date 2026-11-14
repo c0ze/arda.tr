@@ -22,9 +22,11 @@ interface TokyoClockProps {
  * status bar as `JST hh:mm:ss`. Updates once a second.
  */
 export function TokyoClock({ className = "" }: TokyoClockProps) {
-  const [time, setTime] = useState(tokyoNow);
+  // Empty until mount, so the build's prerender bakes no clock time into the HTML.
+  const [time, setTime] = useState("");
 
   useEffect(() => {
+    setTime(tokyoNow());
     const id = window.setInterval(() => setTime(tokyoNow()), 1000);
     return () => window.clearInterval(id);
   }, []);

@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import App from "@/App";
 
-// The page renders client-side, after the browser has already tried the
-// URL's fragment and found nothing to scroll to. llms.txt and old links point
-// at #record, #contact, #catalogue and card ids such as #AK-5-0158, so the app
-// has to land them itself, instantly (not a smooth glide from the top).
+// The browser's own jump to the URL's fragment happens on the prerendered
+// markup (or finds nothing under `npm run dev`); createRoot then replaces that
+// markup and the canvases settle. llms.txt and old links point at #record,
+// #contact, #catalogue and card ids such as #AK-5-0158, so the app lands them
+// again itself, instantly (not a smooth glide from the top).
 
 let landed: { id: string; options: unknown }[];
 let resize: (() => void)[];

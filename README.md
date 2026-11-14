@@ -50,9 +50,9 @@ npm run preview
 Command notes:
 
 - `npm run dev` generates the site config bridge, starts the ReScript compiler in watch mode, and runs Vite
-- `npm run test` runs the Vitest suite: the app shell, the chat transport, voice and markdown, the canvas mounts, deep links, the sitemap and the Tailwind config
+- `npm run test` runs the Vitest suite: the app shell, the catalogue data, the prerender, the chat transport, voice and markdown, the canvas mounts, deep links, index.html's structured data, llms.txt, the sitemap and the Tailwind config
 - `npm run verify` runs lint + typecheck + test
-- `npm run build` creates the production bundle and regenerates `dist/sitemap.xml`
+- `npm run build` creates the production bundle, prerenders the page into `dist/index.html` (`npm run prerender`, `scripts/prerender.mjs` with `src/entry-server.tsx`) and regenerates `dist/sitemap.xml`
 - `npm run generate:sitemap` can be run separately if only metadata changed
 - `npm run generate:site-config` regenerates the TypeScript site-config bridge from `config/site.config.json`
 - `npm run generate:themes-contract` regenerates `config/themes.json`, the committed cross-site theme contract, from the theme blocks in `src/index.css` + `config/site.config.json` (CI fails if it goes stale)
@@ -62,7 +62,7 @@ Command notes:
 ```text
 config/    build, lint, Tailwind, TypeScript, and site metadata config
 public/    static assets, including social preview images
-scripts/   build-time helpers such as sitemap generation
+scripts/   build-time helpers: the prerender and sitemap generation
 src/       app code, ReScript sections, local UI primitives, and generated config bridge
 ```
 
@@ -89,6 +89,7 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
   - section IDs
   - theme metadata
 - `src/config/site.generated.ts` is generated from `config/site.config.json` for the client app
+- `scripts/prerender.mjs` renders the page to static markup on every build, so crawlers and readers without JavaScript get the text and links; the client then mounts over it with `createRoot`
 - `scripts/generate-sitemap.mjs` generates `dist/sitemap.xml` on every build
 - `scripts/generate-site-config-module.mjs` syncs the client-side config bridge from the canonical JSON file
 - `index.html` contains:

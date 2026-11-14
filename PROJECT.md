@@ -34,10 +34,10 @@ boundary. Stay inside this split:
 - **ReScript (`.res`)** — all page sections (`src/components/*.res`), their
   bindings (`src/bindings/*.res`), and all copy/data (`src/content/*Content.res`).
 - **TypeScript (`.tsx`/`.ts`)** — only the interop shell: the entry/provider
-  (`main.tsx`, `App.tsx`, `ThemeProvider.tsx`, `ThemeToggle.tsx`,
-  `TokyoClock.tsx`), the React `ErrorBoundary`, the Radix dropdown in
-  `components/ui/`, `lib/utils.ts`, `lib/deepLink.ts` (lands the URL's
-  `#fragment` after the client-side render), and `OneBit.tsx`, which mounts the canvas
+  (`main.tsx`, `entry-server.tsx`, `App.tsx`, `ThemeProvider.tsx`,
+  `ThemeToggle.tsx`, `TokyoClock.tsx`), the React `ErrorBoundary`, the Radix
+  dropdown in `components/ui/`, `lib/utils.ts`, `lib/deepLink.ts` (lands the
+  URL's `#fragment` again after mount), and `OneBit.tsx`, which mounts the canvas
   effects (bound for ReScript in `bindings/OneBit.res`). Don't grow this layer
   without a real reason.
 - **`src/lib/onebit.js`** is the family's shared 1-bit engine, copied verbatim
@@ -91,6 +91,18 @@ mise exec node@24.14.0 -- npm run verify
   `npm run generate:themes-contract` after touching theme CSS or theme
   metadata; the `theme-contract.yml` workflow fails if it drifts.
   `config/themes.v1.json` is the frozen v1 contract, kept for old readers.
+- The build prerenders the page: after `vite build`, `scripts/prerender.mjs`
+  loads `src/entry-server.tsx` through Vite's SSR loader, renders the same tree
+  `main.tsx` mounts with `renderToString`, and puts it into `dist/index.html`
+  inside `<div id="root">`, so crawlers and readers without JavaScript get the
+  text and links (the canvases stay empty until mount). It fails the build if
+  the placeholder is missing, the render throws or React logs an error.
+  `main.tsx` keeps `createRoot` (not `hydrateRoot`): React replaces the static
+  markup on mount, so it never has to match exactly. Keep the static HTML free
+  of anything build-specific (times, per-build randomness, paths): two builds
+  should give a byte-identical `dist/index.html`. That is why `TokyoClock`
+  starts empty and sets the time in its effect. `npm run dev` serves no
+  prerendered markup. `src/test/prerender.test.tsx` renders it in Node.
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds. Its
   `<lastmod>` is the date of the last commit touching the content, so the
   deploy checks out full history (`fetch-depth: 0`).
