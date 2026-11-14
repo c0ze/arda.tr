@@ -46,33 +46,55 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Arda Karaduman",
-      "url": "https://arda.tr",
-      "image": "https://arda.tr/og-image.jpg",
-      "jobTitle": "Systems Architect",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Veltra"
-      },
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "Keio University",
-        "department": "Computer Science"
-      },
-      "knowsAbout": ["Ruby", "Go", "Python", "AWS", "Kubernetes", "Microservices", "DevOps", "CI/CD"],
-      "nationality": "Turkish",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "Japan"
-      },
-      "sameAs": [
-        "https://github.com/c0ze",
-        "https://twitter.com/ardakaraduman",
-        "https://www.linkedin.com/in/ardakaraduman/",
-        "https://blog.arda.tr",
-        "https://mastodon.world/@arda",
-        "https://bsky.app/profile/arda-karaduman.bsky.social"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://arda.tr/#website",
+          "url": "https://arda.tr/",
+          "name": "Arda Karaduman",
+          "alternateName": "arda.tr",
+          "inLanguage": "en",
+          "publisher": { "@id": "https://arda.tr/#person" }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://arda.tr/#webpage",
+          "url": "https://arda.tr/",
+          "isPartOf": { "@id": "https://arda.tr/#website" },
+          "mainEntity": { "@id": "https://arda.tr/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://arda.tr/#person",
+          "name": "Arda Karaduman",
+          "url": "https://arda.tr/",
+          "image": "https://arda.tr/og-image.jpg",
+          "jobTitle": "Systems Architect",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Veltra"
+          },
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Keio University",
+            "department": "Computer Science"
+          },
+          "knowsAbout": ["Ruby", "Go", "Python", "AWS", "Kubernetes", "Microservices", "DevOps", "CI/CD"],
+          "nationality": "Turkish",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "Japan"
+          },
+          "sameAs": [
+            "https://github.com/c0ze",
+            "https://twitter.com/ardakaraduman",
+            "https://www.linkedin.com/in/ardakaraduman/",
+            "https://blog.arda.tr",
+            "https://mastodon.world/@arda",
+            "https://bsky.app/profile/arda-karaduman.bsky.social",
+            "https://resume.arda.tr/"
+          ]
+        }
       ]
     }
     </script>
