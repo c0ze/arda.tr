@@ -37,7 +37,9 @@ boundary. Stay inside this split:
   (`main.tsx`, `entry-server.tsx`, `App.tsx`, `ThemeProvider.tsx`,
   `ThemeToggle.tsx`, `TokyoClock.tsx`), the React `ErrorBoundary`, the Radix
   dropdown in `components/ui/`, `lib/utils.ts`, `lib/deepLink.ts` (lands the
-  URL's `#fragment` again after mount), and `OneBit.tsx`, which mounts the canvas
+  URL's `#fragment` again after mount, unless the visitor scrolled, tapped or
+  typed first: an inline script in `index.html`'s head marks that as
+  `data-takeover` on `<html>`), and `OneBit.tsx`, which mounts the canvas
   effects (bound for ReScript in `bindings/OneBit.res`). Don't grow this layer
   without a real reason.
 - **`src/lib/onebit.js`** is the family's shared 1-bit engine, copied verbatim

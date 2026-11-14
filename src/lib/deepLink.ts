@@ -7,6 +7,10 @@
  * this is the only landing.) In-page links after that are the browser's own
  * job.
  *
+ * A visitor who scrolled, tapped or typed before the app mounted has already
+ * left the fragment behind: index.html's head script marks that on <html>
+ * (data-takeover), and then nothing here moves them.
+ *
  * The forest, the canvases and the web fonts settle after mount and can push
  * the target down, so it is landed again on every body resize until the
  * visitor scrolls, clicks or types, or SETTLE_MS have passed.
@@ -29,7 +33,7 @@ function target(): HTMLElement | null {
 
 /** Call once after the first mount; returns a cleanup. */
 export function landOnHash(): () => void {
-  if (!target()) return () => {};
+  if (!target() || document.documentElement.dataset.takeover) return () => {};
 
   let done = false;
   // "instant" overrides the stylesheet's smooth scrolling: arrive, don't glide.

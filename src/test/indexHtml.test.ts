@@ -1,9 +1,7 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import { html, runTakeoverScript, takeoverScript } from "./indexHtmlSource";
 
 // The head of index.html is what search engines and link previews read.
-const html = readFileSync(path.resolve(__dirname, "../../index.html"), "utf8");
 const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)![1];
 
 type Node = Record<string, unknown> & { "@id"?: string; "@type"?: string };
@@ -55,5 +53,26 @@ describe("index.html structured data", () => {
 
   it("carries no keywords meta (search engines ignore it)", () => {
     expect(html).not.toMatch(/<meta name="keywords"/);
+  });
+});
+
+// The prerendered page can be read and scrolled before the bundle loads. An
+// inline script notes the visitor's first scroll, tap or key press, so the
+// app's deep-link landing (src/lib/deepLink.ts) does not pull them back.
+describe("index.html pre-mount takeover", () => {
+  afterEach(() => {
+    delete document.documentElement.dataset.takeover;
+  });
+
+  it("sits in the head, before the app's bundle", () => {
+    expect(takeoverScript).toBeDefined();
+    expect(html.indexOf(takeoverScript!)).toBeLessThan(html.indexOf("</head>"));
+  });
+
+  it.each(["wheel", "touchmove", "keydown", "pointerdown"])("marks the page as taken over on %s", (type) => {
+    runTakeoverScript();
+    expect(document.documentElement.dataset.takeover).toBeUndefined();
+    window.dispatchEvent(new Event(type));
+    expect(document.documentElement.dataset.takeover).toBe("1");
   });
 });

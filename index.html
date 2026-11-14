@@ -14,6 +14,14 @@
         if (["night", "night-hc", "xerox", "xerox-hc"].indexOf(t) > -1) document.documentElement.classList.add(t);
       } catch (e) {}
     </script>
+    <!-- The page is prerendered, so it can be read and scrolled before the app
+         mounts. Note the visitor's first scroll, tap or key press; then
+         src/lib/deepLink.ts leaves the URL's #fragment alone on mount. -->
+    <script>
+      ["wheel", "touchmove", "keydown", "pointerdown"].forEach(function (type) {
+        addEventListener(type, function () { document.documentElement.dataset.takeover = "1"; }, { capture: true, passive: true, once: true });
+      });
+    </script>
     <link rel="icon" type="image/svg+xml" href="/a-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import App from "@/App";
+import { runTakeoverScript } from "./indexHtmlSource";
 
 // The browser's own jump to the URL's fragment happens on the prerendered
 // markup (or finds nothing under `npm run dev`); createRoot then replaces that
@@ -31,6 +32,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  delete document.documentElement.dataset.takeover;
   window.history.replaceState(null, "", "/");
   vi.unstubAllGlobals();
 });
@@ -74,6 +76,26 @@ describe("deep links", () => {
     const after = landed.length;
     resize.forEach((cb) => cb());
     expect(landed.length).toBe(after);
+  });
+
+  it("still lands after a slow mount when the visitor has not touched the page", () => {
+    // index.html's head script runs first; the bundle arrives later.
+    runTakeoverScript();
+    go("#AK-5-0158");
+    render(<App />);
+    expect(landed.at(-1)?.id).toBe("AK-5-0158");
+  });
+
+  it("leaves a visitor who scrolled before the app mounted where they are", () => {
+    // Prerendered: the browser jumped to #record, the visitor read on and
+    // scrolled elsewhere, and only then did the bundle mount.
+    runTakeoverScript();
+    go("#record");
+    window.dispatchEvent(new Event("wheel"));
+    render(<App />);
+    resize.forEach((cb) => cb());
+    window.dispatchEvent(new Event("load"));
+    expect(landed).toHaveLength(0);
   });
 
   it("does nothing without a fragment", () => {
