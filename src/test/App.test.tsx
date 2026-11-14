@@ -65,6 +65,28 @@ describe("App", () => {
     }
   });
 
+  it("passes the referrer within the arda.tr family and withholds it elsewhere", () => {
+    render(<App />);
+
+    // Family sites (arda.tr, *.arda.tr) should see where a visitor came from;
+    // other hosts get rel="noopener noreferrer". No card opens a new tab.
+    const family = (url: string) => /^(.+\.)?arda\.tr$/.test(new URL(url).hostname);
+    let familyLinks = 0;
+    for (const e of entries) {
+      for (const a of document.getElementById(anchor(e.cat))!.querySelectorAll("a")) {
+        const href = a.getAttribute("href")!;
+        expect(a).not.toHaveAttribute("target");
+        if (family(href)) {
+          familyLinks++;
+          expect(a, href).not.toHaveAttribute("rel");
+        } else {
+          expect(a, href).toHaveAttribute("rel", "noopener noreferrer");
+        }
+      }
+    }
+    expect(familyLinks).toBeGreaterThan(0);
+  });
+
   it("marks featured entries in place instead of repeating them", () => {
     render(<App />);
 

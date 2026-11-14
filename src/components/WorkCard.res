@@ -12,6 +12,11 @@ let hex = i => "0x" ++ Int.toString(i, ~radix=16)->String.padStart(2, "0")->Stri
 
 let anchorFor = (cat: string) => cat->String.replaceAll(" ", "-")
 
+/* Links within the family (arda.tr and *.arda.tr) pass the referrer; every
+   other host gets rel="noopener noreferrer". */
+let family = %re("/^https?:\/\/([^\/?#:@]+\.)?arda\.tr(?=[\/?#:]|$)/i")
+let relFor = href => family->RegExp.test(href) ? None : Some("noopener noreferrer")
+
 @react.component
 let make = (~entry: CatalogContent.entry, ~index: int) => {
   let (hot, setHot) = React.useState(() => false)
@@ -36,7 +41,7 @@ let make = (~entry: CatalogContent.entry, ~index: int) => {
     <h3>
       {primary == ""
         ? entry.name->React.string
-        : <a className="card-link" href=primary rel="noopener noreferrer">
+        : <a className="card-link" href=primary rel=?{relFor(primary)}>
             {entry.name->React.string}
           </a>}
     </h3>
@@ -54,7 +59,7 @@ let make = (~entry: CatalogContent.entry, ~index: int) => {
           ? <a
               className="src"
               href=entry.repo
-              rel="noopener noreferrer"
+              rel=?{relFor(entry.repo)}
               ariaLabel={`src: source for ${entry.name}`}>
               {"src"->React.string}
             </a>
