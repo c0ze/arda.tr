@@ -1,21 +1,23 @@
 /* Copy for the status bar, the hero and the section prompts. Layout lives in
-   Hero.res / Works.res; text lives here. */
+ Hero.res / Works.res; text lives here. */
 
 type link = {
   label: string,
   href: string,
+  rel: string,
 }
 
 let host = "arda.tr"
 let path = "~/"
 
 // The status bar nav: the works on this page, then the family.
+// rel="me" on the blog and the résumé: they are the same person's profiles.
 let nav: array<link> = [
-  {label: "works", href: "#catalogue"},
-  {label: "blog", href: "https://blog.arda.tr"},
-  {label: "résumé", href: "https://resume.arda.tr"},
-  {label: "ai", href: "https://ai.arda.tr"},
-  {label: "lind", href: "https://lind.arda.tr"},
+  {label: "works", href: "#catalogue", rel: ""},
+  {label: "blog", href: "https://blog.arda.tr", rel: "me"},
+  {label: "résumé", href: "https://resume.arda.tr", rel: "me"},
+  {label: "ai", href: "https://ai.arda.tr", rel: ""},
+  {label: "lind", href: "https://lind.arda.tr", rel: ""},
 ]
 
 let kicker = "// systems architect · tokyo since 2004"

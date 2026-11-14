@@ -131,6 +131,17 @@ describe("App", () => {
     expect(document.querySelectorAll('a[href^="https://coze.org"]')).toHaveLength(1);
   });
 
+  it("marks the status bar's blog and résumé links as the same person (rel=me)", () => {
+    render(<App />);
+
+    const nav = screen.getByRole("navigation", { name: "Site" });
+    const rel = (name: string) => within(nav).getByRole("link", { name }).getAttribute("rel");
+    expect(rel("blog")).toBe("me");
+    expect(rel("résumé")).toBe("me");
+    // The others carry no rel at all, not an empty one.
+    for (const name of ["works", "ai", "lind"]) expect(rel(name)).toBeNull();
+  });
+
   it("opens the chat from the hero's ask button", () => {
     render(<App />);
 

@@ -11,7 +11,11 @@ let make = () =>
     </a>
     <nav ariaLabel="Site">
       {HeroContent.nav
-      ->Array.map(l => <a key=l.label href=l.href> {l.label->React.string} </a>)
+      ->Array.map(l =>
+        <a key=l.label href=l.href rel=?{l.rel == "" ? None : Some(l.rel)}>
+          {l.label->React.string}
+        </a>
+      )
       ->React.array}
     </nav>
     <span className="bar-sp" />
