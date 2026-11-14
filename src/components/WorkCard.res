@@ -13,9 +13,21 @@ let hex = i => "0x" ++ Int.toString(i, ~radix=16)->String.padStart(2, "0")->Stri
 let anchorFor = (cat: string) => cat->String.replaceAll(" ", "-")
 
 /* Links within the family (arda.tr and *.arda.tr) pass the referrer; every
-   other host gets rel="noopener noreferrer". */
-let family = %re("/^https?:\/\/([^\/?#:@]+\.)?arda\.tr(?=[\/?#:]|$)/i")
-let relFor = href => family->RegExp.test(href) ? None : Some("noopener noreferrer")
+   other host, and anything that is not an http(s) URL, gets
+   rel="noopener noreferrer". The URL parser, not a pattern, decides the host,
+   so userinfo (https://arda.tr:1@evil.com) cannot pass for the family. */
+type url = {protocol: string, hostname: string}
+@new external parseUrl: string => url = "URL"
+
+let isFamily = href =>
+  switch parseUrl(href) {
+  | {protocol: "http:" | "https:", hostname} =>
+    hostname == "arda.tr" || hostname->String.endsWith(".arda.tr")
+  | _ => false
+  | exception _ => false
+  }
+
+let relFor = href => isFamily(href) ? None : Some("noopener noreferrer")
 
 @react.component
 let make = (~entry: CatalogContent.entry, ~index: int) => {
