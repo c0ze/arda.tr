@@ -50,4 +50,7 @@ describe("index.html structured data", () => {
     expect(new Set(sameAs).size).toBe(sameAs.length);
   });
 
+  it("carries no keywords meta (search engines ignore it)", () => {
+    expect(html).not.toMatch(/<meta name="keywords"/);
+  });
 });
