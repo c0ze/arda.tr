@@ -66,6 +66,17 @@ let entries: array<entry> = [
   /* 2 — Products */
   {
     ...blank,
+    cat: "AK 2-0176",
+    band: 2,
+    name: "Skrivist Books",
+    description: "A local-only EPUB and PDF reader with OPDS and an offline PWA. No accounts, no cloud library.",
+    status: "LIVE",
+    href: "https://books.skriv.ist",
+    repo: "https://github.com/gandtr/books.skriv.ist",
+    image: "/skrivist-books.webp",
+  },
+  {
+    ...blank,
     cat: "AK 2-0173",
     band: 2,
     name: "RETRO",
@@ -129,6 +140,17 @@ let entries: array<entry> = [
   /* 3 — Games */
   {
     ...blank,
+    cat: "AK 3-0182",
+    band: 3,
+    name: "King",
+    description: "The Turkish trick-taking card game: 20 hands of penalties and trumps against three computer players. Plays in the browser.",
+    status: "PLAYABLE",
+    href: "https://king.arda.tr",
+    repo: "https://github.com/c0ze/king",
+    image: "/king.webp",
+  },
+  {
+    ...blank,
     cat: "AK 3-0101",
     band: 3,
     name: "G Copy",
@@ -148,17 +170,6 @@ let entries: array<entry> = [
     href: "https://gage.coze.org",
     repo: "https://github.com/c0ze/gage.coze.org",
     image: "/gage.webp",
-  },
-  {
-    ...blank,
-    cat: "AK 3-0096",
-    band: 3,
-    name: "COMMIT!!!",
-    description: "A software-career sim. The legacy monolith is the final boss. On Steam and Android.",
-    status: "RELEASED",
-    href: "https://commit.gand.tr",
-    image: "/commit.webp",
-    featured: true,
   },
   {
     ...blank,
@@ -214,6 +225,17 @@ let entries: array<entry> = [
     href: "https://blog.arda.tr",
   },
   /* 5 — Tools */
+  {
+    ...blank,
+    cat: "AK 5-0179",
+    band: 5,
+    name: "Armarium",
+    description: "A small self-hosted library server for comics and ebooks: folders and Calibre libraries over OPDS, a JSON API and a web reader.",
+    status: "LIVE",
+    href: "https://armarium.skriv.ist",
+    repo: "https://github.com/c0ze/armarium",
+    image: "/armarium.webp",
+  },
   {
     ...blank,
     cat: "AK 5-0167",
