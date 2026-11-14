@@ -28,9 +28,12 @@ describe("index.html structured data", () => {
     // The person's url is the canonical URL, trailing slash and all.
     expect(canonical).toBe("https://arda.tr/");
     expect(person).toMatchObject({ "@type": "Person", name: "Arda Karaduman", url: canonical });
-    for (const key of ["image", "jobTitle", "worksFor", "alumniOf", "knowsAbout", "nationality", "address"]) {
+    for (const key of ["jobTitle", "worksFor", "alumniOf", "knowsAbout", "nationality", "address"]) {
       expect(person, key).toHaveProperty(key);
     }
+    // og-image.jpg is a title card, not a picture of the person; Google's
+    // ProfilePage guidance is to leave image out when there is no real one.
+    expect(person).not.toHaveProperty("image");
   });
 
   it("ties the person to the family sites and the profiles", () => {
