@@ -117,6 +117,20 @@ describe("App", () => {
     expect(within(listing()).getAllByRole("article")).toHaveLength(entries.length);
   });
 
+  it("carries the family's one link to coze.org in the contact bar, next to pagan", () => {
+    render(<App />);
+
+    // The arda.tr sites and the coze.org sites are two link families; only
+    // the two landing pages link to each other (PRODUCT.md).
+    const contact = document.getElementById("contact")!;
+    const items = within(contact).getAllByRole("listitem").map((li) => li.textContent);
+    expect(items[items.indexOf("pagan") + 1]).toBe("coze.org");
+    const coze = within(contact).getByRole("link", { name: "coze.org" });
+    expect(coze).toHaveAttribute("href", "https://coze.org");
+    expect(coze).not.toHaveAttribute("rel");
+    expect(document.querySelectorAll('a[href^="https://coze.org"]')).toHaveLength(1);
+  });
+
   it("opens the chat from the hero's ask button", () => {
     render(<App />);
 

@@ -48,6 +48,10 @@ breadth is not clutter to be managed — it is the differentiating claim
   `blog.arda.tr` (writing), `ai.arda.tr` (AI chat), `lind.arda.tr` (Sindarin
   song project). Outbound project links leave the family entirely
   (`sudone.jp`, `vigil.today`, `skriv.ist`, `fable.tr`, `pagan.tr`).
+- The arda.tr sites and the coze.org sites are two separate link families, and
+  only the two landing pages link to each other: this page carries the family's
+  single link to https://coze.org/ (contact bar); the individual coze.org
+  projects stay as work entries (decided 2026-11-14).
 - Inbound traffic is social and referral, not search-intent or ad-driven.
 - Some visitors arrive from music channels (Discogs, Metal Archives, Last.fm)
   rather than software ones.

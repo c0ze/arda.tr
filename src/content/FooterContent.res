@@ -2,7 +2,7 @@ type socialLink = {
   name: string,
   href: string,
   rel: string,
-  icon: [#Github | #Linkedin | #Mail | #Guitar | #Mastodon | #Bluesky],
+  icon: [#Github | #Linkedin | #Mail | #Guitar | #Site | #Mastodon | #Bluesky],
 }
 
 let socialLinks: array<socialLink> = [
@@ -29,6 +29,13 @@ let socialLinks: array<socialLink> = [
     href: "https://pagan.tr",
     rel: "noopener noreferrer",
     icon: #Guitar,
+  },
+  // The family's single link to the coze.org sites (PRODUCT.md).
+  {
+    name: "coze.org",
+    href: "https://coze.org",
+    rel: "",
+    icon: #Site,
   },
   {
     name: "Mastodon",
