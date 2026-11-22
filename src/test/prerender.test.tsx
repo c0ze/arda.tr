@@ -27,6 +27,11 @@ describe("prerendered page", () => {
     for (const id of ["catalogue", "record", "contact"]) expect(html).toContain(`id="${id}"`);
   });
 
+  it("names no past employer: the employment history is the résumé's", () => {
+    for (const employer of ["Gaussy", "Robotfund", "Mobilous"]) expect(html).not.toContain(employer);
+    expect(html).toContain("Veltra");
+  });
+
   it("is the same on every build: nothing of the moment or the visitor baked in", () => {
     expect(html).not.toMatch(/\d\d:\d\d:\d\d/);
     // The site's own scheme (dark), never a visitor's pin: the head script

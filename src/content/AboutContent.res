@@ -21,12 +21,6 @@ let bio: array<array<segment>> = [
       emphasis: false,
     },
   ],
-  [
-    {
-      text: "Previously at Gaussy, Robotfund, and Mobilous.",
-      emphasis: false,
-    },
-  ],
 ]
 
 // Quick-facts panel shown alongside the bio.
@@ -39,7 +33,6 @@ let facts: array<fact> = [
   {label: "Role", value: "Systems Architect @ Veltra"},
   {label: "Location", value: "Tokyo, Japan"},
   {label: "Education", value: "Keio University · CS"},
-  {label: "Previous", value: "Gaussy · Robotfund · Mobilous"},
 ]
 
 // The stack, joined with " · " into the Record's "stack" row.

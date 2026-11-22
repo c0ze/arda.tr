@@ -35,6 +35,11 @@ describe("catalogue data", () => {
     expect(first("github")).toMatchObject({ name: "tincan" });
   });
 
+  it("lists cozy-studio under music, at its own address", () => {
+    const studio = entries.find((e) => e.name === "cozy-studio");
+    expect(studio).toMatchObject({ category: "music", href: "https://studio.tracker.coze.org" });
+  });
+
   it("no longer lists COMMIT!!!", () => {
     expect(entries.find((e) => e.name === "COMMIT!!!")).toBeUndefined();
   });

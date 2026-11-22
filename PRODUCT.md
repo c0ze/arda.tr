@@ -96,8 +96,9 @@ breadth is not clutter to be managed — it is the differentiating claim
 
 Real and verifiable — use freely:
 
-- Employment: Systems Architect at Veltra since 2024; prior roles at Gaussy,
-  Robotfund, Mobilous. 15+ years professional experience.
+- Employment: Systems Architect at Veltra since 2024. 15+ years professional
+  experience. Past employers are the résumé's subject (resume.arda.tr) and are
+  not named on this page.
 - Education: M.Sc. Computer Science, Keio University (2006–2008); PhD studies in
   Embedded Processor Design and Optimization (2008–2011).
 - Languages: native Turkish, near-native English, business-level Japanese.

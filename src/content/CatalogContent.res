@@ -236,6 +236,15 @@ let entries: array<entry> = [
   },
   {
     ...blank,
+    cat: "AK 5-0185",
+    category: "music",
+    name: "cozy-studio",
+    description: "A tracker studio in the browser. Sign in and keep a library of your own.",
+    status: "LIVE",
+    href: "https://studio.tracker.coze.org",
+  },
+  {
+    ...blank,
     cat: "AK 5-0161",
     category: "music",
     name: "cozy-tracker",
