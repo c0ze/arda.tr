@@ -10,40 +10,40 @@
     <!-- GitHub Pages serves this for any unknown path. It stands alone (no
          bundle, no web fonts), so it carries the brand's colours itself: the
          same values as the `arda` theme (brand/arda.css). The script is
-         bootSnippet("theme") from brand/scheme.js, as in index.html, so a
-         pinned scheme holds here too. Not in the sitemap. -->
-    <script>(function(){var s=null;try{s=localStorage.getItem("theme");if(s!=="light"&&s!=="dark"){var n=["xerox","xerox-hc","stock","stock-hc","alucard","paper"].indexOf(s)>=0?"light":["night","night-hc","microfiche","microfiche-hc","dracula","dracula-pro","blade","buffy","lincoln","morbius","van-helsing","carbon"].indexOf(s)>=0?"dark":null;if(s!==null){if(n)localStorage.setItem("theme",n);else localStorage.removeItem("theme");}s=n;}}catch(e){}s=s||null;if(s){document.documentElement.setAttribute("data-theme",s);var m=document.querySelector('meta[name="color-scheme"]');if(m)m.setAttribute("content",s);}})();</script>
+         bootSnippet("theme", "dark") from brand/scheme.js, as in index.html:
+         dark, unless the visitor pinned light. Not in the sitemap. -->
+    <script>(function(){var s=null;try{s=localStorage.getItem("theme");if(s!=="light"&&s!=="dark"){var n=["xerox","xerox-hc","stock","stock-hc","alucard","paper"].indexOf(s)>=0?"light":["night","night-hc","microfiche","microfiche-hc","dracula","dracula-pro","blade","buffy","lincoln","morbius","van-helsing","carbon"].indexOf(s)>=0?"dark":null;if(s!==null){if(n)localStorage.setItem("theme",n);else localStorage.removeItem("theme");}s=n;}}catch(e){}s=s||"dark";if(s){document.documentElement.setAttribute("data-theme",s);var m=document.querySelector('meta[name="color-scheme"]');if(m)m.setAttribute("content",s);}})();</script>
     <style>
       :root {
         color-scheme: light dark;
-        --bg: light-dark(#F5F2EA, #141310);
-        --fg: light-dark(#17160F, #EFEBE0);
-        --muted: light-dark(#625D52, #A8A294);
-        --rule: light-dark(#D8D2C4, #38362E);
-        --accent: light-dark(#C2311A, #FF7352);
-        --link: light-dark(#1D4F91, #86B4F2);
+        --bg: light-dark(#E8E0CE, #0D0C0A);
+        --fg: light-dark(#0D0C0A, #E8E0CE);
+        --muted: light-dark(#5C574C, #9A9384);
+        --rule: light-dark(#5C574C, #9A9384);
+        --link: light-dark(#A33312, #E2502A);
       }
       :root[data-theme="light"] { color-scheme: light; }
       :root[data-theme="dark"] { color-scheme: dark; }
-      * { box-sizing: border-box; margin: 0; border-radius: 0; }
+      * { box-sizing: border-box; margin: 0; }
       html, body { background: var(--bg); color: var(--fg); }
-      body { min-height: 100vh; padding: 0 1.5rem; font: 1.0625rem/1.65 "IBM Plex Sans", system-ui, sans-serif; }
-      header { display: flex; align-items: center; min-height: 3.5rem; border-bottom: 1px solid var(--rule); }
-      main { padding: 4rem 0; max-width: 40rem; }
-      .mark { font: 800 1.5rem/1 Archivo, "Arial Black", system-ui, sans-serif; letter-spacing: -0.04em; color: var(--fg); text-decoration: none; }
-      .dot { color: var(--accent); }
-      h1 { font: 800 4.5rem/1.05 Archivo, "Arial Black", system-ui, sans-serif; letter-spacing: -0.03em; }
+      body { min-height: 100vh; padding: 0 clamp(1.25rem, 8.33vw, 7.5rem); font: 1.25rem/1.6 Spectral, Georgia, serif; }
+      header { display: flex; align-items: center; gap: 0.75rem; min-height: 5rem; }
+      header img { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #0D0C0A; }
+      .mark { font: 800 1.75rem/1 "Grenze Gotisch", Georgia, serif; color: var(--fg); text-decoration: none; }
+      main { padding: 4rem 0; max-width: 45rem; border-top: 1px solid var(--rule); }
+      h1 { font: 900 clamp(4rem, 14vw, 8.25rem)/1 "Grenze Gotisch", Georgia, serif; }
       p { margin-top: 1rem; color: var(--muted); }
       p a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
-      :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+      :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
     </style>
   </head>
   <body>
     <header>
-      <a class="mark" href="/">arda<span class="dot">.</span>tr</a>
+      <img src="/art/emblem.webp" alt="" width="40" height="40" />
+      <a class="mark" href="/">arda.tr</a>
     </header>
     <main>
-      <h1>404<span class="dot">.</span></h1>
+      <h1>404</h1>
       <p>No entry at this address.</p>
       <p><a href="/">Back to the index</a></p>
     </main>

@@ -66,6 +66,9 @@ let tech = [
 // not in Record.res: PROJECT.md keeps page copy in *Content.res so text edits
 // never touch layout.
 let title = "About"
+// The section's heading is the surname, and what it means.
+let surname = "Karaduman"
+let surnameNote = "Turkish for \"black smoke\"."
 let languagesLabel = "Languages"
 let recordLanguages = "Turkish (native) · English (near-native) · Japanese (business)"
 let stackLabel = "Stack"

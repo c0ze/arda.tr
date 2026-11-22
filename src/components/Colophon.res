@@ -1,37 +1,57 @@
-/** Contact, then the colophon: the address and the profiles as the family's
-    key-and-value table, and the closing line under a rule. */
+/** Contact, then the colophon: two ways on (the assistant, the résumé), the
+    address and the profiles, the forest the plume rose from, and the closing
+    line under a rule. */
 @react.component
 let make = () =>
   <footer id="contact" ariaLabelledby="contact-heading">
-    <div className="ix-wrap ix-section">
-      <div className="ix-section__head">
-        <Astryx.Heading level=2 id="contact-heading">
-          {FooterContent.ctaTitle->React.string}
-        </Astryx.Heading>
-        <p className="ix-muted"> {FooterContent.ctaText->React.string} </p>
+    <div className="ix-wrap">
+      <div className="ix-section contact">
+        <div className="contact__words">
+          <p className="ix-label ix-label--ember"> {FooterContent.ctaTitle->React.string} </p>
+          <Astryx.Heading level=2 id="contact-heading">
+            {FooterContent.ctaHeading->React.string}
+          </Astryx.Heading>
+          <p> {FooterContent.ctaText->React.string} </p>
+        </div>
+        <div className="contact__ways">
+          <Astryx.HStack gap=3. wrap=#wrap>
+            <Astryx.Button
+              label=FooterContent.askCta
+              variant=#primary
+              onClick={e =>
+                ChatWidget.openChat(Nullable.make(ReactEvent.Mouse.currentTarget(e)->Obj.magic))}
+            />
+            <Astryx.Button label=FooterContent.resumeCta href=FooterContent.resumeHref />
+          </Astryx.HStack>
+          <ul className="contact__links">
+            {FooterContent.socialLinks
+            ->Array.map(l =>
+              <li key=l.name>
+                <a href=l.href rel=?{l.rel == "" ? None : Some(l.rel)}>
+                  {(l.icon == #Mail ? l.href->String.replace("mailto:", "") : l.name)->React.string}
+                </a>
+              </li>
+            )
+            ->React.array}
+          </ul>
+        </div>
       </div>
-      <dl className="ix-kv">
-        {FooterContent.socialLinks
-        ->Array.map(l =>
-          <div key=l.name>
-            <dt> {l.name->React.string} </dt>
-            <dd>
-              <a href=l.href rel=?{l.rel == "" ? None : Some(l.rel)}>
-                {l.href
-                ->String.replace("mailto:", "")
-                ->String.replace("https://", "")
-                ->React.string}
-              </a>
-            </dd>
-          </div>
-        )
-        ->React.array}
-      </dl>
-    </div>
-    <div className="ix-foot">
-      <div className="ix-wrap ix-foot__in">
-        <p className="ix-label"> {HeroContent.host->React.string} </p>
-        <p className="ix-small ix-muted"> {FooterContent.builtNote->React.string} </p>
+      <img
+        className="ix-art contact__forest"
+        src="/art/forest.webp"
+        alt=""
+        width="1320"
+        height="300"
+        loading=#lazy
+      />
+      <div className="ix-foot">
+        <div className="ix-foot__in">
+          <span className="foot__mark">
+            <img className="ix-emblem" src="/art/emblem.webp" alt="" width="40" height="40" loading=#lazy />
+            {HeroContent.host->React.string}
+          </span>
+          <span> {FooterContent.builtNote->React.string} </span>
+        </div>
       </div>
     </div>
   </footer>

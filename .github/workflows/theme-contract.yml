@@ -1,6 +1,6 @@
 name: Theme contract freshness
 
-# config/themes.json is the family's brand contract (v4, "The Index"): the hashes
+# config/themes.json is the family's brand contract (v4, "Kara Duman"): the hashes
 # of brand/arda.css, arda.js, brand.css and scheme.js, read by the sibling sites
 # (blog, résumé, ai) via raw.githubusercontent.com to check their copies.
 # This check fails when the committed contract or brand/'s copy of the built

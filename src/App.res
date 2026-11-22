@@ -1,22 +1,31 @@
-/** Page shell (The Index, see DESIGN.md): the bar, the hero with the page's
-    only h1, then the works, about and contact. The chat widget floats at the
-    bottom and can be opened from the hero.
+/** Page shell (Kara Duman, see DESIGN.md): the bar; the name and the works
+    beside the plume of smoke; about; contact. The chat widget floats at the
+    bottom and opens from the contact section.
 
-    The kind filter lives here so any section could reset it; today only the
-    works section drives it. */
+    The plume is the right 45% of the first screen and sits behind nothing.
+    On narrow screens it is a band between the bar and the name. */
 @react.component
-let make = () => {
-  let (active, setActive) = React.useState(() => None)
-  let onSelect = (band: option<int>) => setActive(_ => band)
-
+let make = () =>
   <>
     <Bar />
     <main>
-      <Hero />
-      <Works active onSelect />
+      <div className="ix-wrap land">
+        <div className="land__plume">
+          <img
+            className="ix-art ix-art--drift"
+            src="/art/plume.webp"
+            alt=HeroContent.plumeAlt
+            width="1280"
+            height="1960"
+          />
+        </div>
+        <div className="land__words">
+          <Hero />
+          <Works />
+        </div>
+      </div>
       <About />
     </main>
     <Colophon />
     <ChatWidget />
   </>
-}

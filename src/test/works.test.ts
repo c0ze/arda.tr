@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import * as Entry from "@/components/Entry.res.mjs";
+import * as Works from "@/components/Works.res.mjs";
 
 // Family sites (arda.tr, *.arda.tr) get the referrer; anything else, or
 // anything that is not a plain http(s) URL, gets rel="noopener noreferrer".
-const relFor = Entry.relFor as (href: string) => string | undefined;
+const relFor = Works.relFor as (href: string) => string | undefined;
 const withheld = "noopener noreferrer";
 
-describe("Entry relFor", () => {
+describe("Works relFor", () => {
   it("passes the referrer to arda.tr and its subdomains", () => {
     for (const href of ["https://arda.tr", "https://arda.tr/", "https://lind.arda.tr", "http://local-ai.arda.tr/x?y#z", "https://x.arda.tr:8443/"]) {
       expect(relFor(href), href).toBeUndefined();

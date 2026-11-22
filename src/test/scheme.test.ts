@@ -5,7 +5,7 @@ import { SCHEME_EVENT, bootSnippet, normalize, readScheme, toggleScheme } from "
 // brand/scheme.js is the family's scheme switch (the sibling sites carry
 // copies). The page follows the system unless the visitor pins a scheme.
 const root = document.documentElement;
-const runBoot = (key: string, fallback: "dark" | null = null) => new Function(bootSnippet(key, fallback))();
+const runBoot = (key: string, fallback: "dark" | "light" | null = null) => new Function(bootSnippet(key, fallback))();
 
 afterEach(() => {
   root.removeAttribute("data-theme");
@@ -16,7 +16,8 @@ describe("scheme switch", () => {
   it("is applied before first paint by the script in index.html's head", () => {
     // The inline script must be the generated one, right after the meta it
     // rewrites, and ahead of the bundle.
-    const snippet = `<script>${bootSnippet("theme")}</script>`;
+    // arda.tr is dark unless the visitor pinned light.
+    const snippet = `<script>${bootSnippet("theme", "dark")}</script>`;
     expect(html).toContain(snippet);
     expect(html.indexOf('<meta name="color-scheme" content="light dark" />')).toBeLessThan(html.indexOf(snippet));
     expect(html.indexOf(snippet)).toBeLessThan(html.indexOf('type="module"'));
@@ -56,7 +57,7 @@ describe("scheme switch", () => {
     expect(root).not.toHaveAttribute("data-theme");
   });
 
-  it("supports a site that is dark unless pinned (ai.arda.tr)", () => {
+  it("supports a site that is dark unless pinned (arda.tr, ai.arda.tr)", () => {
     runBoot("theme", "dark");
     expect(root).toHaveAttribute("data-theme", "dark");
 

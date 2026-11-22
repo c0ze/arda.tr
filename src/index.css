@@ -1,77 +1,161 @@
 /*
-  arda.tr: the index (see DESIGN.md).
+  arda.tr: the landing page (see DESIGN.md).
   The colours, type and spacing are tokens of the Astryx `arda` theme
-  (src/themes/arda/, imported by astryx-themes.ts). The bar, the row, the
-  plate, the label and the dot are the family's patterns in brand/brand.css.
-  Only this page's own layout lives here.
+  (src/themes/arda/, imported by astryx-themes.ts). The bar, the category
+  block, the row, the label and the ember are the family's patterns in
+  brand/brand.css. Only this page's own layout lives here.
 */
 @import "@astryxdesign/core/reset.css";
 @import "@astryxdesign/core/astryx.css";
 @import "../brand/brand.css";
 
 :root {
-  /* The landing page is where the display headline may reach 120px. */
-  --ix-display-max: 7.5rem;
+  /* Where this site serves the ember that brand.css draws as the assistant. */
+  --ix-ember-art: url("/art/ember.webp");
 }
 
-/* -- Hero ---------------------------------------------------------------- */
+/* -- The first screen: the words, and the plume beside them ---------------- */
 
-.hero {
-  padding-block-start: calc(var(--spacing-8) * 2);
+.land {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
+  column-gap: var(--ix-gutter);
+  align-items: start;
 }
-.hero__who {
+.land__words {
+  grid-column: 1;
+  grid-row: 1;
+  padding-block: var(--spacing-8) var(--spacing-10);
+}
+.land__plume {
+  grid-column: 2;
+  grid-row: 1;
+  /* On bone paper the artwork sits on a soot plate. */
+  background: light-dark(var(--ix-soot), transparent);
+  border-radius: 2px;
+  overflow: clip;
+}
+.land__plume img {
+  width: 100%;
+}
+.hero__kicker {
+  margin-block: var(--spacing-5) var(--spacing-3);
+}
+.works {
+  margin-block-start: calc(var(--spacing-8) * 2);
+}
+.works__label {
+  margin-block-end: var(--spacing-3);
+}
+
+@media (max-width: 60rem) {
+  /* The plume becomes a band between the bar and the name. */
+  .land {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .land__plume {
+    grid-column: 1;
+    grid-row: 1;
+    height: 11.25rem;
+  }
+  .land__plume img {
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 12%;
+  }
+  .land__words {
+    grid-row: 2;
+    padding-block-start: var(--spacing-5);
+  }
+}
+
+/* -- About ------------------------------------------------------------------ */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr) minmax(0, 1fr);
+  column-gap: calc(var(--ix-gutter) * 2);
+  align-items: start;
+}
+.about__words > * + * {
+  margin-block-start: var(--spacing-3);
+}
+.about__bio {
+  margin-block-start: var(--spacing-6);
+}
+.about__facts {
+  margin-block-start: calc(var(--spacing-8) * 2);
+}
+.about__wisp {
+  width: 100%;
+  max-width: 6rem;
+  justify-self: end;
+  background: light-dark(var(--ix-soot), transparent);
+  border-radius: 2px;
+}
+@media (max-width: 60rem) {
+  .about {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .about__facts {
+    margin-block-start: var(--spacing-8);
+  }
+  .about__wisp {
+    display: none;
+  }
+}
+
+/* -- Contact ---------------------------------------------------------------- */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  column-gap: calc(var(--ix-gutter) * 2);
+  row-gap: var(--spacing-6);
+  align-items: start;
+}
+.contact__words > * + * {
+  margin-block-start: var(--spacing-3);
+}
+.contact__ways {
+  padding-block-start: calc(var(--spacing-8) + var(--spacing-2));
+}
+.contact__links {
+  list-style: none;
+  margin: var(--spacing-6) 0 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--spacing-1) var(--spacing-4);
+  gap: var(--spacing-1) var(--spacing-5);
 }
-.hero__name {
-  color: var(--color-text-primary);
-}
-.hero__line {
-  margin-block: var(--spacing-5) var(--spacing-6);
-}
-.hero__ways {
+.contact__forest {
+  width: min(100%, 26rem);
+  margin-inline-start: auto;
   margin-block-start: var(--spacing-8);
+  background: light-dark(var(--ix-soot), transparent);
 }
-
-/* -- Works ---------------------------------------------------------------- */
-
-.works-tools {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-3) var(--spacing-6);
+.contact__forest + .ix-foot {
+  margin-block-start: 0;
 }
-.works-status {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-2) var(--spacing-4);
-  min-height: var(--ix-row);
-}
-.works-status p {
-  margin: 0;
-}
-.entry-meta {
+.foot__mark {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--spacing-3);
-  margin: 0;
 }
-.plate-note {
-  margin-block: var(--spacing-1) var(--spacing-3);
-  opacity: 0.8;
+/* The launcher floats over the page's last line: leave it room. */
+.ix-foot {
+  padding-block-end: calc(var(--spacing-10) * 2);
+}
+@media (max-width: 60rem) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact__ways {
+    padding-block-start: 0;
+  }
 }
 
-/* -- About ---------------------------------------------------------------- */
-
-.about > * + * {
-  margin-block-start: var(--spacing-8);
-}
-
-/* -- Chat ------------------------------------------------------------------ */
+/* -- Chat ------------------------------------------------------------------- */
 
 .chat-launch,
 .chat {
@@ -81,24 +165,25 @@
 }
 .chat-launch {
   z-index: 20;
-  background: var(--color-background-surface);
+  background: var(--color-background-body);
 }
 .chat {
   z-index: 30;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: min(26rem, calc(100vw - 2 * var(--ix-gutter)));
-  height: min(36rem, calc(100dvh - 2 * var(--spacing-5)));
-  background: var(--color-background-surface);
+  width: min(28rem, calc(100vw - 2 * var(--ix-gutter)));
+  height: min(40rem, calc(100dvh - 2 * var(--spacing-5)));
+  background: var(--color-background-body);
   border: 1px solid var(--color-border-emphasized);
+  border-radius: 2px;
 }
 .chat-head {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-3) var(--spacing-4);
-  border-block-end: var(--ix-rule);
+  border-block-end: var(--ix-hairline);
 }
 .chat-title {
   flex: 1;
@@ -107,6 +192,14 @@
 .chat-title p:first-child {
   font-weight: 600;
 }
+.chat-title .ix-label {
+  font-size: var(--text-supporting-size);
+  letter-spacing: 0.08em;
+}
+.chat-voice,
+.chat-x {
+  min-height: 2.75rem;
+}
 .chat-log {
   flex: 1;
   overflow-y: auto;
@@ -114,15 +207,10 @@
   padding: var(--spacing-4);
 }
 .chat-prompts {
-  padding-inline-start: calc(1.5rem + var(--spacing-3));
-}
-.chat-prompts .ix-chip {
-  text-transform: none;
-  letter-spacing: 0;
-  text-align: start;
+  padding-inline-start: calc(1.75rem + var(--spacing-3));
 }
 .chat-err .msg-txt {
-  color: var(--color-text-error);
+  color: var(--ix-error);
 }
 .msg-txt > * + * {
   margin-block-start: 0.75em;
@@ -132,27 +220,19 @@
 }
 .msg-txt :where(code) {
   font-family: var(--ix-mono);
-  font-size: 0.875em;
-  background: var(--ix-sunken);
+  font-size: 0.86em;
+  background: var(--ix-surface);
   padding: 0.1em 0.3em;
-}
-.msg-txt :where(a) {
-  text-decoration: underline;
 }
 .chat-form {
   display: flex;
   gap: var(--spacing-2);
   padding: var(--spacing-3) var(--spacing-4) 0;
-  border-block-start: var(--ix-rule);
+  border-block-start: var(--ix-hairline);
 }
 .chat-hint {
   margin: 0;
   padding: var(--spacing-2) var(--spacing-4) var(--spacing-3);
-}
-
-/* The launcher floats over the page's last line: leave it room. */
-.ix-foot {
-  padding-block-end: calc(var(--spacing-10) * 2);
 }
 
 @media (max-width: 45rem) {
@@ -161,7 +241,7 @@
     inset-inline: 0;
     inset-block-end: 0;
     width: auto;
-    height: min(80dvh, 36rem);
+    height: min(85dvh, 40rem);
     border-inline: 0;
     border-block-end: 0;
   }

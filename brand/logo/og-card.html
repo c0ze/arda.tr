@@ -1,21 +1,19 @@
 <!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<!-- The family's social card (1200 x 630), Kara Duman. Render with headless Chrome:
+     google-chrome-stable --headless=new --hide-scrollbars --window-size=1200,630 --screenshot=og.png og-card.html
+     Per-site cards keep the frame; the site name replaces the line. Artwork is read from ../art/. -->
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@800;900&family=Spectral:wght@400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;box-sizing:border-box}
-body{width:1200px;height:630px;background:#141310;color:#EFEBE0;padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
-.top,.bottom{display:flex;justify-content:space-between;align-items:flex-start}
-.bottom{align-items:baseline}
-.mono{font:500 22px/1.4 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase}
-.accent{color:#FF7352}.muted{color:#A8A294}
-h1{font:800 112px/1.04 Archivo,sans-serif;letter-spacing:-.03em}
+body{width:1200px;height:630px;background:#0D0C0A;color:#E8E0CE;overflow:hidden;position:relative;font-family:Spectral,Georgia,serif}
+.plume{position:absolute;right:0;top:-10px;height:660px}
+.mark{position:absolute;left:72px;top:56px;display:flex;align-items:center;gap:20px;font:800 34px/1 "Grenze Gotisch",serif}
+.mark img{width:64px;height:64px}
+h1{position:absolute;left:68px;top:176px;font:900 118px/1 "Grenze Gotisch",serif}
+p{position:absolute;left:72px;top:438px;font-size:31px;line-height:1.35;max-width:560px}
 </style></head><body>
-<div class="top"><svg width="104" height="104" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="arda.tr">
-  <rect class="t" width="160" height="160" fill="#EFEBE0"/>
-  <g transform="translate(26.43 112.67)">
-    <path class="a" fill="#17160F" d="M25.92 1.49L25.92 1.49Q21.82 1.49 17.92 0.68Q14.01-0.12 10.85-2.17Q7.69-4.22 5.83-7.81Q3.97-11.41 3.97-16.86L3.97-16.86Q3.97-23.93 6.94-28.40Q9.92-32.86 15.56-35.40Q21.20-37.94 29.20-38.94Q37.20-39.93 47.12-39.93L47.12-39.93L47.12-44.02Q47.12-46.87 46.00-48.79Q44.89-50.72 42.72-51.77Q40.55-52.82 36.95-52.82L36.95-52.82Q33.73-52.82 31.31-52.08Q28.89-51.34 27.65-49.91Q26.41-48.48 26.41-46.50L26.41-46.50L26.41-45.38L6.57-45.38Q6.45-46.00 6.45-46.50L6.45-46.50L6.45-47.62Q6.45-53.44 10.11-57.78Q13.76-62.12 20.58-64.48Q27.40-66.84 37.08-66.84L37.08-66.84Q46.13-66.84 52.89-64.60Q59.64-62.37 63.55-57.78Q67.46-53.20 67.46-45.76L67.46-45.76L67.46-17.86Q67.46-15.75 68.63-14.51Q69.81-13.27 71.55-13.27L71.55-13.27L75.76-13.27L75.76-0.74Q74.40-0.12 71.49 0.68Q68.57 1.49 64.48 1.49L64.48 1.49Q60.26 1.49 57.10 0.43Q53.94-0.62 51.89-2.54Q49.85-4.46 49.10-7.07L49.10-7.07L48.24-7.07Q45.88-4.59 42.72-2.60Q39.56-0.62 35.40 0.43Q31.25 1.49 25.92 1.49ZM33.48-12.52L33.48-12.52Q36.46-12.52 38.94-13.39Q41.42-14.26 43.21-15.81Q45.01-17.36 46.07-19.59Q47.12-21.82 47.12-24.43L47.12-24.43L47.12-28.77Q40.05-28.77 34.97-27.78Q29.88-26.78 27.16-24.68Q24.43-22.57 24.43-19.34L24.43-19.34Q24.43-16.99 25.61-15.44Q26.78-13.89 28.77-13.21Q30.75-12.52 33.48-12.52Z"/>
-    <path class="d" fill="#C2311A" d="M103.17 0L81.59 0L81.59-20.71L103.17-20.71L103.17 0Z"/>
-  </g>
-</svg><span class="mono accent">Index</span></div>
-<h1>Everything I make,<br>in one list<span class="accent">.</span></h1>
-<div class="bottom"><span class="mono muted">arda.tr</span><span class="mono muted">Arda Karaduman · Systems architect · Tokyo</span></div>
+<img class="plume" src="../art/plume.webp" alt="">
+<div class="mark"><img src="../art/emblem.webp" alt="">arda.tr</div>
+<h1>Arda<br>Karaduman</h1>
+<p>Systems architect in Tokyo. Software, games and black metal.</p>
 </body></html>

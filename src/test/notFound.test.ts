@@ -21,24 +21,24 @@ describe("404 page", () => {
     for (const [, url] of html.matchAll(/(?:href|src)="([^"]+)"/g)) expect(url.startsWith("/")).toBe(true);
   });
 
-  it("follows the system scheme unless one is pinned, with the site's own script", () => {
-    // The same snippet as index.html: a visitor who pinned dark on the site
-    // must not land on a light 404.
-    expect(script).toBe(bootSnippet("theme"));
+  it("is dark unless light is pinned, with the site's own script", () => {
+    // The same snippet as index.html: a visitor who pinned light on the site
+    // must not land on a dark 404, and everyone else gets the site's dark.
+    expect(script).toBe(bootSnippet("theme", "dark"));
     expect(html).toContain('<meta name="color-scheme" content="light dark" />');
     expect(html).toContain(':root[data-theme="dark"] { color-scheme: dark; }');
 
     run();
-    expect(document.documentElement).not.toHaveAttribute("data-theme");
-    window.localStorage.setItem("theme", "dark");
-    run();
     expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    window.localStorage.setItem("theme", "light");
+    run();
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
   });
 
   it("ignores unknown ids and blocked storage", () => {
     window.localStorage.setItem("theme", "x onclick=alert(1)");
     run();
-    expect(document.documentElement).not.toHaveAttribute("data-theme");
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
     const spy = vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new Error("blocked");
     });

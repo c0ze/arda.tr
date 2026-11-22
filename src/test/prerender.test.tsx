@@ -19,16 +19,19 @@ describe("prerendered page", () => {
       expect(html).toContain(`href="https://${site}.arda.tr"`);
     }
     expect(html).toContain('href="https://coze.org"');
-    // One row per catalogue entry, each with its deep-link id.
-    expect(html.match(/<li [^>]*class="ix-row"/g)).toHaveLength(entries.length);
+    // Five category blocks, the first open; every entry is in the markup with
+    // its deep-link id, open block or not.
+    expect(html.match(/<details /g)).toHaveLength(5);
+    expect(html.match(/<details [^>]*open=""/g)).toHaveLength(1);
     for (const e of entries) expect(html).toContain(`id="${e.cat.replace(/ /g, "-")}"`);
     for (const id of ["catalogue", "record", "contact"]) expect(html).toContain(`id="${id}"`);
   });
 
   it("is the same on every build: nothing of the moment or the visitor baked in", () => {
     expect(html).not.toMatch(/\d\d:\d\d:\d\d/);
-    // No pinned scheme either: the head script and the client apply that.
-    expect(html).not.toMatch(/data-theme=/);
+    // The site's own scheme (dark), never a visitor's pin: the head script
+    // and the client apply that.
+    expect(html).not.toMatch(/data-theme="light"/);
     expect(render()).toBe(html);
   });
 });

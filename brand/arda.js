@@ -20,59 +20,59 @@ export const ardaTheme = {
   __built: true,
   tokens: {
     "--font-size-4xs": "0.4375rem",
-    "--font-size-3xs": "0.5rem",
+    "--font-size-3xs": "0.5625rem",
     "--font-size-2xs": "0.625rem",
-    "--font-size-xs": "0.75rem",
-    "--font-size-sm": "0.875rem",
-    "--font-size-base": "1.0625rem",
-    "--font-size-lg": "1.25rem",
-    "--font-size-xl": "1.5rem",
-    "--font-size-2xl": "1.8125rem",
-    "--font-size-3xl": "2.1875rem",
-    "--font-size-4xl": "2.625rem",
-    "--font-size-5xl": "3.1875rem",
-    "--text-heading-1-size": "3rem",
+    "--font-size-xs": "0.8125rem",
+    "--font-size-sm": "0.9375rem",
+    "--font-size-base": "1.125rem",
+    "--font-size-lg": "1.375rem",
+    "--font-size-xl": "1.625rem",
+    "--font-size-2xl": "1.9375rem",
+    "--font-size-3xl": "2.3125rem",
+    "--font-size-4xl": "2.8125rem",
+    "--font-size-5xl": "3.375rem",
+    "--text-heading-1-size": "4rem",
     "--text-heading-1-weight": "800",
-    "--text-heading-1-leading": "1.0833",
-    "--text-heading-2-size": "2rem",
+    "--text-heading-1-leading": "1.05",
+    "--text-heading-2-size": "2.5rem",
     "--text-heading-2-weight": "700",
-    "--text-heading-2-leading": "1.1875",
-    "--text-heading-3-size": "1.375rem",
+    "--text-heading-2-leading": "1.1",
+    "--text-heading-3-size": "1.625rem",
     "--text-heading-3-weight": "600",
-    "--text-heading-3-leading": "1.2727",
-    "--text-heading-4-size": "1.0625rem",
+    "--text-heading-3-leading": "1.3",
+    "--text-heading-4-size": "1.25rem",
     "--text-heading-4-weight": "600",
-    "--text-heading-4-leading": "1.6471",
+    "--text-heading-4-leading": "1.6",
     "--text-heading-5-size": "var(--font-size-sm)",
-    "--text-heading-5-weight": "800",
-    "--text-heading-5-leading": "1.4286",
+    "--text-heading-5-weight": "var(--font-weight-semibold)",
+    "--text-heading-5-leading": "1.6",
     "--text-heading-6-size": "var(--font-size-xs)",
-    "--text-heading-6-weight": "800",
-    "--text-heading-6-leading": "1.6667",
-    "--text-body-size": "1.0625rem",
+    "--text-heading-6-weight": "var(--font-weight-semibold)",
+    "--text-heading-6-leading": "1.5385",
+    "--text-body-size": "1.25rem",
     "--text-body-weight": "var(--font-weight-normal)",
-    "--text-body-leading": "1.6471",
-    "--text-large-size": "1.375rem",
+    "--text-body-leading": "1.6",
+    "--text-large-size": "1.3125rem",
     "--text-large-weight": "400",
-    "--text-large-leading": "1.4545",
-    "--text-label-size": "0.8125rem",
-    "--text-label-weight": "500",
-    "--text-label-leading": "1.5385",
-    "--text-code-size": "0.8125rem",
+    "--text-large-leading": "1.7",
+    "--text-label-size": "1.125rem",
+    "--text-label-weight": "600",
+    "--text-label-leading": "1.2",
+    "--text-code-size": "1.125rem",
     "--text-code-weight": "var(--font-weight-normal)",
-    "--text-code-leading": "1.5385",
-    "--text-supporting-size": "0.875rem",
+    "--text-code-leading": "1.6",
+    "--text-supporting-size": "1.125rem",
     "--text-supporting-weight": "var(--font-weight-normal)",
-    "--text-supporting-leading": "1.5714",
-    "--text-display-1-size": "4.5rem",
-    "--text-display-1-weight": "800",
-    "--text-display-1-leading": "1.0556",
-    "--text-display-2-size": "3.75rem",
+    "--text-supporting-leading": "1.5",
+    "--text-display-1-size": "8.25rem",
+    "--text-display-1-weight": "900",
+    "--text-display-1-leading": "1",
+    "--text-display-2-size": "4rem",
     "--text-display-2-weight": "800",
-    "--text-display-2-leading": "1.0667",
-    "--text-display-3-size": "3rem",
-    "--text-display-3-weight": "800",
-    "--text-display-3-leading": "1.0833",
+    "--text-display-2-leading": "1.05",
+    "--text-display-3-size": "2.5rem",
+    "--text-display-3-weight": "700",
+    "--text-display-3-leading": "1.1",
     "--duration-fast-min": "95ms",
     "--duration-fast": "125ms",
     "--duration-fast-max": "165ms",
@@ -92,9 +92,9 @@ export const ardaTheme = {
     "--_astryx-pre-tempo-duration-slow": "700ms",
     "--_astryx-pre-tempo-duration-slow-max": "935ms",
     "--_astryx-motion-tempo": "1",
-    "--font-family-body": "'IBM Plex Sans', system-ui, sans-serif",
-    "--font-family-heading": "Archivo, 'IBM Plex Sans', system-ui, sans-serif",
-    "--font-family-code": "'IBM Plex Mono', ui-monospace, monospace",
+    "--font-family-body": "Spectral, Georgia, serif",
+    "--font-family-heading": "'Grenze Gotisch', Spectral, Georgia, serif",
+    "--font-family-code": "'JetBrains Mono', ui-monospace, monospace",
     "--color-syntax-keyword": "light-dark(#6b187c, #efa8ff)",
     "--color-syntax-string": "light-dark(#0b5615, #a4d6a3)",
     "--color-syntax-comment": "light-dark(#525252, #b9b9b9)",
@@ -108,57 +108,57 @@ export const ardaTheme = {
     "--color-syntax-attribute": "light-dark(#584400, #eec448)",
     "--color-syntax-property": "light-dark(#005348, #90d7c8)",
     "--color-syntax-punctuation": "light-dark(#525252, #b9b9b9)",
-    "--color-syntax-background": "light-dark(#ffffff, #0a0905)",
+    "--color-syntax-background": "light-dark(#ffffff, #14100a)",
     "--color-syntax-added": "color-mix(in srgb, var(--color-success-muted) 25%, transparent)",
     "--color-syntax-removed": "color-mix(in srgb, var(--color-error-muted) 25%, transparent)",
     "--color-syntax-diff-header": "transparent",
     "--color-syntax-added-marker": "var(--color-syntax-punctuation)",
     "--color-syntax-removed-marker": "var(--color-syntax-punctuation)",
-    "--color-background-surface": "light-dark(#FFFFFF, #1E1D18)",
-    "--color-background-body": "light-dark(#F5F2EA, #141310)",
-    "--color-background-card": "light-dark(#FFFFFF, #1E1D18)",
-    "--color-background-popover": "light-dark(#FFFFFF, #1E1D18)",
-    "--color-background-muted": "light-dark(#ECE8DD, #28261F)",
-    "--color-accent": "light-dark(#C2311A, #FF7352)",
-    "--color-accent-muted": "light-dark(#ecccc5, #871200)",
+    "--color-background-surface": "light-dark(#F3EDDF, #1A1815)",
+    "--color-background-body": "light-dark(#E8E0CE, #0D0C0A)",
+    "--color-background-card": "light-dark(#F3EDDF, #1A1815)",
+    "--color-background-popover": "light-dark(#F3EDDF, #1A1815)",
+    "--color-background-muted": "light-dark(#F3EDDF, #1A1815)",
+    "--color-accent": "light-dark(#0D0C0A, #E2502A)",
+    "--color-accent-muted": "light-dark(#d5d4d3, #474747)",
     "--color-neutral": "light-dark(#0000000F, #ffffff1A)",
     "--color-overlay": "light-dark(#00000080, #000000CC)",
     "--color-overlay-hover": "light-dark(#0000000d, #ffffff0d)",
     "--color-overlay-pressed": "light-dark(#0000001a, #ffffff1a)",
-    "--color-text-primary": "light-dark(#17160F, #EFEBE0)",
-    "--color-text-secondary": "light-dark(#625D52, #A8A294)",
-    "--color-text-disabled": "light-dark(#959085, #565147)",
-    "--color-text-accent": "light-dark(#1D4F91, #86B4F2)",
+    "--color-text-primary": "light-dark(#0D0C0A, #E8E0CE)",
+    "--color-text-secondary": "light-dark(#5C574C, #9A9384)",
+    "--color-text-disabled": "light-dark(#9a9384, #575248)",
+    "--color-text-accent": "light-dark(#A33312, #E2502A)",
     "--color-on-dark": "light-dark(#ffffff, #ffffff)",
-    "--color-on-light": "light-dark(#13110d, #12110d)",
-    "--color-on-accent": "light-dark(#FFFFFF, #141310)",
-    "--color-on-success": "light-dark(#ffffff, #12110d)",
-    "--color-on-error": "light-dark(#ffffff, #12110d)",
-    "--color-on-warning": "light-dark(#ffffff, #12110d)",
-    "--color-info": "light-dark(#1d4f91, #77adf9)",
-    "--color-info-muted": "light-dark(#cbd5e4, #93bbf43d)",
-    "--color-on-info": "light-dark(#ffffff, #12110d)",
-    "--color-text-info": "light-dark(#1d4f91, #b6c8e2)",
-    "--color-text-success": "light-dark(#1f6b3b, #a6d4b1)",
-    "--color-text-warning": "light-dark(#754b00, #eebd7d)",
-    "--color-text-error": "light-dark(#a3123f, #f5b2b9)",
-    "--color-on-info-muted": "light-dark(#0f3870, #b6c8e2)",
-    "--color-on-success-muted": "light-dark(#044720, #a6d4b1)",
-    "--color-on-warning-muted": "light-dark(#553500, #eebd7d)",
-    "--color-on-error-muted": "light-dark(#710025, #f5b2b9)",
-    "--color-icon-accent": "light-dark(#C2311A, #FF7352)",
-    "--color-icon-primary": "light-dark(#17160F, #EFEBE0)",
-    "--color-icon-secondary": "light-dark(#625D52, #A8A294)",
-    "--color-icon-disabled": "light-dark(#959085, #565147)",
-    "--color-success": "light-dark(#1f6b3b, #80bc90)",
-    "--color-warning": "light-dark(#855600, #d79f55)",
-    "--color-error": "light-dark(#a3123f, #f58494)",
-    "--color-success-muted": "light-dark(#b4e2bf, #93c8a03d)",
-    "--color-error-muted": "light-dark(#ebcbce, #ff95a43d)",
-    "--color-warning-muted": "light-dark(#facc91, #e3ae683d)",
-    "--color-border": "light-dark(#D8D2C4, #38362E)",
-    "--color-border-emphasized": "light-dark(#8A8475, #767163)",
-    "--color-skeleton": "light-dark(#d4d4d4, #494842)",
+    "--color-on-light": "light-dark(#13110b, #13110c)",
+    "--color-on-accent": "light-dark(#E8E0CE, #0D0C0A)",
+    "--color-on-success": "light-dark(#ffffff, #13110c)",
+    "--color-on-error": "light-dark(#ffffff, #13110c)",
+    "--color-on-warning": "#111111",
+    "--color-info": "light-dark(#0074e2, #6d9cfe)",
+    "--color-info-muted": "light-dark(#b9d7ff, #88bcff3D)",
+    "--color-on-info": "light-dark(#ffffff, #111111)",
+    "--color-text-info": "light-dark(#0067ce, #a1caff)",
+    "--color-text-success": "light-dark(#44523a, #b8cfa8)",
+    "--color-text-warning": "light-dark(#836700, #eec448)",
+    "--color-text-error": "light-dark(#9b1c1c, #f2b5ad)",
+    "--color-on-info-muted": "light-dark(#003978, #a1caff)",
+    "--color-on-success-muted": "light-dark(#38462e, #b8cfa8)",
+    "--color-on-warning-muted": "light-dark(#4b3900, #eec448)",
+    "--color-on-error-muted": "light-dark(#77050a, #f2b5ad)",
+    "--color-icon-accent": "light-dark(#A33312, #E2502A)",
+    "--color-icon-primary": "light-dark(#0D0C0A, #E8E0CE)",
+    "--color-icon-secondary": "light-dark(#5C574C, #9A9384)",
+    "--color-icon-disabled": "light-dark(#9a9384, #575248)",
+    "--color-success": "light-dark(#44523a, #99b684)",
+    "--color-warning": "#ffce2f",
+    "--color-error": "light-dark(#9b1c1c, #f5877c)",
+    "--color-success-muted": "light-dark(#c6ddb6, #a8c3963d)",
+    "--color-error-muted": "light-dark(#eacdc9, #ff988d3d)",
+    "--color-warning-muted": "light-dark(#fae19e, #e2b6233D)",
+    "--color-border": "light-dark(#BDB5A2, #3A3832)",
+    "--color-border-emphasized": "light-dark(#5C574C, #9A9384)",
+    "--color-skeleton": "light-dark(#d4d4d4, #555149)",
     "--color-shadow": "light-dark(#0000001A, #0000004D)",
     "--color-tint-hover": "light-dark(#000000, #ffffff)",
     "--color-background-red": "light-dark(#ffc4be, #5b2b28)",
@@ -202,12 +202,12 @@ export const ardaTheme = {
     "--color-icon-gray": "light-dark(#474747, #9e9e9e)",
     "--color-text-gray": "light-dark(#1b1b1b, #d4d4d4)",
     "--radius-none": "0px",
-    "--radius-inner": "0px",
-    "--radius-element": "0px",
+    "--radius-inner": "2px",
+    "--radius-element": "2px",
     "--radius-container": "0px",
     "--radius-page": "0px",
     "--radius-chat": "var(--radius-container)",
-    "--radius-full": "0px",
+    "--radius-full": "2px",
     "--shadow-low": "0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)), 0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%))",
     "--shadow-med": "0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)), 0 4px 12px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 12%))",
     "--shadow-high": "0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), 0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%))",
@@ -216,18 +216,18 @@ export const ardaTheme = {
     "--shadow-inset-success": "inset 0px 0px 0px 2px #2f7d334D",
     "--shadow-inset-warning": "inset 0px 0px 0px 2px #f8d36a4D",
     "--shadow-inset-error": "inset 0px 0px 0px 2px #de47454D",
-    "--color-background-inverted": "light-dark(#17160F, #EFEBE0)",
-    "--color-icon-success": "light-dark(#1f6b3b, #a6d4b1)",
-    "--color-border-success": "light-dark(#a0d6ad, #6faf80)",
-    "--color-icon-warning": "light-dark(#754b00, #eebd7d)",
-    "--color-border-warning": "light-dark(#f5ba6d, #ca9142)",
-    "--color-icon-error": "light-dark(#a3123f, #f5b2b9)",
-    "--color-border-error": "light-dark(#e7b9bd, #e87487)",
-    "--color-icon-info": "light-dark(#1d4f91, #b6c8e2)",
-    "--color-border-info": "light-dark(#bac8db, #679fed)",
-    "--focus-outline-color": "light-dark(#1D4F91, #86B4F2)",
-    "--focus-outline-offset": "2px",
-    "--font-weight-bold": "800"
+    "--color-background-inverted": "light-dark(#0D0C0A, #E8E0CE)",
+    "--color-icon-success": "light-dark(#44523a, #b8cfa8)",
+    "--color-border-success": "light-dark(#b6d1a3, #8aa974)",
+    "--color-icon-error": "light-dark(#9b1c1c, #f2b5ad)",
+    "--color-border-error": "light-dark(#e4bbb6, #e8786d)",
+    "--focus-outline-color": "light-dark(#0D0C0A, #E2502A)",
+    "--focus-outline-offset": "3px",
+    "--font-weight-semibold": "600",
+    "--font-weight-bold": "600",
+    "--size-element-sm": "2.75rem",
+    "--size-element-md": "3rem",
+    "--size-element-lg": "3rem"
   },
   localTokens: {
     "--astryx-theme-neutral-color-status-fill-accent": "light-dark(#0074e2, #6d9cfe)"
@@ -251,13 +251,13 @@ export const ardaTheme = {
         "lineHeight": "var(--text-heading-2-leading)"
       },
       "level:3": {
-        "fontFamily": "'IBM Plex Sans', system-ui, sans-serif",
+        "fontFamily": "Spectral, Georgia, serif",
         "fontSize": "var(--text-heading-3-size)",
         "fontWeight": "var(--text-heading-3-weight)",
         "lineHeight": "var(--text-heading-3-leading)"
       },
       "level:4": {
-        "fontFamily": "'IBM Plex Sans', system-ui, sans-serif",
+        "fontFamily": "Spectral, Georgia, serif",
         "fontSize": "var(--text-heading-4-size)",
         "fontWeight": "var(--text-heading-4-weight)",
         "lineHeight": "var(--text-heading-4-leading)"
@@ -288,9 +288,6 @@ export const ardaTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
-      },
-      "base": {
-        "letterSpacing": "-0.02em"
       }
     },
     "text": {
@@ -337,22 +334,22 @@ export const ardaTheme = {
     },
     "item": {
       "selected": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #c9c6bf)"
       }
     },
     "tree-list-item": {
       "selected": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #c9c6bf)"
       }
     },
     "file-input": {
       "mode:dropzone": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #c9c6bf)"
       }
     },
     "citation": {
       "variant:number": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #c9c6bf)"
       }
     },
     "button": {
@@ -362,6 +359,10 @@ export const ardaTheme = {
       },
       "base": {
         "--radius-element": "2px"
+      },
+      "variant:secondary": {
+        "backgroundColor": "transparent",
+        "border": "1px solid var(--color-text-primary)"
       }
     },
     "badge": {
@@ -417,7 +418,7 @@ export const ardaTheme = {
     },
     "segmented-control-item": {
       "base": {
-        "--color-text-secondary": "light-dark(#625D52, #aeaba3)"
+        "--color-text-secondary": "light-dark(#585246, #b2ada0)"
       },
       "size:sm": {
         "height": "calc(var(--size-element-sm) - 8px)"
@@ -459,31 +460,31 @@ export const ardaTheme = {
         "boxShadow": "none"
       },
       "variant:blue": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:cyan": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:green": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:orange": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:pink": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:purple": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#5C574C, #bdb9b0)"
       },
       "variant:red": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:teal": {
-        "--color-text-secondary": "light-dark(#555146, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#585246, #bdb9b0)"
       },
       "variant:yellow": {
-        "--color-text-secondary": "light-dark(#625D52, #bbb8b2)"
+        "--color-text-secondary": "light-dark(#5C574C, #bdb9b0)"
       }
     },
     "section": {
@@ -546,19 +547,6 @@ export const ardaTheme = {
         "borderColor": "var(--color-border)",
         "boxShadow": "none"
       }
-    },
-    "toggle-button": {
-      "base": {
-        "borderRadius": "0px",
-        "border": "1px solid var(--color-border-emphasized)",
-        "fontFamily": "var(--font-family-code)",
-        "textTransform": "uppercase",
-        "letterSpacing": "0.06em"
-      },
-      "isPressed:true": {
-        "backgroundColor": "var(--color-background-inverted)",
-        "color": "var(--color-background-body)"
-      }
     }
   },
   __onDark: {
@@ -611,33 +599,22 @@ export const ardaTheme = {
         },
         "value": {
           "tokens": {
+            "--font-family-body": "Spectral, Georgia, serif",
+            "--font-family-heading": "'Grenze Gotisch', Spectral, Georgia, serif",
+            "--font-family-code": "'JetBrains Mono', ui-monospace, monospace",
+            "--font-weight-bold": "600",
+            "--text-heading-1-size": "2.75rem",
             "--text-heading-1-weight": "800",
-            "--text-heading-2-weight": "800",
-            "--text-heading-3-weight": "800",
-            "--text-heading-4-weight": "800",
-            "--text-heading-5-weight": "800",
-            "--text-heading-6-weight": "800",
-            "--text-display-1-weight": "800",
-            "--text-display-2-weight": "800",
-            "--text-display-3-weight": "800"
-          }
-        }
-      },
-      {
-        "when": {
-          "pointer": "coarse",
-          "width": {
-            "below": "lg"
-          }
-        },
-        "value": {
-          "tokens": {
-            "--font-weight-bold": "800",
-            "--text-heading-1-weight": "800",
+            "--text-heading-2-size": "2rem",
             "--text-heading-2-weight": "700",
             "--text-heading-3-weight": "600",
             "--text-heading-4-weight": "600",
-            "--text-label-weight": "500"
+            "--text-body-size": "1.25rem",
+            "--text-large-size": "1.3125rem",
+            "--text-large-weight": "400",
+            "--text-supporting-size": "1.125rem",
+            "--text-label-size": "1.125rem",
+            "--text-label-weight": "600"
           }
         }
       }
@@ -646,27 +623,27 @@ export const ardaTheme = {
   __axes: {
     "typography": {
       "scale": {
-        "base": 17,
+        "base": 18,
         "ratio": 1.2
       },
       "body": {
-        "family": "IBM Plex Sans",
-        "fallbacks": "system-ui, sans-serif"
+        "family": "Spectral",
+        "fallbacks": "Georgia, serif"
       },
       "heading": {
-        "family": "Archivo",
-        "fallbacks": "IBM Plex Sans, sans-serif",
+        "family": "Grenze Gotisch",
+        "fallbacks": "Spectral, Georgia, serif",
         "weights": {
-          "1": "800",
-          "2": "800",
-          "3": "800",
-          "4": "800",
-          "5": "800",
-          "6": "800"
+          "1": "var(--font-weight-semibold)",
+          "2": "var(--font-weight-semibold)",
+          "3": "var(--font-weight-bold)",
+          "4": "var(--font-weight-bold)",
+          "5": "var(--font-weight-semibold)",
+          "6": "var(--font-weight-semibold)"
         }
       },
       "code": {
-        "family": "IBM Plex Mono",
+        "family": "JetBrains Mono",
         "fallbacks": "ui-monospace, monospace"
       }
     },

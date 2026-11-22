@@ -5,18 +5,13 @@
     {
       "id": "accent",
       "name": "Accent",
-      "seed": "#c2311a",
+      "seed": "#0d0c0a",
+      "kind": "neutral",
       "anchors": [
         {
           "mode": "light",
-          "stop": 45,
-          "color": "#c2311a",
-          "policy": "exact"
-        },
-        {
-          "mode": "dark",
-          "stop": 45,
-          "color": "#c2311a",
+          "stop": 5,
+          "color": "#0d0c0a",
           "policy": "exact"
         }
       ]
@@ -24,19 +19,19 @@
     {
       "id": "neutral",
       "name": "Neutral",
-      "seed": "#625d52",
+      "seed": "#9a9384",
       "kind": "neutral",
       "anchors": [
         {
           "mode": "light",
-          "stop": 40,
-          "color": "#625d52",
+          "stop": 60,
+          "color": "#9a9384",
           "policy": "exact"
         },
         {
           "mode": "dark",
-          "stop": 40,
-          "color": "#625d52",
+          "stop": 60,
+          "color": "#9a9384",
           "policy": "exact"
         }
       ]
@@ -44,25 +39,12 @@
     {
       "id": "success",
       "name": "Success",
-      "seed": "#1f6b3b",
+      "seed": "#44523a",
       "anchors": [
         {
           "mode": "light",
-          "stop": 40,
-          "color": "#1f6b3b",
-          "policy": "exact"
-        }
-      ]
-    },
-    {
-      "id": "warning",
-      "name": "Warning",
-      "seed": "#855600",
-      "anchors": [
-        {
-          "mode": "light",
-          "stop": 40,
-          "color": "#855600",
+          "stop": 30,
+          "color": "#44523a",
           "policy": "exact"
         }
       ]
@@ -70,25 +52,12 @@
     {
       "id": "danger",
       "name": "Danger",
-      "seed": "#a3123f",
-      "anchors": [
-        {
-          "mode": "light",
-          "stop": 40,
-          "color": "#a3123f",
-          "policy": "exact"
-        }
-      ]
-    },
-    {
-      "id": "info",
-      "name": "Info",
-      "seed": "#1d4f91",
+      "seed": "#9b1c1c",
       "anchors": [
         {
           "mode": "light",
           "stop": 35,
-          "color": "#1d4f91",
+          "color": "#9b1c1c",
           "policy": "exact"
         }
       ]
