@@ -108,7 +108,7 @@ Real and verifiable — use freely:
 - Music: Pagan (atmospheric black metal, `pagan.tr`), The Seventh Shadow (AI
   gothic metal, DistroKid release), Arda (Sindarin dark folk, `lind.arda.tr`).
   Artist profiles on Discogs, Metal Archives, Last.fm.
-- Social: GitHub `c0ze`, LinkedIn, Mastodon, Bluesky, `arda@karaduman.org`.
+- Social: GitHub `c0ze`, LinkedIn, Mastodon, Bluesky, `arda@karaduman.tr`.
 
 **Absent — must never be fabricated:** testimonials, client logos, user counts,
 revenue or traction metrics, press mentions, awards, case-study outcomes.

@@ -20,7 +20,7 @@ let socialLinks: array<socialLink> = [
   },
   {
     name: "Email",
-    href: "mailto:arda@karaduman.org",
+    href: "mailto:arda@karaduman.tr",
     rel: "",
     icon: #Mail,
   },
