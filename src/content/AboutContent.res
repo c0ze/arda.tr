@@ -6,24 +6,24 @@ type segment = {
 
 let bio: array<array<segment>> = [
   [
-    {text: "I've lived in ", emphasis: false},
+    {text: "I have lived in ", emphasis: false},
     {text: "Japan since 2004", emphasis: true},
     {
-      text: ". M.Sc. in Computer Science at Keio University (2006–2008), then PhD studies in embedded processor design and optimization (2008–2011).",
+      text: ". I finished an M.Sc. in Computer Science at Keio University (2006–2008) and stayed for PhD studies in embedded processor design and optimization (2008–2011).",
       emphasis: false,
     },
   ],
   [
     {text: "Over ", emphasis: false},
-    {text: "15 years of professional work", emphasis: true},
+    {text: "15 years of engineering work", emphasis: true},
     {
-      text: ", from embedded systems to cloud architecture. Since 2024 I've been Systems Architect at Veltra, integrating legacy applications with AI over MCP and building infrastructure.",
+      text: ", moving from embedded systems to cloud architecture. Since 2024 I have been Systems Architect at Veltra, connecting legacy applications to AI over MCP and building infrastructure.",
       emphasis: false,
     },
   ],
   [
     {
-      text: "Before that: Gaussy, Robotfund and Mobilous.",
+      text: "Previously at Gaussy, Robotfund, and Mobilous.",
       emphasis: false,
     },
   ],
@@ -36,10 +36,10 @@ type fact = {
 }
 
 let facts: array<fact> = [
-  {label: "Now", value: "Systems Architect @ Veltra"},
-  {label: "Based", value: "Tokyo, Japan"},
-  {label: "Studied", value: "Keio University · CS"},
-  {label: "Past", value: "Gaussy · Robotfund · Mobilous"},
+  {label: "Role", value: "Systems Architect @ Veltra"},
+  {label: "Location", value: "Tokyo, Japan"},
+  {label: "Education", value: "Keio University · CS"},
+  {label: "Previous", value: "Gaussy · Robotfund · Mobilous"},
 ]
 
 // The stack, joined with " · " into the Record's "stack" row.
@@ -62,8 +62,10 @@ let tech = [
   "Linux",
 ]
 
-// Maker-record fields. These live here, not in Record.res — PROJECT.md keeps
-// page copy in *Content.res so text edits never touch layout.
-let recordCat = "AK 0-0001"
-let recordName = "Arda Karaduman"
+// The section's heading and the rows that follow the facts. These live here,
+// not in Record.res: PROJECT.md keeps page copy in *Content.res so text edits
+// never touch layout.
+let title = "About"
+let languagesLabel = "Languages"
 let recordLanguages = "Turkish (native) · English (near-native) · Japanese (business)"
+let stackLabel = "Stack"

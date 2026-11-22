@@ -1,4 +1,4 @@
-/* Copy for the status bar, the hero and the section prompts. Layout lives in
+/* Copy for the bar, the hero and the works toolbar. Layout lives in Bar.res /
  Hero.res / Works.res; text lives here. */
 
 type link = {
@@ -8,37 +8,42 @@ type link = {
 }
 
 let host = "arda.tr"
-let path = "~/"
 
-// The status bar nav: the works on this page, then the family.
+// The bar's nav: the works on this page, then the family.
 // rel="me" on the blog and the résumé: they are the same person's profiles.
 let nav: array<link> = [
   {label: "works", href: "#catalogue", rel: ""},
   {label: "blog", href: "https://blog.arda.tr", rel: "me"},
   {label: "résumé", href: "https://resume.arda.tr", rel: "me"},
-  {label: "ai", href: "https://ai.arda.tr", rel: ""},
+  {label: "ask", href: "https://ai.arda.tr", rel: ""},
   {label: "lind", href: "https://lind.arda.tr", rel: ""},
 ]
 
-let kicker = "// systems architect · tokyo since 2004"
-let nameLines = ["Arda", "Karaduman"]
-let introLead = "Software, games and black metal."
-let introRest = " Day job: legacy systems and AI at Veltra."
-let worksCta = "ls ~/works ↓"
-let askCta = "ask"
-let askLabel = "Ask Arda's AI"
+// The scheme switch names the scheme it switches to; the rest is for screen readers.
+let schemeBefore = "Switch to "
+let schemeDark = "dark"
+let schemeLight = "light"
+let schemeAfter = " scheme"
 
-// The tag that follows the radio mast on the ridge.
-let mastCoords = "35.6518°N 139.5446°E"
-let mastPlace = "調布 · CHOFU · TOKYO"
+// The page's h1, set small above the headline, with the kicker beside it.
+let name = "Arda Karaduman"
+let kicker = "Systems architect · Tokyo since 2004"
+// The headline is the brand line. It ends in the vermilion full stop.
+let headlineLines = ["Everything I make,", "in one list"]
+let introLead = "Software and games. Also black metal."
+let introRest = " At Veltra I connect legacy systems to AI."
+let worksCta = "Browse works"
+let askLabel = "Ask about Arda"
 
-let paganName = "PAGAN"
-let paganNote = "atmospheric black metal"
-let paganHost = "pagan.tr"
-let paganHref = "https://pagan.tr"
-let paganImage = "/pagan.webp"
-
-// Shell prompts that open each section.
-let shellPrompt = "arda@chofu:~$"
-let worksTagline = "numbered in hex from 0x00"
-let recordCommand = "cat ~/record"
+// Works toolbar.
+let worksTitle = "Works"
+let worksTagline = "one list, sorted by kind"
+let filterLabel = "Filter by kind"
+let allKinds = "All"
+let viewLabel = "View"
+let viewList = "List"
+let viewPlates = "Plates"
+let clearFilter = "Clear filter"
+let featuredLabel = "Featured"
+let noLink = " (no public link)"
+let sourceLabel = "src"

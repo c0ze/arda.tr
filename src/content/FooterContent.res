@@ -53,5 +53,5 @@ let socialLinks: array<socialLink> = [
 
 // Closing call-to-action.
 let ctaTitle = "Contact"
-let ctaText = "Open to collaborations, in code or music."
-let builtNote = "made in tokyo with rescript and react"
+let ctaText = "Write if you want to collaborate on code or music."
+let builtNote = "Built in Tokyo with ReScript and React."

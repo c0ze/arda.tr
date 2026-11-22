@@ -35,3 +35,9 @@ src/config/site.generated.ts
 
 # Impeccable transient decision-page state (PID, port, heartbeat)
 .impeccable/questions/
+
+# Astryx theme editor previews (rebuilt by `astryx experimental theme editor show arda --png`)
+themes/arda/*.png
+themes/arda/preview.html
+themes/arda/sheet*.html
+themes/arda/arda.pictures.json

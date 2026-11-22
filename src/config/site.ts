@@ -1,1 +1,1 @@
-export { site, pages, sectionIds, themes, siteConfig } from "./site.generated";
+export { site, pages, sectionIds, siteConfig } from "./site.generated";

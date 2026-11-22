@@ -1,36 +1,37 @@
-// Floating "Ask about Arda" helpdesk widget. A launcher opens a One Bit chat
-// panel — a revolving orb that sizzles on every streamed chunk, a crackling
-// cursor trailing the reply — that streams from the ai.arda.tr bot's SSE
-// /api/chat/stream (Gemini; the server holds the key) and renders Markdown.
-// Falls back to non-streaming /api/chat. SSR-safe: the network call only runs
-// in event handlers, and the panel only mounts after a click. Requires the
-// bot's CORS ALLOWED_ORIGINS to include this origin (https://arda.tr).
+// Floating "Ask about Arda" helpdesk widget. A launcher opens a chat panel
+// that streams from the ai.arda.tr bot's SSE /api/chat/stream (Gemini; the
+// server holds the key) and renders Markdown. Falls back to non-streaming
+// /api/chat. SSR-safe: the network call only runs in event handlers, and the
+// panel only mounts after a click. Requires the bot's CORS ALLOWED_ORIGINS to
+// include this origin (https://arda.tr).
 //
-// Voice: unless muted (the ♪ toggle in the header, persisted site-wide by
+// The assistant is drawn as the square dot from the wordmark (DESIGN.md): it
+// blinks while a reply is on its way and swells with the voice's loudness.
+//
+// Voice: unless muted (the Voice toggle in the header, persisted site-wide by
 // src/lib/voice.js), requests ask for speech too. One speaker per reply plays
 // it through the robot filter and says how far the voice has got; the reply
-// shows only that far (the crackle cursor trailing it), and the voice's
-// loudness makes the orb sizzle, as on ai.arda.tr.
+// shows only that far.
 
 let launcherLabel = "Ask about Arda"
 let titleLabel = "Ask about Arda"
 let closeLabel = "Close"
-let greeting = "Arda's AI assistant. Ask about his work, projects or background."
+let greeting = "AI assistant for Arda Karaduman. Ask about his work, projects, or background."
 let placeholder = "Ask a question…"
-let sendLabel = "Send (enter)" // contains the visible "enter ↵" (WCAG 2.5.3)
+let sendLabel = "Send"
 let thinkingLabel = "Thinking…"
 let voiceLabel = "Voice"
 let voiceTitle = "Read replies aloud"
-let voiceOnText = "on"
-let voiceOffText = "off"
+let voiceOnText = "On"
+let voiceOffText = "Off"
 let lang = "en"
-let errorLabel = "I couldn't reach the assistant. Try again in a moment."
-let suggestions = ["What does Arda build?", "Where has he worked?", "What's his background?"]
-let botLabel = "construct"
-let youLabel = "you"
-let modelLabel = "ai · gemini"
-let hintLabel = "answers can be wrong. check anything important."
-let sendText = "enter ↵"
+let errorLabel = "Could not reach the assistant. Try again shortly."
+let suggestions = ["What does Arda build?", "Where has he worked?", "What is his background?"]
+let botLabel = "Construct"
+let youLabel = "You"
+let modelLabel = "AI · Gemini"
+let hintLabel = "Replies can be wrong. Check anything important."
+let sendText = "Send"
 let inputLabel = "Your question"
 
 type chatMsg = {
@@ -278,32 +279,42 @@ let answeredHistory = (messages: array<chatMsg>) => {
 // How far the voice has got through reply `id`: `shown` UTF-16 units of it.
 type speech = {id: int, shown: int}
 
-// Messages are labelled like a terminal transcript (`construct ▸` / `you ▸`),
-// as on ai.arda.tr. `live` marks the reply that is still streaming or being
-// spoken: it gets the crackling 1-bit cursor after its last word. `shown`
+// The assistant's mark: the square dot. `busy` blinks it; `level` (0 to 1, the
+// voice's loudness) swells it through the --ix-level custom property.
+let mark = (~busy=false, ~level=0., ~small=false) =>
+  React.cloneElement(
+    <span className={small ? "ix-mark ix-mark--sm" : "ix-mark"} ariaHidden=true />,
+    {"data-busy": busy ? "true" : "false", "style": {"--ix-level": Float.toString(level)}},
+  )
+
+// The assistant's messages sit on the left beside the mark; the visitor's on
+// the right in a sunken box. Who is speaking is said to screen readers.
+// `live` marks the reply that is still streaming or being spoken. `shown`
 // limits a spoken reply to the part the voice has reached.
 let bubble = (msg: chatMsg, ~live: bool, ~shown: option<int>) => {
   let isModel = msg.role != "user" && !msg.isError
-  <div
-    key={Int.toString(msg.id)}
-    className={"msg " ++ (msg.role == "user" ? "you" : msg.isError ? "bot err" : "bot")}>
-    <p className="msg-who">
-      {React.string(msg.role == "user" ? youLabel : botLabel)}
-      <span ariaHidden=true> {React.string(" ▸")} </span>
-    </p>
-    <div className="msg-txt">
-      {isModel
-        ? <Markdown
-            text={switch shown {
-            | Some(n) => Markdown.revealPrefix(msg.content, n)
-            | None => msg.content
-            }}
-            live
-            trailing=?{live ? Some(<OneBit.Crackle className="cursor" />) : None}
-          />
-        : React.string(msg.content)}
-    </div>
-  </div>
+  msg.role == "user"
+    ? <div key={Int.toString(msg.id)} className="ix-msg ix-msg--you">
+        <p className="ix-sr"> {React.string(youLabel)} </p>
+        <div className="msg-txt"> {React.string(msg.content)} </div>
+      </div>
+    : <div key={Int.toString(msg.id)} className={msg.isError ? "ix-msg chat-err" : "ix-msg"}>
+        {mark()}
+        <div className="ix-msg__body">
+          <p className="ix-sr"> {React.string(botLabel)} </p>
+          <div className="msg-txt">
+            {isModel
+              ? <Markdown
+                  text={switch shown {
+                  | Some(n) => Markdown.revealPrefix(msg.content, n)
+                  | None => msg.content
+                  }}
+                  live
+                />
+              : React.string(msg.content)}
+          </div>
+        </div>
+      </div>
 }
 
 @react.component
@@ -574,7 +585,6 @@ let make = () => {
 
   let canSend = String.trim(input) !== "" && !busy
   // Changes on every streamed chunk (and on send), which makes the orb sizzle.
-  let pulse = busy ? lastLen + Array.length(messages) : 0
   let liveId = switch (speech, streaming, messages->Array.get(Array.length(messages) - 1)) {
   | (Some({id}), _, _) => id
   | (None, true, Some(m)) if m.role != "user" => m.id
@@ -607,7 +617,7 @@ let make = () => {
   <>
     // On the page for the widget's whole life, outside the panel: a live
     // region inserted with text already in it is not read out.
-    <div role="status" className="sr-only"> {React.string(announcement)} </div>
+    <div role="status" className="ix-sr"> {React.string(announcement)} </div>
     {isOpen
       ? React.null
       : <button
@@ -616,37 +626,36 @@ let make = () => {
           onClick={e => openFrom(Nullable.make(ReactEvent.Mouse.currentTarget(e)->Obj.magic))}
           ariaLabel={launcherLabel}
           ariaHaspopup=#dialog
-          className="chat-launch">
-          <OneBit.Orb size=20 />
+          className="ix-btn chat-launch">
+          {mark(~small=true)}
           <span> {React.string(launcherLabel)} </span>
         </button>}
     {isOpen
       ? <div role="dialog" ariaLabel={titleLabel} className="chat">
           <div className="chat-head">
-            <OneBit.Orb size=40 pulse level />
-            <div>
+            {mark(~busy, ~level)}
+            <div className="chat-title">
               <p> {React.string(titleLabel)} </p>
-              <p> {React.string(modelLabel)} </p>
+              <p className="ix-label"> {React.string(modelLabel)} </p>
             </div>
             // Mute / unmute the voice. The name stays "Voice"; aria-pressed
-            // carries the state (on phones only the struck-through ♪ shows it).
+            // carries the state, and the chip fills when it is on.
             <button
               type_="button"
               onClick={_ => Voice.setVoiceEnabled(!voiceOn)}
               ariaLabel={voiceLabel}
               ariaPressed={voiceOn ? #"true" : #"false"}
               title={voiceTitle}
-              className="chat-voice">
-              <span className="voice-glyph" ariaHidden=true> {React.string("♪")} </span>
-              <span className="voice-word" ariaHidden=true>
-                {React.string(voiceOn ? voiceOnText : voiceOffText)}
+              className="ix-chip chat-voice">
+              <span ariaHidden=true>
+                {React.string(`${voiceLabel}: ${voiceOn ? voiceOnText : voiceOffText}`)}
               </span>
             </button>
             <button
               type_="button"
               onClick={_ => setIsOpen(_ => false)}
               ariaLabel={closeLabel}
-              className="chat-x">
+              className="ix-chip chat-x">
               {React.string("×")}
             </button>
           </div>
@@ -662,20 +671,23 @@ let make = () => {
               | Some(el) => followRef.current = nearBottom(el)
               | None => ()
               }}
-            className="chat-log">
-            <div className="msg bot">
-              <p className="msg-who">
-                {React.string(botLabel)}
-                <span ariaHidden=true> {React.string(" ▸")} </span>
-              </p>
-              <div className="msg-txt"> {React.string(greeting)} </div>
+            className="chat-log ix-thread">
+            <div className="ix-msg">
+              {mark()}
+              <div className="ix-msg__body">
+                <p className="ix-sr"> {React.string(botLabel)} </p>
+                <div className="msg-txt"> {React.string(greeting)} </div>
+              </div>
             </div>
             {Array.length(messages) == 0
-              ? <div className="qp">
+              ? <div className="ix-chips chat-prompts">
                   {suggestions
                   ->Array.mapWithIndex((s, i) =>
-                    <button key={Int.toString(i)} type_="button" onClick={_ => submit(s)}>
-                      <em ariaHidden=true> {React.string(Int.toString(i + 1))} </em>
+                    <button
+                      key={Int.toString(i)}
+                      type_="button"
+                      className="ix-chip"
+                      onClick={_ => submit(s)}>
                       {React.string(s)}
                     </button>
                   )
@@ -695,14 +707,11 @@ let make = () => {
             )
             ->React.array}
             {busy && !streaming
-              ? <div className="msg bot">
-                  <p className="msg-who">
-                    {React.string(botLabel)}
-                    <span ariaHidden=true> {React.string(" ▸")} </span>
-                  </p>
-                  <div className="msg-txt">
-                    <span className="sr-only"> {React.string(thinkingLabel)} </span>
-                    <OneBit.Crackle className="cursor" />
+              ? <div className="ix-msg">
+                  {mark(~busy=true)}
+                  <div className="ix-msg__body">
+                    <p className="ix-sr"> {React.string(botLabel)} </p>
+                    <div className="msg-txt ix-muted"> {React.string(thinkingLabel)} </div>
                   </div>
                 </div>
               : React.null}
@@ -714,8 +723,8 @@ let make = () => {
               submit(input)
             }}
             className="chat-form">
-            <b ariaHidden=true> {React.string("▸")} </b>
             <input
+              className="ix-input"
               ref={ReactDOM.Ref.domRef(inputRef)}
               type_="text"
               maxLength={20000}
@@ -727,11 +736,15 @@ let make = () => {
               placeholder={placeholder}
               ariaLabel={inputLabel}
             />
-            <button type_="submit" ariaLabel={sendLabel} disabled={!canSend} className="chat-send">
+            <button
+              type_="submit"
+              ariaLabel={sendLabel}
+              disabled={!canSend}
+              className="ix-btn ix-btn--primary chat-send">
               {React.string(sendText)}
             </button>
           </form>
-          <p className="chat-hint"> {React.string(hintLabel)} </p>
+          <p className="ix-small ix-muted chat-hint"> {React.string(hintLabel)} </p>
         </div>
       : React.null}
   </>

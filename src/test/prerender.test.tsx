@@ -1,8 +1,6 @@
 // @vitest-environment node
-import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { render } from "@/entry-server";
-import { TokyoClock } from "@/components/TokyoClock";
 import * as Catalog from "@/content/CatalogContent.res.mjs";
 import { injectAppHtml, ssrServerOptions } from "../../scripts/prerender.mjs";
 
@@ -14,28 +12,24 @@ const entries = Catalog.entries as { cat: string }[];
 describe("prerendered page", () => {
   const html = render();
 
-  it("carries the name, the family links, coze.org and every card", () => {
+  it("carries the name, the family links, coze.org and every entry", () => {
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(html).toMatch(/<h1[^>]*>[\s\S]*Arda[\s\S]*Karaduman[\s\S]*<\/h1>/);
     for (const site of ["blog", "resume", "ai", "lind"]) {
       expect(html).toContain(`href="https://${site}.arda.tr"`);
     }
     expect(html).toContain('href="https://coze.org"');
-    // One article per catalogue entry, each with its deep-link id.
-    expect(html.match(/<article[\s>]/g)).toHaveLength(entries.length);
+    // One row per catalogue entry, each with its deep-link id.
+    expect(html.match(/<li [^>]*class="ix-row"/g)).toHaveLength(entries.length);
     for (const e of entries) expect(html).toContain(`id="${e.cat.replace(/ /g, "-")}"`);
     for (const id of ["catalogue", "record", "contact"]) expect(html).toContain(`id="${id}"`);
   });
 
-  it("is the same on every build: no clock time baked in", () => {
+  it("is the same on every build: nothing of the moment or the visitor baked in", () => {
     expect(html).not.toMatch(/\d\d:\d\d:\d\d/);
+    // No pinned scheme either: the head script and the client apply that.
+    expect(html).not.toMatch(/data-theme=/);
     expect(render()).toBe(html);
-  });
-});
-
-describe("TokyoClock", () => {
-  it("renders no time on the server; the browser fills it in", () => {
-    expect(renderToString(<TokyoClock />)).not.toMatch(/\d\d:\d\d/);
   });
 });
 

@@ -1,8 +1,8 @@
 {
   "site": {
     "name": "Arda Karaduman",
-    "title": "Arda Karaduman - Systems Architect & Developer",
-    "description": "Arda Karaduman, systems architect in Tokyo. Lists his software, games, writing and music, with links to his résumé and blog.",
+    "title": "Arda Karaduman - Systems Architect",
+    "description": "Index of work by Arda Karaduman, a systems architect in Tokyo: software, games, writing, and music, plus links to his résumé and blog.",
     "url": "https://arda.tr",
     "ogImagePath": "/og-image.jpg",
     "ogImageWidth": 1200,
@@ -19,36 +19,5 @@
     "catalogue": "catalogue",
     "about": "record",
     "contact": "contact"
-  },
-  "defaultTheme": "night",
-  "themes": [
-    {
-      "id": "night",
-      "role": "dark",
-      "name": "Night",
-      "hint": "dark",
-      "color": "#060708"
-    },
-    {
-      "id": "night-hc",
-      "role": "hc-dark",
-      "name": "Night HC",
-      "hint": "AAA dark",
-      "color": "#000000"
-    },
-    {
-      "id": "xerox",
-      "role": "light",
-      "name": "Xerox",
-      "hint": "light",
-      "color": "#efede6"
-    },
-    {
-      "id": "xerox-hc",
-      "role": "hc-light",
-      "name": "Xerox HC",
-      "hint": "AAA light",
-      "color": "#ffffff"
-    }
-  ]
+  }
 }

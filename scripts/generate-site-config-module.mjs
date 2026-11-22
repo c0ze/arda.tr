@@ -15,7 +15,6 @@ export const siteConfig = ${JSON.stringify(siteConfig, null, 2)} as const;
 export const site = siteConfig.site;
 export const pages = siteConfig.pages;
 export const sectionIds = siteConfig.sections;
-export const themes = siteConfig.themes;
 `;
 
   await fs.writeFile(outputFile, contents, "utf8");

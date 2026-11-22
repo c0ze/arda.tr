@@ -6,7 +6,8 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["dist", "node_modules", ".cache"],
+    // src/themes/ and src/astryx-themes.ts are written by `astryx theme`.
+    ignores: ["dist", "node_modules", ".cache", "src/themes/**", "src/astryx-themes.ts"],
   },
   {
     ...js.configs.recommended,

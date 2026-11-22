@@ -1,6 +1,6 @@
-/** Page shell (One Bit Forest, see DESIGN.md): the forest hero with the status
-    bar and the page's only h1, then the works, the record, and contact. The
-    chat widget floats bottom-left and can be opened from the hero's `ask`.
+/** Page shell (The Index, see DESIGN.md): the bar, the hero with the page's
+    only h1, then the works, about and contact. The chat widget floats at the
+    bottom and can be opened from the hero.
 
     The kind filter lives here so any section could reset it; today only the
     works section drives it. */
@@ -10,10 +10,11 @@ let make = () => {
   let onSelect = (band: option<int>) => setActive(_ => band)
 
   <>
-    <Hero />
+    <Bar />
     <main>
+      <Hero />
       <Works active onSelect />
-      <Record />
+      <About />
     </main>
     <Colophon />
     <ChatWidget />

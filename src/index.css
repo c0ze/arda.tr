@@ -1,490 +1,168 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /*
-  ── One Bit Forest ────────────────────────────────────────────────────────
-  The family design system (/DESIGN-SYSTEM.md, adopted 2026-09-23). arda.tr is
-  the wild one: a night forest dithered to one bit, one neon phosphor — lichen —
-  cutting through the monochrome.
-
-  Four renditions, same ids on every family site:
-    night     — dark (default)          night-hc — high-contrast dark (AAA)
-    xerox     — light, photocopy paper  xerox-hc — high-contrast light (AAA)
-
-  Colours are hex. --ob-* are read by src/lib/onebit.js every frame, so a
-  rendition switch repaints the canvases immediately. Keep each block a
-  top-level rule: scripts/generate-themes-contract.mjs reads them from here.
+  arda.tr: the index (see DESIGN.md).
+  The colours, type and spacing are tokens of the Astryx `arda` theme
+  (src/themes/arda/, imported by astryx-themes.ts). The bar, the row, the
+  plate, the label and the dot are the family's patterns in brand/brand.css.
+  Only this page's own layout lives here.
 */
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "../brand/brand.css";
 
-:root,
-.night {
-  color-scheme: dark;
-  --bg: #060708;
-  --surface: #0d0f10;
-  --fg: #e4e0d4;
-  --fg-2: #9d998e;
-  --rule: #22252a;
-  --signal: #c6ff3a;
-  --ob-ink: #e4e0d4;
-  --ob-ground: #060708;
-  --ob-signal: #c6ff3a;
+:root {
+  /* The landing page is where the display headline may reach 120px. */
+  --ix-display-max: 7.5rem;
 }
 
-.night-hc {
-  color-scheme: dark;
-  --bg: #000000;
-  --surface: #000000;
-  --fg: #ffffff;
-  --fg-2: #d0cdc4;
-  --rule: #8a8a8a;
-  --signal: #d4ff5c;
-  --ob-ink: #ffffff;
-  --ob-ground: #000000;
-  --ob-signal: #d4ff5c;
+/* -- Hero ---------------------------------------------------------------- */
+
+.hero {
+  padding-block-start: calc(var(--spacing-8) * 2);
+}
+.hero__who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-1) var(--spacing-4);
+}
+.hero__name {
+  color: var(--color-text-primary);
+}
+.hero__line {
+  margin-block: var(--spacing-5) var(--spacing-6);
+}
+.hero__ways {
+  margin-block-start: var(--spacing-8);
 }
 
-.xerox {
-  color-scheme: light;
-  --bg: #efede6;
-  --surface: #f7f6f1;
-  --fg: #111210;
-  --fg-2: #5d5b55;
-  --rule: #cfccc2;
-  --signal: #3f5f00;
-  --ob-ink: #111210;
-  --ob-ground: #efede6;
-  --ob-signal: #3f5f00;
+/* -- Works ---------------------------------------------------------------- */
+
+.works-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3) var(--spacing-6);
+}
+.works-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2) var(--spacing-4);
+  min-height: var(--ix-row);
+}
+.works-status p {
+  margin: 0;
+}
+.entry-meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--spacing-3);
+  margin: 0;
+}
+.plate-note {
+  margin-block: var(--spacing-1) var(--spacing-3);
+  opacity: 0.8;
 }
 
-.xerox-hc {
-  color-scheme: light;
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --fg: #000000;
-  --fg-2: #2e2e2e;
-  --rule: #1a1a1a;
-  --signal: #2b4200;
-  --ob-ink: #000000;
-  --ob-ground: #ffffff;
-  --ob-signal: #2b4200;
+/* -- About ---------------------------------------------------------------- */
+
+.about > * + * {
+  margin-block-start: var(--spacing-8);
 }
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-    background: var(--bg);
-  }
+/* -- Chat ------------------------------------------------------------------ */
 
-  * {
-    @apply border-rule;
-  }
-
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    @apply font-sans;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.5;
-    overflow-x: hidden;
-  }
-
-  /* Radius 0 everywhere, no exceptions (UI primitives included). */
-  *, *::before, *::after {
-    border-radius: 0 !important;
-  }
-
-  ::selection {
-    background: var(--signal);
-    color: var(--bg);
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--signal);
-    outline-offset: 2px;
-  }
-
-  canvas.px {
-    display: block;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
+.chat-launch,
+.chat {
+  position: fixed;
+  inset-inline-end: var(--ix-gutter);
+  inset-block-end: var(--spacing-5);
+}
+.chat-launch {
+  z-index: 20;
+  background: var(--color-background-surface);
+}
+.chat {
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: min(26rem, calc(100vw - 2 * var(--ix-gutter)));
+  height: min(36rem, calc(100dvh - 2 * var(--spacing-5)));
+  background: var(--color-background-surface);
+  border: 1px solid var(--color-border-emphasized);
+}
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-block-end: var(--ix-rule);
+}
+.chat-title {
+  flex: 1;
+  min-width: 0;
+}
+.chat-title p:first-child {
+  font-weight: 600;
+}
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--spacing-4);
+}
+.chat-prompts {
+  padding-inline-start: calc(1.5rem + var(--spacing-3));
+}
+.chat-prompts .ix-chip {
+  text-transform: none;
+  letter-spacing: 0;
+  text-align: start;
+}
+.chat-err .msg-txt {
+  color: var(--color-text-error);
+}
+.msg-txt > * + * {
+  margin-block-start: 0.75em;
+}
+.msg-txt :where(ul, ol) {
+  padding-inline-start: 1.25em;
+}
+.msg-txt :where(code) {
+  font-family: var(--ix-mono);
+  font-size: 0.875em;
+  background: var(--ix-sunken);
+  padding: 0.1em 0.3em;
+}
+.msg-txt :where(a) {
+  text-decoration: underline;
+}
+.chat-form {
+  display: flex;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4) 0;
+  border-block-start: var(--ix-rule);
+}
+.chat-hint {
+  margin: 0;
+  padding: var(--spacing-2) var(--spacing-4) var(--spacing-3);
 }
 
-@layer components {
-  /* ── shared: the prompt line and its blinking block ─────────────────────── */
-  .prompt {
-    font: 14px/1.6 theme("fontFamily.mono");
-    color: var(--fg-2);
-    overflow-wrap: anywhere;
-  }
-  .prompt b { color: var(--signal); font-weight: 400; }
-  .prompt .cur {
-    display: inline-block;
-    width: 9px;
-    height: 17px;
-    background: var(--signal);
-    vertical-align: -3px;
-    animation: ob-blink 1.1s steps(1) infinite;
-  }
-  @keyframes ob-blink { 50% { opacity: 0; } }
+/* The launcher floats over the page's last line: leave it room. */
+.ix-foot {
+  padding-block-end: calc(var(--spacing-10) * 2);
+}
 
-  .sec-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-    margin: 18px 0 26px;
-  }
-  .sec-head h2 {
-    font: 900 72px/.9 theme("fontFamily.display");
-    text-transform: uppercase;
-  }
-  .sec-head small {
-    font: 12px/1.5 theme("fontFamily.mono");
-    color: var(--fg-2);
-    text-align: right;
-  }
-
-  /* ── status bar ─────────────────────────────────────────────────────────── */
-  .bar {
-    position: absolute;
-    inset: 0 0 auto 0;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    height: 34px;
-    padding: 0 20px;
-    font: 12px/1 theme("fontFamily.mono");
-    letter-spacing: .02em;
-    color: var(--fg-2);
-    /* the one permitted gradient: a scrim behind text over imagery */
-    background: linear-gradient(var(--bg) 62%, transparent);
-  }
-  .bar-site { color: var(--fg); display: flex; gap: 8px; align-items: center; white-space: nowrap; }
-  .bar-site i { width: 8px; height: 14px; background: var(--signal); display: inline-block; }
-  .bar-site span { color: var(--fg-2); }
-  .bar nav { display: flex; gap: 16px; }
-  .bar nav a:hover { color: var(--signal); }
-  .bar-sp { flex: 1; }
-  .bar-clock { font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .rend {
-    border: 1px solid currentColor;
-    padding: 3px 7px;
-    font: inherit;
-    color: var(--fg-2);
-    background: var(--bg);
-    white-space: nowrap;
-  }
-  button.rend:hover { color: var(--signal); }
-
-  /* ── hero ───────────────────────────────────────────────────────────────── */
-  .hero { position: relative; height: 100vh; height: 100svh; min-height: 680px; overflow: hidden; }
-  .hero-forest { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--signal); opacity: .8; }
-  .tick.tl { top: 48px; left: 20px; border-top-width: 1px; border-left-width: 1px; }
-  .tick.tr { top: 48px; right: 20px; border-top-width: 1px; border-right-width: 1px; }
-  .tick.bl { bottom: 20px; left: 20px; border-bottom-width: 1px; border-left-width: 1px; }
-  .tick.br { bottom: 20px; right: 20px; border-bottom-width: 1px; border-right-width: 1px; }
-  .geo {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    transition: opacity .3s;
-    font: 11px/1.5 theme("fontFamily.mono");
-    color: var(--signal);
-    white-space: nowrap;
-    background: var(--bg);
-    padding: 3px 7px;
-    pointer-events: none;
-  }
-  .geo::before { content: ""; position: absolute; left: -46px; top: 8px; width: 40px; height: 1px; background: var(--signal); opacity: .7; }
-
-  .ident { position: absolute; left: 40px; top: 66px; right: 40px; max-width: 900px; }
-  .kicker {
-    display: inline-block;
-    font: 12px/1 theme("fontFamily.mono");
-    color: var(--signal);
-    letter-spacing: .04em;
-    margin-bottom: 14px;
-    background: var(--bg);
-    padding: 5px 7px;
-  }
-  .ident h1 {
-    font: 900 clamp(64px, 9.4vw, 150px)/.8 theme("fontFamily.display");
-    text-transform: uppercase;
-    letter-spacing: -.01em;
-    color: var(--fg);
-  }
-  .ident h1 span { display: block; }
-  .intro {
-    display: inline-flex;
-    gap: 18px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin: 20px 0 0 -40px;
-    padding: 8px 10px 8px 40px;
-    background: var(--bg);
-    font: 15px/1.4 theme("fontFamily.sans");
-    color: var(--fg-2);
-  }
-  .intro b { color: var(--fg); font-weight: 500; }
-  .cta { font: 13px/1 theme("fontFamily.mono"); color: var(--bg); background: var(--signal); padding: 9px 12px; border: 1px solid var(--signal); white-space: nowrap; }
-  .cta.ghost { background: var(--bg); color: var(--signal); }
-  .cta:hover { filter: brightness(1.15); }
-
-  .pagan { position: absolute; right: 40px; bottom: 36px; width: 288px; text-align: right; background: var(--bg); padding: 12px 14px 10px; }
-  .pagan canvas { width: 260px; height: 150px; margin-left: auto; }
-  .pagan p { font: 11px/1.5 theme("fontFamily.mono"); color: var(--fg-2); margin-top: 6px; }
-  .pagan p b { color: var(--fg); font-weight: 500; }
-  .pagan:hover p { color: var(--signal); }
-
-  /* ── works ──────────────────────────────────────────────────────────────── */
-  .works { padding: 70px 40px 90px; border-top: 1px solid var(--rule); }
-  .kinds { display: flex; flex-wrap: wrap; border: 1px solid var(--rule); }
-  .kinds button {
-    font: 12.5px/1 theme("fontFamily.mono");
-    padding: 12px 14px;
-    border-right: 1px solid var(--rule);
-    color: var(--fg-2);
-    display: flex;
-    gap: 10px;
-  }
-  /* Counts at full strength: dimmed by opacity they fell under 4.5:1. */
-  .kinds button em { font-style: normal; }
-  .kinds button:hover { color: var(--fg); }
-  .kinds button[aria-pressed="true"] { background: var(--signal); color: var(--bg); }
-  .kinds button:focus-visible { outline-offset: -4px; outline-color: var(--fg); }
-  /* The ring sits inside the signal fill of the pressed button, where --fg is
-     1.1-2.6:1; --bg is 6.3-18:1. */
-  .kinds button[aria-pressed="true"]:focus-visible { outline-color: var(--bg); }
-  .works-status {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    min-height: 44px;
-    align-items: center;
-    padding: 8px 0 10px;
-    font: 12px/1.4 theme("fontFamily.mono");
-    color: var(--fg-2);
-  }
-  .works-status strong { color: var(--fg); font-weight: 400; }
-  .works-status button { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
-
-  .grid-works { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-  .card {
-    position: relative;
-    background: var(--bg);
-    padding: 14px 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: background .2s;
-    scroll-margin-top: 24px;
-  }
-  .card:hover, .card:focus-within { background: var(--surface); }
-  .card-img { position: relative; aspect-ratio: 16 / 10; background: var(--bg); overflow: hidden; }
-  .card-img canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .hex, .pin { position: absolute; top: 8px; font: 11px/1 theme("fontFamily.mono"); background: var(--bg); padding: 3px 5px; }
-  .hex { left: 8px; color: var(--fg); }
-  .pin { right: 8px; color: var(--signal); border: 1px solid var(--signal); }
-  .card h3 { font: 800 30px/.95 theme("fontFamily.display"); text-transform: uppercase; letter-spacing: .005em; overflow-wrap: anywhere; }
-  .card-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-  .card-link:focus-visible { outline: none; }
-  .card-link:focus-visible::after { outline: 2px solid var(--signal); outline-offset: -2px; }
-  .card:hover .card-link { color: var(--signal); }
-  .note {
-    font: 13.5px/1.45 theme("fontFamily.sans");
-    color: var(--fg-2);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .meta { margin-top: auto; display: flex; justify-content: space-between; gap: 10px; font: 11.5px/1 theme("fontFamily.mono"); color: var(--fg-2); }
-  .meta-r { display: flex; gap: 12px; }
-  .st.live { color: var(--signal); }
-  .st.live::before { content: "● "; }
-  /* Padded out to a 24px target over the card link; the negative margin keeps it in place. */
-  .src { position: relative; z-index: 2; padding: 7px 2px; margin: -7px -2px; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
-  .src:hover { color: var(--signal); }
-
-  /* ── record ─────────────────────────────────────────────────────────────── */
-  .record { padding: 70px 40px 90px; border-top: 1px solid var(--rule); }
-  .record-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border: 1px solid var(--rule); }
-  .spec { border-right: 1px solid var(--rule); }
-  .spec div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 16px; padding: 11px 16px; border-bottom: 1px solid var(--rule); }
-  .spec div:last-child { border-bottom: 0; }
-  .spec dt { font: 12px/1.6 theme("fontFamily.mono"); color: var(--fg-2); }
-  .spec dt::after { content: ":"; }
-  .spec dd { font: 14.5px/1.5 theme("fontFamily.sans"); color: var(--fg); }
-  .spec dd.mono { font: 12.5px/1.7 theme("fontFamily.mono"); color: var(--fg-2); }
-  .bio { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
-  .bio p { font: 15.5px/1.65 theme("fontFamily.sans"); color: var(--fg-2); max-width: 64ch; }
-  .bio p strong { color: var(--fg); font-weight: 500; }
-  .bio-prompt { font: 12px/1 theme("fontFamily.mono"); color: var(--signal); }
-
-  /* ── contact ────────────────────────────────────────────────────────────── */
-  .foot { border-top: 1px solid var(--rule); }
-  .foot-tl { width: 100%; height: 66px; }
-  .foot-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 14px 40px;
-    /* bottom padding clears the fixed chat launcher */
-    padding: 20px 40px 72px;
-    background: var(--fg);
-    color: var(--bg);
-    font: 12px/1.6 theme("fontFamily.mono");
-  }
-  .foot-bar h2 { font: 900 30px/.95 theme("fontFamily.display"); text-transform: uppercase; margin-bottom: 10px; }
-  /* Rows 24px apart at least when the links wrap (target spacing, WCAG 2.5.8). */
-  .foot-bar ul { display: flex; flex-wrap: wrap; gap: 6px 0; }
-  .foot-bar li:not(:last-child)::after { content: "·"; padding: 0 8px; opacity: .6; }
-  .foot-bar a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .foot-bar a:hover { text-decoration-thickness: 2px; }
-  .foot-bar :focus-visible { outline-color: var(--bg); }
-  .foot-bar .colophon { text-align: right; opacity: .8; }
-
-  /* ── chat ───────────────────────────────────────────────────────────────── */
-  .chat-launch {
-    position: fixed;
-    left: 16px;
-    bottom: 16px;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 40px;
-    padding: 0 12px 0 8px;
-    background: var(--bg);
-    border: 1px solid var(--signal);
-    color: var(--signal);
-    font: 12.5px/1 theme("fontFamily.mono");
-  }
-  .chat-launch canvas { width: 24px; height: 24px; }
-  .chat-launch:hover { background: var(--surface); }
+@media (max-width: 45rem) {
+  /* A bottom sheet on phones. */
   .chat {
-    position: fixed;
-    left: 16px;
-    bottom: 16px;
-    z-index: 50;
-    width: 25rem;
-    max-height: min(80vh, 640px);
-    display: flex;
-    flex-direction: column;
-    background: var(--bg);
-    border: 1px solid var(--rule);
-    color: var(--fg);
+    inset-inline: 0;
+    inset-block-end: 0;
+    width: auto;
+    height: min(80dvh, 36rem);
+    border-inline: 0;
+    border-block-end: 0;
   }
-  .chat-head { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; border-bottom: 1px solid var(--rule); }
-  .chat-head canvas { width: 44px; height: 44px; flex: none; }
-  .chat-head p:first-child { font: 900 24px/.9 theme("fontFamily.display"); text-transform: uppercase; }
-  .chat-head p + p { font: 11px/1.5 theme("fontFamily.mono"); color: var(--fg-2); margin-top: 4px; }
-  .chat-x { margin-left: auto; align-self: flex-start; width: 32px; height: 32px; border: 1px solid var(--rule); color: var(--fg-2); font: 14px/1 theme("fontFamily.mono"); }
-  .chat-x:hover { color: var(--signal); border-color: var(--signal); }
-  /* Voice toggle: ♪ on / ♪ off. Muted dims it, like the toggle on ai.arda.tr. */
-  .chat-voice { margin-left: auto; align-self: flex-start; height: 32px; min-width: 7ch; padding: 0 8px; border: 1px solid var(--fg-2); color: var(--fg); font: 12px/1 theme("fontFamily.mono"); white-space: nowrap; }
-  .chat-voice + .chat-x { margin-left: 0; }
-  .chat-voice .voice-word { margin-left: .5ch; }
-  .chat-voice[aria-pressed="false"] { border-color: var(--rule); color: var(--fg-2); }
-  .chat-voice:hover { color: var(--signal); border-color: var(--signal); }
-  .chat-log { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 16px; }
-  .msg-who { font: 11px/1.4 theme("fontFamily.mono"); color: var(--fg-2); margin-bottom: 4px; }
-  .msg.bot .msg-who { color: var(--signal); }
-  .msg-txt { font: 14.5px/1.6 theme("fontFamily.sans"); overflow-wrap: anywhere; }
-  .msg.you .msg-txt { white-space: pre-wrap; color: var(--fg-2); }
-  .msg.err .msg-txt { color: var(--fg); border-left: 2px solid var(--signal); padding-left: 10px; white-space: pre-wrap; }
-  .msg-txt strong { color: var(--fg); }
-  .px.cursor { display: inline-block; width: 10px; height: 18px; vertical-align: -3px; margin-left: 3px; }
-  .qp { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-  .qp button { font: 12px/1.3 theme("fontFamily.mono"); border: 1px solid var(--rule); padding: 8px 10px; color: var(--fg-2); text-align: left; }
-  .qp button:hover { border-color: var(--signal); color: var(--signal); }
-  /* Numbers at full strength: dimmed by opacity they fell under 4.5:1. */
-  .qp button em { font-style: normal; margin-right: 8px; }
-  .chat-form { display: flex; align-items: center; gap: 10px; margin: 0 12px 12px; border: 1px solid var(--rule); padding: 0 6px 0 12px; }
-  .chat-form:focus-within { border-color: var(--signal); }
-  .chat-form b { color: var(--signal); font: 14px/1 theme("fontFamily.mono"); font-weight: 400; }
-  .chat-form input { flex: 1; min-width: 0; background: transparent; border: 0; padding: 13px 0; font: 14px/1 theme("fontFamily.mono"); color: var(--fg); caret-color: var(--signal); }
-  .chat-form input::placeholder { color: var(--fg-2); }
-  .chat-form input:focus-visible { outline: none; }
-  .chat-send { font: 12px/1 theme("fontFamily.mono"); color: var(--bg); background: var(--signal); padding: 8px 10px; }
-  .chat-send:disabled { background: transparent; color: var(--fg-2); }
-  .chat-hint { font: 10.5px/1.4 theme("fontFamily.mono"); color: var(--fg-2); padding: 0 14px 12px; margin-top: -4px; }
-}
-
-/* ── narrow screens ─────────────────────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .grid-works { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 900px) {
-  .geo { display: none; }
-  .record-grid { grid-template-columns: minmax(0, 1fr); }
-  .spec { border-right: 0; border-bottom: 1px solid var(--rule); }
-  /* On a phone the ridge climbs behind the name: give each line solid backing. */
-  .ident h1 span { display: table; background: var(--bg); padding-right: .05em; }
-}
-@media (max-width: 700px) {
-  .bar { gap: 14px; padding: 0 12px; font-size: 11px; }
-  .bar nav { gap: 11px; }
-  .bar-site span, .bar-clock { display: none; }
-  .tick { display: none; }
-  .ident { left: 16px; right: 16px; top: 58px; }
-  .ident h1 { font-size: clamp(52px, 16.5vw, 96px); }
-  .intro { display: flex; margin: 20px -16px 0; padding: 10px 16px; }
-  .pagan { right: 16px; bottom: 16px; width: 196px; padding: 10px 12px 8px; }
-  .pagan canvas { width: 172px; height: 99px; }
-  .works, .record { padding: 48px 16px 64px; }
-  .sec-head { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .sec-head h2 { font-size: 52px; }
-  .sec-head small { text-align: left; }
-  .kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); }
-  .kinds button { border-right: 0; background: var(--bg); justify-content: space-between; }
-  .spec div { grid-template-columns: 6rem minmax(0, 1fr); gap: 12px; padding: 10px 12px; }
-  .bio { padding: 16px 12px; }
-  .foot-bar { padding: 18px 16px 72px; }
-  .foot-bar .colophon { text-align: left; }
-  .chat { left: 0; right: 0; bottom: 0; width: auto; max-height: 85vh; border-width: 1px 0 0; }
-  /* Under 16px iOS Safari zooms the page when the input takes focus on open. */
-  .chat-form input { font-size: 16px; }
-}
-@media (max-width: 560px) {
-  .grid-works { grid-template-columns: minmax(0, 1fr); }
-  .chat-launch span { display: none; }
-  .chat-voice { min-width: 0; }
-  .chat-voice .voice-word { display: none; }
-  .chat-voice[aria-pressed="false"] .voice-glyph { text-decoration: line-through; }
-  .chat-launch { padding: 0 8px; }
-}
-
-/* Short viewports (200% zoom, landscape phones): the hero's CTAs reach the
-   bottom-left corner, so the launcher shrinks to its orb and moves right. */
-@media (max-height: 480px) {
-  .chat-launch { left: auto; right: 16px; padding: 0 8px; }
-  .chat-launch span { display: none; }
-}
-
-/* The bar never wraps or scrolls sideways. Below 400px "xerox-hc ▾" used to be
-   clipped: the caret goes and the gaps tighten, then the type steps to 10px. */
-@media (max-width: 400px) {
-  .bar { gap: 10px; padding: 0 10px; }
-  .bar nav { gap: 9px; }
-  .rend { padding: 3px 5px; }
-  .rend-caret { display: none; }
-}
-@media (max-width: 359px) {
-  .bar { gap: 6px; padding: 0 8px; font-size: 10px; }
-  .bar nav { gap: 7px; }
-  .rend { padding: 3px 4px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .prompt .cur { animation: none; }
-  .card, .geo { transition: none; }
 }

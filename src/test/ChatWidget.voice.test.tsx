@@ -19,7 +19,7 @@ function node() {
     gain: param(), frequency: param(), Q: param(), delayTime: param(),
     threshold: param(), knee: param(), ratio: param(), attack: param(), release: param(),
     fftSize: 1024,
-    getFloatTimeDomainData(a: Float32Array) { a.fill(0); }, // silent: no orb updates to wrap in act()
+    getFloatTimeDomainData(a: Float32Array) { a.fill(0); }, // silent: no level updates to wrap in act()
   };
 }
 class FakeAudioContext {

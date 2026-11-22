@@ -1,10 +1,11 @@
 name: Theme contract freshness
 
-# config/themes.json is the canonical "One Bit Forest" theme contract (v3) read by
-# the sibling sites (blog.arda.tr, resume.arda.tr) via raw.githubusercontent.com.
-# This check fails when the committed contract is stale relative to the theme
-# blocks in src/index.css or the theme menu in config/site.config.json. It is a
-# separate workflow on purpose: a stale contract must never block Pages deploys.
+# config/themes.json is the family's brand contract (v4, "The Index"): the hashes
+# of brand/arda.css, arda.js, brand.css and scheme.js, read by the sibling sites
+# (blog, résumé, ai) via raw.githubusercontent.com to check their copies.
+# This check fails when the committed contract or brand/'s copy of the built
+# theme is stale relative to themes/arda/ and brand/. It is a separate workflow
+# on purpose: a stale contract must never block Pages deploys.
 
 on:
   push:
@@ -33,4 +34,4 @@ jobs:
         # The generator only uses node built-ins, so `npm ci` is not needed.
         run: node scripts/generate-themes-contract.mjs
       - name: Fail if the committed contract is stale
-        run: git diff --exit-code config/themes.json
+        run: git diff --exit-code config/themes.json brand/

@@ -14,9 +14,6 @@ export default defineConfig({
       ignored: ["**/lib/bs/**", "**/lib/ocaml/**", "**/lib/rescript.lock"],
     },
   },
-  css: {
-    postcss: configDir,
-  },
   plugins: [
     react({
       include: ["**/*.{js,mjs,jsx,ts,tsx}", "**/*.res.mjs"],

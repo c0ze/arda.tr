@@ -4,51 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#060708" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     <title>Not found · arda.tr</title>
-    <link rel="icon" type="image/svg+xml" href="/a-favicon.svg" />
-    <!-- GitHub Pages serves this for any unknown path. Self-contained: night
-         by default, or the rendition stored by the site (same ids and tokens
-         as src/index.css). Radius 0, no shadows. Not in the sitemap. -->
-    <script>
-      try {
-        var t = localStorage.getItem("theme");
-        var grounds = { night: "#060708", "night-hc": "#000000", xerox: "#efede6", "xerox-hc": "#ffffff" };
-        if (Object.prototype.hasOwnProperty.call(grounds, t)) {
-          document.documentElement.className = t;
-          var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute("content", grounds[t]);
-        }
-      } catch (e) {}
-    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- GitHub Pages serves this for any unknown path. It stands alone (no
+         bundle, no web fonts), so it carries the brand's colours itself: the
+         same values as the `arda` theme (brand/arda.css). The script is
+         bootSnippet("theme") from brand/scheme.js, as in index.html, so a
+         pinned scheme holds here too. Not in the sitemap. -->
+    <script>(function(){var s=null;try{s=localStorage.getItem("theme");if(s!=="light"&&s!=="dark"){var n=["xerox","xerox-hc","stock","stock-hc","alucard","paper"].indexOf(s)>=0?"light":["night","night-hc","microfiche","microfiche-hc","dracula","dracula-pro","blade","buffy","lincoln","morbius","van-helsing","carbon"].indexOf(s)>=0?"dark":null;if(s!==null){if(n)localStorage.setItem("theme",n);else localStorage.removeItem("theme");}s=n;}}catch(e){}s=s||null;if(s){document.documentElement.setAttribute("data-theme",s);var m=document.querySelector('meta[name="color-scheme"]');if(m)m.setAttribute("content",s);}})();</script>
     <style>
-      :root, .night { color-scheme: dark; --bg: #060708; --fg: #e4e0d4; --fg-2: #9d998e; --rule: #22252a; --signal: #c6ff3a; }
-      .night-hc { color-scheme: dark; --bg: #000000; --fg: #ffffff; --fg-2: #d0cdc4; --rule: #8a8a8a; --signal: #d4ff5c; }
-      .xerox { color-scheme: light; --bg: #efede6; --fg: #111210; --fg-2: #5d5b55; --rule: #cfccc2; --signal: #3f5f00; }
-      .xerox-hc { color-scheme: light; --bg: #ffffff; --fg: #000000; --fg-2: #2e2e2e; --rule: #1a1a1a; --signal: #2b4200; }
+      :root {
+        color-scheme: light dark;
+        --bg: light-dark(#F5F2EA, #141310);
+        --fg: light-dark(#17160F, #EFEBE0);
+        --muted: light-dark(#625D52, #A8A294);
+        --rule: light-dark(#D8D2C4, #38362E);
+        --accent: light-dark(#C2311A, #FF7352);
+        --link: light-dark(#1D4F91, #86B4F2);
+      }
+      :root[data-theme="light"] { color-scheme: light; }
+      :root[data-theme="dark"] { color-scheme: dark; }
       * { box-sizing: border-box; margin: 0; border-radius: 0; }
       html, body { background: var(--bg); color: var(--fg); }
-      body { min-height: 100vh; padding: 0 20px; font: 14px/1.6 "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; }
-      header { display: flex; align-items: center; height: 34px; border-bottom: 1px solid var(--rule); }
-      main { padding: 64px 0; max-width: 40rem; }
-      a { color: inherit; }
-      .mark { display: flex; gap: 8px; align-items: center; font-size: 12px; text-decoration: none; }
-      .mark i { width: 8px; height: 14px; background: var(--signal); }
-      h1 { font: 900 72px/.9 "Big Shoulders Display", Impact, "Arial Narrow", sans-serif; text-transform: uppercase; }
-      p { margin-top: 18px; color: var(--fg-2); }
-      p a { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
-      :focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+      body { min-height: 100vh; padding: 0 1.5rem; font: 1.0625rem/1.65 "IBM Plex Sans", system-ui, sans-serif; }
+      header { display: flex; align-items: center; min-height: 3.5rem; border-bottom: 1px solid var(--rule); }
+      main { padding: 4rem 0; max-width: 40rem; }
+      .mark { font: 800 1.5rem/1 Archivo, "Arial Black", system-ui, sans-serif; letter-spacing: -0.04em; color: var(--fg); text-decoration: none; }
+      .dot { color: var(--accent); }
+      h1 { font: 800 4.5rem/1.05 Archivo, "Arial Black", system-ui, sans-serif; letter-spacing: -0.03em; }
+      p { margin-top: 1rem; color: var(--muted); }
+      p a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+      :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     </style>
   </head>
   <body>
     <header>
-      <a class="mark" href="/"><i aria-hidden="true"></i>arda.tr</a>
+      <a class="mark" href="/">arda<span class="dot">.</span>tr</a>
     </header>
     <main>
-      <h1>404</h1>
-      <p>This page does not exist.</p>
-      <p><a href="/">Go to arda.tr</a></p>
+      <h1>404<span class="dot">.</span></h1>
+      <p>No entry at this address.</p>
+      <p><a href="/">Back to the index</a></p>
     </main>
   </body>
 </html>

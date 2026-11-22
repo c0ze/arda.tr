@@ -22,7 +22,7 @@ it("shows streamed replies under Strict Mode and keeps them in subsequent histor
   const input = screen.getByRole("textbox");
   await waitFor(() => expect(input).toBeEnabled());
   fireEvent.change(input, { target: { value: "Follow up" } });
-  fireEvent.click(screen.getByRole("button", { name: "Send (enter)" }));
+  fireEvent.click(screen.getByRole("button", { name: "Send" }));
   expect(JSON.parse(fetch.mock.calls[1][1].body).history).toContainEqual({ role: "model", content: "Visible answer" });
   await waitFor(() => expect(read).toHaveBeenCalledTimes(3));
   emit!({ done: false, value: encoder.encode('data: {"type":"done","text":"Second answer"}\n\n') });
@@ -57,14 +57,14 @@ it("shows the error without a fallback after HTTP 429 or an SSE error event", as
   render(<ChatWidget />);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
-  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
+  await waitFor(() => expect(screen.getAllByText(/Could not reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
   expect(fetch).toHaveBeenCalledTimes(1);
 
   const input = screen.getByRole("textbox");
   await waitFor(() => expect(input).toBeEnabled());
   fireEvent.change(input, { target: { value: "Again" } });
   fireEvent.submit(input.closest("form")!);
-  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
+  await waitFor(() => expect(screen.getAllByText(/Could not reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
   expect(fetch).toHaveBeenCalledTimes(2);
   expect(fetch.mock.calls.every(([url]) => /\/api\/chat\/stream$/.test(url))).toBe(true);
 });
@@ -90,7 +90,7 @@ it("keeps partial text and reports interruption without automatically resubmitti
   render(<StrictMode><ChatWidget /></StrictMode>);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
-  expect(await screen.findByText(/couldn't reach the assistant/)).toBeVisible();
+  expect(await screen.findByText(/Could not reach the assistant/)).toBeVisible();
   expect(screen.getByText("Partial answer")).toBeVisible();
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(screen.getByRole("textbox")).toBeEnabled();
@@ -126,9 +126,9 @@ it("leaves failed questions and their partial replies out of later history", asy
   expect(await screen.findByText("Answer one", { selector: "p" })).toBeVisible();
   await ask("Two");
   expect(await screen.findByText("Cut off", { selector: "p" })).toBeVisible();
-  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
+  await waitFor(() => expect(screen.getAllByText(/Could not reach the assistant/, { selector: ".msg-txt" })).toHaveLength(1));
   await ask("Three");
-  await waitFor(() => expect(screen.getAllByText(/couldn't reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
+  await waitFor(() => expect(screen.getAllByText(/Could not reach the assistant/, { selector: ".msg-txt" })).toHaveLength(2));
   await ask("Four");
   await waitFor(() => expect(fetch).toHaveBeenCalledTimes(5));
   expect(JSON.parse(fetch.mock.calls[4][1].body).history).toEqual([
@@ -209,7 +209,7 @@ it("keeps the input usable and focused while a reply is on its way", async () =>
   expect(input).toHaveFocus();
   // Busy still guards sending: typing ahead is fine, a second request is not.
   fireEvent.change(input, { target: { value: "Second question" } });
-  expect(screen.getByRole("button", { name: "Send (enter)" })).toBeDisabled();
+  expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
   fireEvent.submit(input.closest("form")!);
   expect(fetch).toHaveBeenCalledTimes(1);
 
@@ -283,7 +283,7 @@ it("announces a failed reply's error", async () => {
   render(<ChatWidget />);
   fireEvent.click(screen.getByRole("button", { name: "Ask about Arda" }));
   fireEvent.click(screen.getByRole("button", { name: "What does Arda build?" }));
-  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(/couldn't reach the assistant/));
+  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(/Could not reach the assistant/));
 });
 
 // The bot rejects a message over 20,000 characters with a 400, which the
