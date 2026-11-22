@@ -68,17 +68,19 @@ breadth is not clutter to be managed — it is the differentiating claim
   `config/site.config.json`; `config/themes.json` is the generated cross-repo
   brand contract; `src/themes/arda/` and `src/astryx-themes.ts` are written by
   `astryx`.
-- **Theme system today:** The Index (adopted 2026-11-22), shared by the family:
-  one Astryx theme, light and dark, following the system. This repository owns
+- **Theme system today:** Kara Duman (adopted 2026-11-23), shared by the family:
+  one Astryx theme; arda.tr is dark unless the visitor pins light. This repository owns
   the brand files (`brand/`); `config/themes.json` (contract v4: their hashes)
   is generated here and read by the sibling sites' CI.
 - **Everything above is in scope for the redesign** — the catalogue, the theme
   count, the cross-repo contract, and the ReScript architecture itself
   (confirmed 2026-07-25).
-- **Decided 2026-11-22:** The Index replaces One Bit Forest as the family
-  system for arda.tr, blog, résumé and ai (`/DESIGN-SYSTEM.md` in the parent
-  workspace). The brand guide was generated in Moda; the site copy was rewritten
-  by Gemini 4 Neon to its voice, facts unchanged.
+- **Decided 2026-11-23:** Kara Duman is the family system for arda.tr, blog,
+  résumé and ai (`/DESIGN-SYSTEM.md` in the parent workspace). Arda chose it from
+  three directions generated in Moda, after rejecting "The Index" (2026-11-22)
+  as boring and generic. The works are filed under five categories he named:
+  coze, gand, gand.games, music, github. The site copy was rewritten by Gemini 4
+  Neon on 2026-11-22, facts unchanged.
 
 ## Brand Commitments
 
@@ -87,8 +89,8 @@ breadth is not clutter to be managed — it is the differentiating claim
   worth shipping.", "Open to interesting problems, collaborations, and the
   occasional jam session.", "Built in Tokyo". No hype register, no growth-copy.
 - The professional and creative halves must read as one coherent person.
-- The brand idea: "Everything he makes gets the same line in the same list."
-  The hero says it in the first person: "Everything I make, in one list."
+- The brand idea: his surname means black smoke. Blackletter for names, an
+  engraved plume, an ember for the assistant.
 
 ## Evidence on Hand
 

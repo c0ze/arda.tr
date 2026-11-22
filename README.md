@@ -1,16 +1,16 @@
 # arda.tr
 
-Personal landing site for Arda Karaduman, in the family design system "The
-Index" (see DESIGN.md).
+Personal landing site for Arda Karaduman, in the family design system "Kara
+Duman" (see DESIGN.md).
 
 The app is a single page with:
 
-- a bar with the arda.tr wordmark, the family nav and the scheme switch
-- a hero: the name, the line "Everything I make, in one list.", two ways on
-- Works: every project, game, tool and record as numbered rows, filterable by
-  kind, with a plates view of the same entries
+- a bar with the emblem and the arda.tr wordmark, the family nav and the scheme switch
+- the name in blackletter beside an engraved plume of smoke
+- Works: five categories (coze, gand, gand.games, music, github), each a block
+  that opens to its entries
 - About: the bio and a key-and-value table of facts
-- Contact: email and profile links
+- Contact: the assistant, the résumé, email and profile links
 - a floating chat widget backed by ai.arda.tr
 
 ## Stack
@@ -62,7 +62,7 @@ Command notes:
 ## Project Layout
 
 ```text
-brand/     the family's brand files: built theme, patterns, scheme switch, logo
+brand/     the family's brand files: built theme, patterns, scheme switch, artwork, logo
 config/    build, lint, TypeScript, and site metadata config
 public/    static assets, including social preview images
 scripts/   build-time helpers: the prerender and sitemap generation
@@ -73,14 +73,14 @@ themes/    the Astryx `arda` theme's source
 ## Frontend Notes
 
 - Typography uses:
-  - `Archivo` for the display line, the wordmark and section titles
-  - `IBM Plex Sans` for body copy and entry titles
-  - `IBM Plex Mono` for numbers, labels and nav
-- The colour scheme follows the system; the bar's switch pins light or dark
+  - `Grenze Gotisch` for names: the page's name, category names, section headings
+  - `Spectral` for everything else
+  - `JetBrains Mono` for dates and code
+- The page is dark unless the visitor pins light with the bar's switch
   (`brand/scheme.js`, localStorage key `theme`).
-- Controls and layout primitives are Astryx components, bound for ReScript in
-  `src/bindings/Astryx.res`; the row, the plate and the bar are the `ix-`
-  patterns in `brand/brand.css`.
+- Controls are Astryx components, bound for ReScript in
+  `src/bindings/Astryx.res`; the bar, the category block and the rest are the
+  `ix-` patterns in `brand/brand.css`.
 - The page sections are authored in ReScript and compiled in-source to ignored `.res.mjs` artifacts
 
 ## SEO And Metadata

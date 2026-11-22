@@ -5,8 +5,8 @@ Working notes for agents in this repository (the rules are in CLAUDE.md).
 ## Purpose
 
 Maintain `arda.tr`, a single-page personal landing for Arda Karaduman: every
-piece of work he has shipped, of every kind, in one list. It is the index of the
-family system **The Index** (see `/DESIGN-SYSTEM.md` in the parent workspace),
+piece of work he has shipped, under five categories. It is the landing page of
+the family system **Kara Duman** (see `/DESIGN-SYSTEM.md` in the parent workspace),
 and the repository that owns the family's brand files (`brand/`, `themes/arda/`).
 Read DESIGN.md and PRODUCT.md before changing anything visual.
 
@@ -43,14 +43,14 @@ boundary. Stay inside this split:
   grow this layer without a real reason.
 - **`brand/`** is the family's brand, and this repository is its source:
   `arda.css` / `arda.js` (the built Astryx theme), `brand.css` (the `ix-`
-  patterns), `scheme.js` (the scheme switch) and `logo/`. The sibling sites carry
+  patterns), `scheme.js` (the scheme switch), `art/` (the artwork; `public/art/`
+  is the copy this site serves) and `logo/`. The sibling sites carry
   verbatim copies. Change a file here, run `npm run generate:themes-contract`,
   then copy it out to them.
 - **`themes/arda/`** is the theme's source. `arda.settings.json` is owned by
   `npx astryx experimental theme editor`; `arda.theme.ts` is hand-edited (the
-  type scale). After a change: `npx astryx experimental theme compile
-  themes/arda/arda.theme.ts`, look at `npx astryx experimental theme editor show
-  arda --png`, then `npm run generate:themes-contract`. `src/themes/arda/` and
+  colours and the type scale). After a change: `npm run theme:build`, then look
+  at `npx astryx experimental theme editor show arda --png`. `src/themes/arda/` and
   `src/astryx-themes.ts` are written by `astryx`; never hand-edit them.
 - **CSS**: `src/layers.css` declares the cascade-layer order and is imported
   first; `src/index.css` imports Astryx's reset and component styles and
@@ -61,9 +61,9 @@ boundary. Stay inside this split:
   `design-previews/onebit/voice.js` in the parent workspace. Its header
   documents the SSE voice protocol.
 - **Content lives in `src/content/*Content.res`, never hardcoded in a component.**
-  `CatalogContent.res` is the catalogue itself: every entry, its band (kind, with
-  the kind's code), and its catalogue number (the entry's anchor id).
-  `HeroContent.res` carries the bar, the hero and the works toolbar.
+  `CatalogContent.res` is the works: the five categories, and every entry with
+  its category, its group and its catalogue number (the entry's anchor id).
+  `HeroContent.res` carries the bar, the hero and the works' labels.
   `AboutContent.res` and `FooterContent.res` carry about and contact. The chat's
   copy is the block of constants at the top of `ChatWidget.res`. Keep it that way
   when editing text.
@@ -119,24 +119,24 @@ mise exec node@24.14.0 -- npm run verify
 - `scripts/generate-sitemap.mjs` regenerates the sitemap during builds. Its
   `<lastmod>` is the date of the last commit touching the content, so the
   deploy checks out full history (`fetch-depth: 0`).
-- `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only when the stream most likely never reached the model: a network error, a timeout or dropped connection before any byte, HTTP 413 or a 5xx; other 4xx, an SSE `error` event and anything after the first byte are final and show the error. A question whose reply ended in an error is left out of later history, with its partial reply. The stream deadline is 45 s without data. Unless muted, requests carry `voice: true, lang: "en"` (from `voice.js` `requestFields`); one speaker per reply gates the visible text to what has been spoken, drives the dot's `--ix-level`, and is stopped on close, on a new question and on mute. The header's "Voice" toggle persists the choice site-wide (localStorage `voice`). Transport and React Strict Mode regressions run under `npm run verify` with mocked responses. `ChatWidget.voice.test.tsx` covers the voice path with a fake AudioContext and mocked speech events.
+- `src/components/ChatWidget.res` owns the chat transport and UI. Streaming completion requires a complete `done` event; interrupted replies retain received text and show an error. Requests fall back to `/api/chat` only when the stream most likely never reached the model: a network error, a timeout or dropped connection before any byte, HTTP 413 or a 5xx; other 4xx, an SSE `error` event and anything after the first byte are final and show the error. A question whose reply ended in an error is left out of later history, with its partial reply. The stream deadline is 45 s without data. Unless muted, requests carry `voice: true, lang: "en"` (from `voice.js` `requestFields`); one speaker per reply gates the visible text to what has been spoken, drives the ember's `--ix-level`, and is stopped on close, on a new question and on mute. The header's "Voice" toggle persists the choice site-wide (localStorage `voice`). Transport and React Strict Mode regressions run under `npm run verify` with mocked responses. `ChatWidget.voice.test.tsx` covers the voice path with a fake AudioContext and mocked speech events.
 
 ## Frontend Guardrails
 
 - Keep the site a single-page experience unless there is a strong reason to add routing.
 - Preserve the family type system (shared with resume.arda.tr, blog.arda.tr
   and ai.arda.tr; the scale is in `themes/arda/arda.theme.ts`):
-  - `Archivo` 700/800 for the display line, the wordmark and section titles
-  - `IBM Plex Sans` for prose and entry titles
-  - `IBM Plex Mono` for numbers, kind codes, labels and nav (`.ix-label`)
+  - `Grenze Gotisch` for names only: the page's name, category names, section
+    headings. Never for running text, controls, capitals or anything under 28px
+  - `Spectral` for everything else, nothing below 18px
+  - `JetBrains Mono` for dates and code
 - Respect the visual direction (DESIGN.md is canonical):
-  - light and dark, following the system; a visitor can pin either
-  - vermilion for entry numbers, the dot and the primary button only; blue for
-    links and focus
-  - radius 0 (2px on buttons and inputs), no shadows, no gradients, 1px rules, a
-    2px ink rule opening each list
-  - the family row: number, kind, title, meta
-  - the only motion is the assistant's dot, and it stops under reduced motion
+  - dark unless the visitor pins light
+  - ember for links, numerals, the primary button and focus
+  - 2px corners on controls, no shadows, 1px rules and hairlines, no boxes
+  - the artwork never covers text or controls, and sits on a soot plate on paper
+  - the only motion is the plume's slow drift and the ember's glow, and both stop
+    under reduced motion
 - Build UI from Astryx components and the `ix-` patterns; follow the
   `astryx-project` skill. Run `npx astryx doctor` after setup changes.
 - Avoid template bloat and unnecessary dependencies.

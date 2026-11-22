@@ -2,13 +2,13 @@
 version: 2
 slug: "src-app-res"
 primary_target: "src/App.res"
-related_targets: ["src/components/Bar.res","src/components/Hero.res","src/components/Works.res","src/components/Entry.res","src/components/ChatWidget.res"]
+related_targets: ["src/components/Bar.res","src/components/Hero.res","src/components/Works.res","src/components/About.res","src/components/Colophon.res","src/components/ChatWidget.res"]
 ---
 
 ## Scope & mode
 
 `arda.tr` root single-page landing. Visitor mode: **Experience**. It is the
-index of the family system The Index (see DESIGN.md), adopted 2026-11-22.
+landing page of the family system Kara Duman (see DESIGN.md), adopted 2026-11-23.
 
 ## Audience, job, action
 
@@ -19,36 +19,34 @@ outbound click. This is not a recruiter or client funnel.
 
 ## Direction contract
 
-**THESIS.** Everything he makes gets the same line in the same list. The range
-of the work is still the argument: a processor design, an app, a C64 port and a
-record are each one numbered row.
+**THESIS.** His surname means black smoke. The page is signed by one person:
+the name in blackletter, one engraved plume, and the works filed under five
+names he chose.
 
-**OWN-WORLD.** A printed index: warm paper and ink, Archivo for the one large
-line, IBM Plex Sans for entries, IBM Plex Mono for numbers and codes, vermilion
-for entry numbers and the dot. Square corners, hairline rules, no shadows.
+**OWN-WORLD.** Soot and bone, a woodcut hand, an ember. Blackletter names
+things and Spectral says everything else. No boxes, no shadows.
 
-**FIRST VIEWPORT.** The bar with the wordmark, the name as a small label, the
-line "Everything I make, in one list." closed by the vermilion full stop, one
-paragraph, "Browse works" and "Ask about Arda".
+**FIRST VIEWPORT.** The bar with the emblem and the wordmark, the name on two
+lines, one paragraph, the plume rising on the right, and the first category
+open beneath the name.
 
-**FORM.** A list: the kind filter, then rows of number, kind, title and status
-under a 2px rule. The same entries can be shown as plates.
+**FORM.** Five blocks that open: coze, gand, gand.games, music, github.
 
 ## Memorable moment
 
-The list itself: thirty-odd unrelated things set in one row format, numbered
-001 onward. Switching to plates shows each one's artefact without changing
-their order or their numbers.
+The plume beside the name.
 
-## Settled (2026-11-22)
+## Settled (2026-11-23)
 
-- One Astryx theme, light and dark, following the system; a visitor can pin
-  either. Old stored rendition ids map to their role. Contract v4.
-- Catalogue-number anchors (`#AK-2-0142`) keep working. The number printed is
-  the entry's place in the list.
-- Featured entries are marked in place ("Featured" in the row, an ink plate).
-- The assistant is the square dot from the wordmark.
+- Dark unless the visitor pins light. Old stored rendition ids map to their role.
+- Five categories replace the seven kinds and the filter. The day job, the PhD,
+  the blog and the assistant are no longer entries: About and the bar carry them.
+- Catalogue-number anchors (`#AK-2-0142`) keep working, inside closed blocks too.
+- The assistant is the ember.
 
 ## Unresolved
 
-- Whether plates should be the default view on wide screens.
+- cozy-studio is named in the music category's note but has no entry yet
+  (cozy-tracker stands in).
+- Entry screenshots, statuses and the featured flag are kept in the data but not
+  drawn.
