@@ -371,7 +371,8 @@ it("does not pull a visitor who scrolled up back down, until they send", async (
     const log = screen.getByRole("log");
     emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":"First words"}\n\n') });
     expect(await screen.findByText("First words")).toBeInTheDocument();
-    expect(log.scrollTop).toBe(800);
+    // The log follows in an effect, which React may run a tick after the text shows.
+    await waitFor(() => expect(log.scrollTop).toBe(800));
 
     // Within 40px of the bottom still counts as following along.
     log.scrollTop = 770;
@@ -379,7 +380,7 @@ it("does not pull a visitor who scrolled up back down, until they send", async (
     await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
     emit!({ done: false, value: encoder.encode('data: {"type":"chunk","text":" and more"}\n\n') });
     expect(await screen.findByText("First words and more")).toBeInTheDocument();
-    expect(log.scrollTop).toBe(800);
+    await waitFor(() => expect(log.scrollTop).toBe(800));
 
     log.scrollTop = 100;
     fireEvent.scroll(log);

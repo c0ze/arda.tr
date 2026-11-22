@@ -104,6 +104,8 @@ export const ardaTheme = defineTheme({
             '--text-supporting-size': '1.125rem',
             '--text-label-size': '1.125rem',
             '--text-label-weight': '600',
+            '--text-code-size': '1.125rem',
+            '--text-code-leading': '1.6',
           },
         },
       },
