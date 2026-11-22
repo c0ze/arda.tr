@@ -2,13 +2,13 @@
 version: 2
 slug: "src-app-res"
 primary_target: "src/App.res"
-related_targets: ["src/components/Hero.res","src/components/Works.res","src/components/WorkCard.res","src/components/ChatWidget.res"]
+related_targets: ["src/components/Bar.res","src/components/Hero.res","src/components/Works.res","src/components/Entry.res","src/components/ChatWidget.res"]
 ---
 
 ## Scope & mode
 
-`arda.tr` root single-page landing. Visitor mode: **Experience**. It is the wild
-member of the One Bit Forest family (see DESIGN.md).
+`arda.tr` root single-page landing. Visitor mode: **Experience**. It is the
+index of the family system The Index (see DESIGN.md), adopted 2026-11-22.
 
 ## Audience, job, action
 
@@ -19,35 +19,36 @@ outbound click. This is not a recruiter or client funnel.
 
 ## Direction contract
 
-**THESIS.** A black-metal programmer's index, printed in one bit. The range of
-the work is still the argument: every kind of thing gets the same card.
+**THESIS.** Everything he makes gets the same line in the same list. The range
+of the work is still the argument: a processor design, an app, a C64 port and a
+record are each one numbered row.
 
-**OWN-WORLD.** A night spruce valley, ordered-dithered and drifting in parallax.
-It has one lichen phosphor (`#c6ff3a`), Big Shoulders Display for names, and
-IBM Plex Mono for everything a terminal would print. There is no radius, no
-shadow, and no pre-dithered asset.
+**OWN-WORLD.** A printed index: warm paper and ink, Archivo for the one large
+line, IBM Plex Sans for entries, IBM Plex Mono for numbers and codes, vermilion
+for entry numbers and the dot. Square corners, hairline rules, no shadows.
 
-**FIRST VIEWPORT.** The status bar, the name huge in the dark sky, the intro on
-solid backing with `ls ~/works ↓` and `ask ▸`, the mast tag, and Pagan
-bottom-right.
+**FIRST VIEWPORT.** The bar with the wordmark, the name as a small label, the
+line "Everything I make, in one list." closed by the vermilion full stop, one
+paragraph, "Browse works" and "Ask about Arda".
 
-**FORM.** A directory listing: a shell prompt, kind "directories" with counts,
-and a hex-indexed card grid.
+**FORM.** A list: the kind filter, then rows of number, kind, title and status
+under a 2px rule. The same entries can be shown as plates.
 
 ## Memorable moment
 
-The forest scrolling behind the name. The images of the works develop out of
-noise when they appear, and again on hover.
+The list itself: thirty-odd unrelated things set in one row format, numbered
+001 onward. Switching to plates shows each one's artefact without changing
+their order or their numbers.
 
-## Settled (2026-09-23)
+## Settled (2026-11-22)
 
-- The four renditions share ids with the family: night (default), night-hc,
-  xerox, xerox-hc. Contract v3.
-- Catalogue-number anchors (`#AK-2-0142`) keep working. The numbers are no longer
-  printed.
-- The featured strip was folded into the grid. Featured cards get a small tag.
+- One Astryx theme, light and dark, following the system; a visitor can pin
+  either. Old stored rendition ids map to their role. Contract v4.
+- Catalogue-number anchors (`#AK-2-0142`) keep working. The number printed is
+  the entry's place in the list.
+- Featured entries are marked in place ("Featured" in the row, an ink plate).
+- The assistant is the square dot from the wordmark.
 
 ## Unresolved
 
-- Whether the xerox forest should print as a negative (the engine's ink=fg rule)
-  or get its own treatment.
+- Whether plates should be the default view on wide screens.

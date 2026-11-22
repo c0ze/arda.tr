@@ -1,121 +1,127 @@
 ---
 name: arda.tr
-description: The wild member of the One Bit Forest family — a night forest dithered to one bit, one lichen-green phosphor.
+description: The index of the family system "The Index": everything Arda makes, as numbered entries in one list.
 ---
 
 # Design System: arda.tr
 
-arda.tr follows the family system **One Bit Forest** (`/DESIGN-SYSTEM.md` in the
-parent workspace, adopted 2026-09-23). This file records how arda.tr applies it.
-The approved reference is section "01 · arda.tr" of
-`design-previews/sketch-1bit.html`. It replaces "The Parts Catalogue" (July 2026).
+arda.tr follows the family system **The Index** (adopted 2026-11-22; it replaces
+"One Bit Forest"). The brand guide was generated in Moda; its written form, with
+every token and rule, is `/DESIGN-SYSTEM.md` in the parent workspace. This file
+records how arda.tr applies it, and what arda.tr owns for the family.
 
 ## Idea
 
-A programmer who plays black metal and loves old machines and pine forests. The
-common ground is **1-bit dithering**: photocopied black-metal covers and early
-Macs. One neon phosphor per site cuts through the monochrome. On arda.tr that
-phosphor is **lichen**. Tone: wild.
+**Everything he makes gets the same line in the same list.** arda.tr is the
+index: level 4 of 4, the most expressive of the family. The display headline may
+reach 120px here, every entry number is vermilion, and entries can be shown as
+plates.
 
-Everything pictorial is dithered live by `src/lib/onebit.js` (a verbatim copy of
-the family engine). There are no pre-dithered assets.
+## What this repository owns
 
-## Renditions
+arda.tr is the family's source for the brand. The sibling sites carry verbatim
+copies of the files in `brand/`, and their CI compares them with the hashes in
+`config/themes.json` (contract **v4**).
 
-The next-themes class goes on `<html>`, and the preference is stored in the
-`theme` localStorage key. Blocks are top-level rules in `src/index.css`.
+| Path | What |
+|---|---|
+| `themes/arda/` | The Astryx theme. `arda.settings.json` belongs to `astryx experimental theme editor`; `arda.theme.ts` holds the type scale and the phone rule. The rest is built. |
+| `src/themes/arda/`, `src/astryx-themes.ts` | The app's copy of the built theme, written by `astryx`. Never hand-edit. |
+| `brand/arda.css`, `brand/arda.js` | The built theme, copied from `themes/arda/` by `npm run generate:themes-contract`. |
+| `brand/brand.css` | The family patterns (`ix-` classes): the bar, the row, the key-and-value table, the plate, the label, the dot, chips, buttons, long-form text, the chat thread. |
+| `brand/scheme.js` | The scheme switch: pin, unpin, old stored ids, the pre-paint snippet. |
+| `brand/logo/` | Wordmark, monogram, favicon and the social card, outlined from Archivo 800 by `make-logo.cjs`. |
 
-| id | role | --bg | --surface | --fg | --fg-2 | --rule | --signal |
-|---|---|---|---|---|---|---|---|
-| `night` (default) | dark | `#060708` | `#0d0f10` | `#e4e0d4` | `#9d998e` | `#22252a` | `#c6ff3a` |
-| `night-hc` | hc-dark (AAA) | `#000000` | `#000000` | `#ffffff` | `#d0cdc4` | `#8a8a8a` | `#d4ff5c` |
-| `xerox` | light | `#efede6` | `#f7f6f1` | `#111210` | `#5d5b55` | `#cfccc2` | `#3f5f00` |
-| `xerox-hc` | hc-light (AAA) | `#ffffff` | `#ffffff` | `#000000` | `#2e2e2e` | `#1a1a1a` | `#2b4200` |
+To change the theme: `npx astryx experimental theme editor set arda <thing> <value>`
+(or edit `themes/arda/arda.theme.ts` and run
+`npx astryx experimental theme compile themes/arda/arda.theme.ts`), look at
+`npx astryx experimental theme editor show arda --png`, then
+`npm run generate:themes-contract`, and copy `brand/` out to the siblings.
 
-- Canvas palette: `--ob-ink` = `--fg`, `--ob-ground` = `--bg`, `--ob-signal` =
-  `--signal`. Always hex. The engine re-reads them every frame, and
-  `OneBit.tsx` repaints each canvas when the class on `<html>` changes (under
-  reduced motion there is no next frame), so switching rendition repaints the
-  canvases immediately. An inline script in `index.html` puts the stored
-  rendition on `<html>` before the first frame. In xerox the forest therefore
-  prints as a negative: pale trees and a dark moon on paper.
-- Solid signal buttons set their label in `--bg`.
-- Stored ids from older systems migrate by role in `ThemeProvider.tsx`
-  (`stock` → `xerox`, `microfiche-hc` → `night-hc`, and so on).
-- `config/themes.json` is the generated **v3** contract that the sibling sites
-  read: ids, roles, names and required tokens. Regenerate it with
-  `npm run generate:themes-contract`. `themes.v1.json` is kept for old readers.
+## Colour and scheme
+
+Tokens are the Astryx theme's (`--color-background-body`, `--color-text-primary`,
+`--color-accent`, …); the values are in `/DESIGN-SYSTEM.md`. No hex value appears
+in `src/`.
+
+- Light and dark, following the system. `<html data-astryx-theme="arda">` scopes
+  the theme; `data-theme="light|dark"` is present only when the visitor pinned a
+  scheme.
+- The bar's switch names the scheme it switches to. It pins a scheme only when
+  it differs from the system's, and clears the pin on the way back
+  (`brand/scheme.js`, key `theme` in localStorage). Ids stored by earlier
+  designs (`night`, `xerox`, …) map to `dark` or `light`.
+- `index.html` and `public/404.html` inline `bootSnippet("theme")`, so a pinned
+  scheme is applied before first paint. Astryx's `<Theme>` owns
+  `<html data-theme>` after mount, so `App.tsx` passes the pin to it as `mode`
+  and follows the switch through the `ix:scheme` event.
+- Vermilion marks entry numbers, the dot and the primary button. Blue marks
+  links and focus. Errors are crimson and say so in words.
+- `prefers-contrast: more` strengthens hairlines and muted text.
 
 ## Type
 
-Fonts load from Google Fonts in `index.html`.
+Google Fonts, loaded in `index.html`: Archivo 700/800, IBM Plex Sans
+400/400i/500/600, IBM Plex Mono 400/500. The seven-step scale is set in
+`themes/arda/arda.theme.ts`.
 
-- **Big Shoulders Display** 800–900, uppercase: the name, section titles and card
-  names (`font-display`)
-- **IBM Plex Sans**: intro, notes and bio (`font-sans`)
-- **IBM Plex Mono**: the status bar, prompts, filters, meta, chat labels and input
-  (`font-mono`)
+- Display (`.ix-display`): the hero line, `clamp()` up to 120px.
+- Heading 2 (Astryx `Heading level=2`): section titles.
+- Row titles: IBM Plex Sans 500 at body size. Plate titles: Heading 3.
+- Label (`.ix-label`, `.ix-num`): IBM Plex Mono 500, uppercase, 0.06em.
 
-## Geometry
+## Shape
 
-- Radius 0 everywhere.
-- No drop shadows and no gradients. The one exception is the status bar's scrim
-  over the forest.
-- Rules are 1px `--rule`. Grids are drawn as 1px gaps over a `--rule` ground.
-- Focus ring: 2px solid `--signal`, offset 2px. Inside the bone contact bar it
-  uses `--bg`, and so does the ring inset on the pressed (signal-filled) kind
-  filter button.
-- Any text over imagery sits on a solid `--bg` backing: the kicker, the intro,
-  the mast tag and the Pagan plate. On screens under 900px the name gets a
-  backing too.
+Radius 0; 2px on buttons and inputs. 1px rules; a 2px ink rule opens each list.
+No shadows, no gradients. Focus is a 2px blue outline. Everything is
+left-aligned on a 12-column, 1200px grid with 24px gutters.
+
+## Components
+
+Controls and layout primitives are **Astryx components** (`@astryxdesign/core`),
+bound for ReScript in `src/bindings/Astryx.res`: `Button`, `ToggleButtonGroup`,
+`ToggleButton`, `Heading`, `HStack`, `VStack`, `Text`. The family's signature
+patterns are the `ix-` classes of `brand/brand.css`, so the non-React sites draw
+the same row. `src/index.css` holds only this page's own layout.
 
 ## Page
 
-1. **Hero** (`Hero.res`, `StatusBar.res`): a full-viewport `forest()` scrolling
-   sideways in parallax.
-   - The status bar: site mark, nav, `JST` clock and rendition switch.
-   - Corner ticks and the single `h1` (the name), with the kicker and intro.
-   - `ls ~/works ↓` (solid) and `ask ▸` (ghost), which dispatches `arda:open-chat`.
-   - The Chofu coordinates tag, which follows the radio mast through `onMast`.
-   - The Pagan logo, dithered, bottom-right.
-2. **Works** (`Works.res`, `WorkCard.res`, `#catalogue`): opens with the prompt
-   `ls -la works/ --kind=…`.
-   - A kind filter styled as directory buttons (`aria-pressed`,
-     `aria-controls`), plus a live status line with "clear filter".
-   - A 4/2/1-column card grid. Each card has a hex index, the entry's image
-     dithered (a seeded sigil when it has none), name, description, `kind/` and
-     status. Live-ish statuses are set in signal.
-   - Featured entries carry a small signal "featured" tag. Hover or focus
-     develops a card's image again and tints it signal.
-   - Cards keep their catalogue-number ids (`#AK-2-0142`).
-3. **Record** (`Record.res`, `#record`): `cat ~/record`, then a `key: value` spec
-   sheet beside the bio.
-4. **Contact** (`Colophon.res`, `footer#contact`): a `treeline()` strip drifting
-   at about 6px/s, then a bone bar with the mailto link, profiles and the
-   colophon line.
-5. **Chat** (`ChatWidget.res`): the launcher sits bottom-left. On viewports
-   under 480px tall (200% zoom, landscape phones) it is just its orb,
-   bottom-right, clear of the hero's CTAs.
-   - The panel carries a revolving `orb()` that sizzles on every streamed chunk.
-   - Messages are labelled `construct ▸` / `you ▸`, and a `crackle()` cursor
-     trails the streaming reply.
-   - Suggestions are numbered chips, and the input is a terminal line.
+1. **Bar** (`Bar.res`, `Wordmark.res`): the wordmark, the nav (works, blog,
+   résumé, ask, lind), the scheme switch, a 1px rule.
+2. **Hero** (`Hero.res`): the name as the page's only `h1`, set as a label with
+   the kicker beside it; the brand line "Everything I make, in one list." in the
+   display face, closed by the vermilion full stop; one paragraph; "Browse
+   works" (primary) and "Ask about Arda" (opens the chat).
+3. **Works** (`Works.res`, `Entry.res`, `#catalogue`): the kind filter and the
+   view switch (Astryx toggle groups), a live status line, then every entry.
+   - **List** (default): the family row. Number (place in the list, three
+     digits), kind code, title with its note beneath, status at right, with
+     "Featured" and `src` where they apply.
+   - **Plates**: the same entries as flat tiles: kind code, the number in
+     Archivo 800, the entry's image uncropped, title, note, status. Featured
+     entries are ink plates.
+   - Both keep the entry's catalogue-number id (`#AK-2-0142`), and the title's
+     link covers the whole row or plate.
+4. **About** (`About.res`, `#record`): the bio in one 68-character column, then
+   the facts as the key-and-value table.
+5. **Contact** (`Colophon.res`, `footer#contact`): the profiles as a
+   key-and-value table, then the colophon line under a rule.
+6. **Chat** (`ChatWidget.res`): the launcher sits bottom-right. The assistant is
+   the square dot from the wordmark and nothing else: it blinks while a reply is
+   on its way and swells with the voice's loudness (`--ix-level`). The
+   assistant's messages sit left beside the dot, the visitor's right in a sunken
+   box; suggestions are chips; the input is a text field with a vermilion
+   button. A bottom sheet under 720px.
 
 ## Motion
 
-All motion goes through `onebit.js`, mounted by `src/components/OneBit.tsx`.
-Every animation pauses off-screen and in hidden tabs. Under
-`prefers-reduced-motion` each one draws a single still frame, and the CSS stops
-the prompt cursor from blinking.
+Only the assistant's dot moves. Under `prefers-reduced-motion` it does not.
 
-## Mobile (≤ 700px)
+## Mobile (below 720px)
 
-- The bar drops the path and the clock. Under 400px the rendition switch
-  loses its ▾ and the gaps tighten; under 360px the bar's type steps down to
-  10px, so the switch stays on the bar at 320px.
-- The name scales down to about 16.5vw.
-- The Pagan plate shrinks.
-- The kind filter becomes a 2-column grid.
-- Cards go to one column under 560px.
+- The bar's nav tightens and may wrap.
+- A row stacks to two lines: number, kind and status above; title and note
+  below.
+- Plates go to one column.
 - The chat becomes a bottom sheet.
 - Nothing scrolls sideways.

@@ -1,24 +1,26 @@
 # arda.tr
 
-Personal landing site for Arda Karaduman, in the family design system "One Bit
-Forest" (see DESIGN.md).
+Personal landing site for Arda Karaduman, in the family design system "The
+Index" (see DESIGN.md).
 
 The app is a single page with:
 
-- a hero, a dithered night forest in parallax, with the status bar and the name
-- Works: every project, game, tool and record in one filterable card grid
-- Record: career background as a spec sheet
+- a bar with the arda.tr wordmark, the family nav and the scheme switch
+- a hero: the name, the line "Everything I make, in one list.", two ways on
+- Works: every project, game, tool and record as numbered rows, filterable by
+  kind, with a plates view of the same entries
+- About: the bio and a key-and-value table of facts
 - Contact: email and profile links
 - a floating chat widget backed by ai.arda.tr
 
 ## Stack
 
 - Vite 8
-- React 18
+- React 19
 - ReScript
-- TypeScript bridge files for config, theme/error wrappers, and tests
-- Tailwind CSS
-- `next-themes`
+- Astryx (`@astryxdesign/core`) with the local `arda` theme
+- TypeScript bridge files for the entry, the theme wrapper and tests
+- Plain CSS on the theme's tokens
 - npm only
 
 ## Requirements
@@ -50,35 +52,36 @@ npm run preview
 Command notes:
 
 - `npm run dev` generates the site config bridge, starts the ReScript compiler in watch mode, and runs Vite
-- `npm run test` runs the Vitest suite: the app shell, the catalogue data, the prerender, the chat transport, voice and markdown, the canvas mounts, deep links, index.html's structured data, llms.txt, the sitemap and the Tailwind config
+- `npm run test` runs the Vitest suite: the app shell, the catalogue data, the prerender, the chat transport, voice and markdown, the scheme switch, deep links, index.html's structured data, the 404 page, llms.txt and the sitemap
 - `npm run verify` runs lint + typecheck + test
 - `npm run build` creates the production bundle, prerenders the page into `dist/index.html` (`npm run prerender`, `scripts/prerender.mjs` with `src/entry-server.tsx`) and regenerates `dist/sitemap.xml`
 - `npm run generate:sitemap` can be run separately if only metadata changed
 - `npm run generate:site-config` regenerates the TypeScript site-config bridge from `config/site.config.json`
-- `npm run generate:themes-contract` regenerates `config/themes.json`, the committed cross-site theme contract, from the theme blocks in `src/index.css` + `config/site.config.json` (CI fails if it goes stale)
+- `npm run generate:themes-contract` copies the built theme into `brand/` and regenerates `config/themes.json`, the committed contract (hashes of the brand files) the sibling sites check their copies against (CI fails if it goes stale)
 
 ## Project Layout
 
 ```text
-config/    build, lint, Tailwind, TypeScript, and site metadata config
+brand/     the family's brand files: built theme, patterns, scheme switch, logo
+config/    build, lint, TypeScript, and site metadata config
 public/    static assets, including social preview images
 scripts/   build-time helpers: the prerender and sitemap generation
-src/       app code, ReScript sections, local UI primitives, and generated config bridge
+src/       app code, ReScript sections and bindings, and generated config bridge
+themes/    the Astryx `arda` theme's source
 ```
 
 ## Frontend Notes
 
 - Typography uses:
-  - `Big Shoulders Display` for headings and names
-  - `IBM Plex Sans` for body copy
-  - `IBM Plex Mono` for UI, labels and meta
-- Theme state is handled by `next-themes`. There are four renditions, listed in
-  `config/site.config.json`: `night` (default), `night-hc`, `xerox` and
-  `xerox-hc`.
-- Canvas imagery and motion come from `src/lib/onebit.js`, the family's shared
-  1-bit engine.
+  - `Archivo` for the display line, the wordmark and section titles
+  - `IBM Plex Sans` for body copy and entry titles
+  - `IBM Plex Mono` for numbers, labels and nav
+- The colour scheme follows the system; the bar's switch pins light or dark
+  (`brand/scheme.js`, localStorage key `theme`).
+- Controls and layout primitives are Astryx components, bound for ReScript in
+  `src/bindings/Astryx.res`; the row, the plate and the bar are the `ix-`
+  patterns in `brand/brand.css`.
 - The page sections are authored in ReScript and compiled in-source to ignored `.res.mjs` artifacts
-- The app is intentionally lightweight and avoids a large component framework
 
 ## SEO And Metadata
 
@@ -87,7 +90,6 @@ src/       app code, ReScript sections, local UI primitives, and generated confi
   - site URL
   - indexed pages
   - section IDs
-  - theme metadata
 - `src/config/site.generated.ts` is generated from `config/site.config.json` for the client app
 - `scripts/prerender.mjs` renders the page to static markup on every build, so crawlers and readers without JavaScript get the text and links; the client then mounts over it with `createRoot`
 - `scripts/generate-sitemap.mjs` generates `dist/sitemap.xml` on every build
