@@ -22,7 +22,7 @@ export interface Speaker {
   stop(): void;
 }
 
-export interface RobotChain {
+export interface VoiceChain {
   input: AudioNode;
   output: AnalyserNode;
   analyser: AnalyserNode;
@@ -34,4 +34,6 @@ export function setVoiceEnabled(on: boolean): void;
 export function onVoiceChange(fn: (on: boolean) => void): () => boolean;
 export function requestFields(lang: string): { voice: true; lang: string } | Record<string, never>;
 export function createSpeaker(opts?: SpeakerOptions): Speaker;
-export function robotChain(ctx: BaseAudioContext): RobotChain;
+export function voiceChain(ctx: BaseAudioContext): VoiceChain;
+export function speechInput(): AudioNode | null;
+export function speechLevel(): number;
