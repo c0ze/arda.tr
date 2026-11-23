@@ -16,6 +16,11 @@ h1{position:absolute;left:68px;top:176px;font:900 118px/1 "Grenze Gotisch",serif
 .paper .plume{display:none}
 .paper .mark img{background:#0D0C0A;border-radius:50%}
 .paper .site{color:#5C574C}
+/* The blog's default card is square (1024 x 1024). */
+.square{width:1024px;height:1024px}
+.square .plume{height:1060px;right:-170px;top:-20px}
+.square h1{top:330px}
+.square p{top:520px;max-width:430px}
 p{position:absolute;left:72px;top:438px;font-size:31px;line-height:1.35;max-width:560px}
 </style></head><body>
 <img class="plume" src="../art/plume.webp" alt="">
@@ -25,7 +30,7 @@ p{position:absolute;left:72px;top:438px;font-size:31px;line-height:1.35;max-widt
 <script>
 /* og-card.html?site=blog | resume | ai draws that site's card. */
 const cards = {
-  blog:   {site: "blog", h1: "Blog", p: "Notes on AI tooling, Go, DevOps, home networking, and generative music."},
+  blog:   {square: true, site: "blog", h1: "Blog", p: "Notes on AI tooling, Go, DevOps, home networking, and generative music."},
   resume: {site: "r\u00e9sum\u00e9", h1: "Arda<br>Karaduman", p: "AI Platform & Backend Systems Architect. Go, Ruby, Python, MCP, AWS, GCP.", paper: true},
   ai:     {site: "ask", h1: "Ask about<br>Arda", p: "Answers questions about Arda\u2019s work, projects, and music.", art: "../art/wisp.webp"},
 };
@@ -35,6 +40,7 @@ if (c) {
   document.querySelector("h1").innerHTML = c.h1;
   document.querySelector("p").textContent = c.p;
   if (c.art) document.querySelector(".plume").src = c.art;
+  if (c.square) document.body.classList.add("square");
   if (c.paper) document.body.classList.add("paper");
 }
 </script>
