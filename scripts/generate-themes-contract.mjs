@@ -4,7 +4,8 @@
  * Kara Duman (see DESIGN.md) is shared by arda.tr, blog.arda.tr, resume.arda.tr
  * and ai.arda.tr as four files in brand/: arda.css and arda.js (the built
  * Astryx theme: its stylesheet, and the module React sites pass to <Theme>),
- * brand.css (the family patterns) and scheme.js (the scheme switch). The
+ * brand.css (the family patterns), scheme.js (the scheme switch) and smoke.js
+ * (the artwork's motion). The
  * sibling sites carry verbatim copies of the ones they use; their CI fetches
  * config/themes.json from this repository and compares hashes.
  *
@@ -22,7 +23,7 @@ const brandDir = path.join(projectRoot, "brand");
 const outputFile = path.join(projectRoot, "config", "themes.json");
 
 /** The files a sibling site must carry unchanged. */
-export const BRAND_FILES = ["arda.css", "arda.js", "brand.css", "scheme.js"];
+export const BRAND_FILES = ["arda.css", "arda.js", "brand.css", "scheme.js", "smoke.js"];
 
 /** The ones built by `astryx experimental theme compile` in themes/arda/. */
 const BUILT_FILES = ["arda.css", "arda.js", "arda.d.ts", "arda.variants.d.ts"];

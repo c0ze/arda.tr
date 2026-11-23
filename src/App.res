@@ -10,14 +10,19 @@ let make = () =>
     <Bar />
     <main>
       <div className="ix-wrap land">
-        <div className="land__plume">
-          <img
-            className="ix-art ix-art--drift"
-            src="/art/plume.webp"
-            alt=HeroContent.plumeAlt
-            width="1280"
-            height="1960"
-          />
+        <div className="land__plume ix-smoke">
+          // data-smoke-video names the film brand/smoke.js plays over the image.
+          {React.cloneElement(
+            <img
+              className="ix-art ix-art--drift"
+              src="/art/plume.webp"
+              alt=HeroContent.plumeAlt
+              width="1280"
+              height="1960"
+            />,
+            {"data-smoke-video": "/art/plume-smoke"},
+          )}
+          <Embers />
         </div>
         <div className="land__words">
           <Hero />

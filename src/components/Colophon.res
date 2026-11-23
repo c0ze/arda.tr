@@ -6,14 +6,14 @@ let make = () =>
   <footer id="contact" ariaLabelledby="contact-heading">
     <div className="ix-wrap">
       <div className="ix-section contact">
-        <div className="contact__words">
+        <div className="contact__words ix-reveal">
           <p className="ix-label ix-label--ember"> {FooterContent.ctaTitle->React.string} </p>
           <Astryx.Heading level=2 id="contact-heading">
             {FooterContent.ctaHeading->React.string}
           </Astryx.Heading>
           <p> {FooterContent.ctaText->React.string} </p>
         </div>
-        <div className="contact__ways">
+        <div className="contact__ways ix-reveal">
           <Astryx.HStack gap=3. wrap=#wrap>
             <Astryx.Button
               label=FooterContent.askCta

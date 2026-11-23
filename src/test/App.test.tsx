@@ -141,7 +141,9 @@ describe("App", { timeout: 30_000 }, () => {
     expect(rel("blog")).toBe("me");
     expect(rel("résumé")).toBe("me");
     // The others carry no rel at all, not an empty one.
-    for (const name of ["works", "ask", "lind"]) expect(rel(name)).toBeNull();
+    for (const name of ["works", "ask"]) expect(rel(name)).toBeNull();
+    // lind is reached from the music block, not from the bar.
+    expect(within(nav).queryByRole("link", { name: "lind" })).toBeNull();
   });
 
   it("opens the chat from contact's ask button", () => {

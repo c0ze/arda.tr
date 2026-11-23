@@ -31,6 +31,7 @@ copies of the files in `brand/`, and their CI compares them with the hashes in
 | `brand/arda.css`, `brand/arda.js` | The built theme, copied from `themes/arda/` by `npm run generate:themes-contract`. |
 | `brand/brand.css` | The family patterns (`ix-` classes). |
 | `brand/scheme.js` | The scheme switch: pin, unpin, old stored ids, the pre-paint snippet. |
+| `brand/smoke.js` | The artwork's motion: plays a looping film over an image that names one (`data-smoke-video`). |
 | `brand/art/` | The artwork, exported from Moda and converted to bone lines on a transparent ground: `plume`, `wisp`, `forest`, `emblem`, and the `ember`. `public/art/` is the copy this site serves. |
 | `brand/logo/` | The wordmark (outlined from Grenze Gotisch 800 by `make-logo.cjs`), the favicon glyph, the social card. |
 
@@ -76,7 +77,8 @@ the toggle group, for when a section needs them). The family's patterns are the
 ## Page
 
 1. **Bar** (`Bar.res`, `Wordmark.res`): the emblem and the wordmark, the nav
-   (works, blog, résumé, lind, and ask in ember), the scheme switch.
+   (works, blog, résumé, and ask in ember), the scheme switch. lind is reached
+   from the music block.
 2. **The first screen** (`App.res`, `Hero.res`): the name as the page's only
    `h1`, in blackletter, one word to a line; the kicker; one paragraph. The plume
    is the right 45% and sits behind nothing; it drifts slowly, and not at all
@@ -88,7 +90,8 @@ the toggle group, for when a section needs them). The family's patterns are the
    in italics. The first is open on arrival; several can be open; they work
    without script. Inside, each entry is its name (a link) and what it is, with
    "source" where it has both a site and a repository; coze's games share one
-   line. Every entry keeps its catalogue-number id (`#AK-2-0142`), and `App.tsx`
+   line. gand links the parent of each family (Skriv.ist, Vigil, SUDONE), not
+   each product; a work that has ended says "Discontinued." before its line. Every entry keeps its catalogue-number id (`#AK-2-0142`), and `App.tsx`
    opens the block that holds a deep link's target.
 4. **About** (`About.res`, `#record`): the surname and what it means, the bio,
    the facts as a key-and-value table, a wisp in the margin.
@@ -102,8 +105,20 @@ the toggle group, for when a section needs them). The family's patterns are the
 
 ## Motion
 
-The plume's slow drift and the ember's glow. Both stop under
-`prefers-reduced-motion`.
+The page is alive, quietly (`brand/brand.css`, "Motion"; `brand/smoke.js`):
+
+- **The plume swirls.** A looping film of the engraving (`public/art/plume-smoke.webm`
+  and `.mp4`, the artwork on black) plays over the still image with
+  `mix-blend-mode: lighten`, and the whole column sways from its base. The film
+  loads when the plume nears the screen and pauses off screen.
+- **Embers** rise through the plume (`Embers.res`, nine sparks, CSS only).
+- **The name forms out of smoke** when the page opens (`.ix-emerge`).
+- **Blocks rise into place** as they scroll into view (`.ix-reveal`, a
+  scroll-driven animation where the browser has them).
+- **The ember breathes** while idle, and glows while a reply is on its way.
+
+All of it is decoration: under `prefers-reduced-motion` nothing moves and the
+film is never fetched; without script the plume is the still image.
 
 ## Not shown any more
 

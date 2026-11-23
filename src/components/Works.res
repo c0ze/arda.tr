@@ -60,6 +60,12 @@ module Entry = {
     <li id={anchorFor(entry.cat)} className="ix-entry">
       <h3 className="ix-entry__name"> {nameOf(entry)} </h3>
       <p className="ix-entry__desc">
+        {entry.status == "DISCONTINUED"
+          ? <>
+              <span className="ix-entry__ended"> {HeroContent.discontinuedLabel->React.string} </span>
+              {" "->React.string}
+            </>
+          : React.null}
         {entry.description->React.string}
         {source(entry)}
       </p>
@@ -95,7 +101,7 @@ module Category = {
 
     // `open` is only the state on arrival; the browser owns it after that.
     React.cloneElement(
-      <details className="ix-cat" id={`works-${category.id}`}>
+      <details className="ix-cat ix-reveal" id={`works-${category.id}`}>
         <summary>
           <span className="ix-num"> {roman(index)->React.string} </span>
           <span className="ix-cat__name">

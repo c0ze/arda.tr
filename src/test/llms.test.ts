@@ -19,10 +19,12 @@ describe("llms.txt", () => {
   });
 
   it("lists the newest works and none the catalogue has retired", () => {
-    for (const url of ["https://king.arda.tr/", "https://armarium.skriv.ist/", "https://books.skriv.ist/"]) {
+    for (const url of ["https://king.arda.tr/", "https://armarium.skriv.ist/", "https://vigil.center/", "https://the7th-shadow.arda.tr/"]) {
       expect(section("Projects")).toContain(`](${url})`);
     }
     expect(links.some((u) => u.includes("commit.gand.tr"))).toBe(false);
+    // gand lists the parent of each family: the single products are gone.
+    expect(links.some((u) => u.includes("books.skriv.ist") || u.includes("vigil.today"))).toBe(false);
   });
 
   it("carries the family's one link to coze.org", () => {

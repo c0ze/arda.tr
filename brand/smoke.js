@@ -1,0 +1,121 @@
+/**
+ * Kara Duman: the smoke moves.
+ *
+ * startSmoke() finds every <img data-smoke-video="/art/plume-smoke"> inside an
+ * .ix-smoke wrapper and plays a looping film of the same artwork over it:
+ * <base>.webm, else <base>.mp4. The film is the artwork on black, so
+ * brand.css lays it down with mix-blend-mode: lighten and only its lines show.
+ *
+ * The image stays in the page. It keeps the layout, it is what shows until
+ * the film can play, and it is all there is without script, when printing,
+ * and under reduced motion. The film is fetched only when the artwork comes
+ * near the screen, and pauses while it is off screen.
+ */
+
+const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Plays the film over one image. Returns a function that stops it and restores the image. */
+export function smoke(img) {
+  const wrap = img.closest(".ix-smoke");
+  const base = img.dataset.smokeVideo;
+  if (!wrap || !base || wrap.dataset.smoke) return () => {};
+  wrap.dataset.smoke = "pending";
+
+  const video = document.createElement("video");
+  video.className = "ix-smoke__film";
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.preload = "auto";
+  video.disablePictureInPicture = true;
+  video.setAttribute("aria-hidden", "true");
+  video.tabIndex = -1;
+  for (const [ext, type] of [
+    ["webm", "video/webm"],
+    ["mp4", "video/mp4"],
+  ]) {
+    const source = document.createElement("source");
+    source.src = `${base}.${ext}`;
+    source.type = type;
+    video.append(source);
+  }
+
+  let attached = false;
+  let stopped = false;
+
+  // The film is cropped as the image is (the phone band uses object-fit).
+  const fit = () => {
+    const style = getComputedStyle(img);
+    video.style.objectFit = style.objectFit === "fill" ? "cover" : style.objectFit;
+    video.style.objectPosition = style.objectPosition;
+  };
+  const onPlaying = () => {
+    wrap.dataset.smoke = "on";
+  };
+  // No source could be played: stay with the image.
+  const onError = () => stop();
+
+  const seen = new IntersectionObserver(
+    ([entry]) => {
+      if (stopped) return;
+      if (!entry.isIntersecting) {
+        video.pause();
+        return;
+      }
+      if (!attached) {
+        attached = true;
+        fit();
+        wrap.append(video);
+      }
+      // A refused play() (a data saver, a policy) leaves the image showing.
+      video.play().catch(() => {});
+    },
+    { rootMargin: "200px" },
+  );
+  const resized = new ResizeObserver(fit);
+
+  function stop() {
+    if (stopped) return;
+    stopped = true;
+    seen.disconnect();
+    resized.disconnect();
+    video.removeEventListener("playing", onPlaying);
+    video.pause();
+    video.remove();
+    delete wrap.dataset.smoke;
+  }
+
+  video.addEventListener("playing", onPlaying);
+  video.lastElementChild.addEventListener("error", onError);
+  seen.observe(wrap);
+  resized.observe(img);
+  return stop;
+}
+
+/**
+ * Starts every film under `root`, and stops them all again if the visitor
+ * turns reduced motion on. Returns a function that stops everything.
+ */
+export function startSmoke(root = document) {
+  // Without these the image simply stays as it is.
+  if (
+    typeof matchMedia !== "function" ||
+    typeof IntersectionObserver !== "function" ||
+    typeof ResizeObserver !== "function"
+  ) {
+    return () => {};
+  }
+  let stops = [];
+  const query = matchMedia("(prefers-reduced-motion: reduce)");
+  const apply = () => {
+    stops.forEach((stop) => stop());
+    stops = reduced() ? [] : [...root.querySelectorAll(".ix-smoke > img[data-smoke-video]")].map(smoke);
+  };
+  apply();
+  query.addEventListener("change", apply);
+  return () => {
+    query.removeEventListener("change", apply);
+    stops.forEach((stop) => stop());
+    stops = [];
+  };
+}

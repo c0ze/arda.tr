@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import * as Catalog from "@/content/CatalogContent.res.mjs";
 
-type Entry = { cat: string; category: string; group: string; name: string; href: string; repo: string; image: string };
+type Entry = { cat: string; category: string; group: string; name: string; href: string; repo: string; image: string; status: string };
 const entries = Catalog.entries as Entry[];
 const categories = Catalog.categories as { id: string; name: string; note: string }[];
 const publicDir = path.resolve(__dirname, "../../public");
@@ -38,6 +38,27 @@ describe("catalogue data", () => {
   it("lists cozy-studio under music, at its own address", () => {
     const studio = entries.find((e) => e.name === "cozy-studio");
     expect(studio).toMatchObject({ category: "music", href: "https://studio.tracker.coze.org" });
+  });
+
+  // gand links the parent of each family, not each product.
+  it("lists one entry per gand family, and marks Fablespun as ended", () => {
+    const gand = entries.filter((e) => e.category === "gand");
+    expect(gand.map((e) => e.name)).toEqual(["Skriv.ist", "Vigil", "SUDONE", "Fablespun"]);
+    expect(gand.find((e) => e.name === "Vigil")).toMatchObject({ href: "https://vigil.center" });
+    expect(gand.find((e) => e.name === "Fablespun")).toMatchObject({ status: "DISCONTINUED" });
+  });
+
+  it("puts the studio's Steam and itch.io pages under gand.games", () => {
+    const hrefs = entries.filter((e) => e.category === "gand-games").map((e) => e.href);
+    expect(hrefs).toContain("https://store.steampowered.com/search/?developer=gand-tr");
+    expect(hrefs).toContain("https://coze.itch.io");
+  });
+
+  it("files King and Armarium under github, and sends The Seventh Shadow to its own site", () => {
+    const by = (name: string) => entries.find((e) => e.name === name);
+    expect(by("King")).toMatchObject({ category: "github", group: "" });
+    expect(by("Armarium")).toMatchObject({ category: "github" });
+    expect(by("The Seventh Shadow")).toMatchObject({ href: "https://the7th-shadow.arda.tr" });
   });
 
   it("no longer lists COMMIT!!!", () => {

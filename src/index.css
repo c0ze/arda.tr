@@ -92,6 +92,10 @@
   justify-self: end;
   background: light-dark(var(--ix-soot), transparent);
   border-radius: 2px;
+  overflow: clip;
+}
+.about__wisp img {
+  width: 100%;
 }
 @media (max-width: 60rem) {
   .about {

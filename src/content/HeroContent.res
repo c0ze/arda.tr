@@ -17,7 +17,6 @@ let nav: array<link> = [
   {label: "works", href: "#catalogue", rel: "", accent: false},
   {label: "blog", href: "https://blog.arda.tr", rel: "me", accent: false},
   {label: "résumé", href: "https://resume.arda.tr", rel: "me", accent: false},
-  {label: "lind", href: "https://lind.arda.tr", rel: "", accent: false},
   {label: "ask", href: "https://ai.arda.tr", rel: "", accent: true},
 ]
 
@@ -35,6 +34,8 @@ let introRest = " At Veltra I connect legacy systems to AI."
 
 // Works.
 let worksTitle = "Works"
+// Shown after the name of a work that has ended.
+let discontinuedLabel = "Discontinued."
 let sourceLabel = "source"
 let noLink = " (no public link)"
 // Alt text for the artwork: decorative, so empty.

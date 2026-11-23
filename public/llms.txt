@@ -4,8 +4,8 @@
 
 ## Sections
 
-- [Catalogue](https://arda.tr/#catalogue): Systems, products, games, writing, tools and music in one grid
-- [Record](https://arda.tr/#record): Career background: Systems Architect at Veltra, Keio University, earlier roles
+- [Works](https://arda.tr/#catalogue): Five groups: coze, gand, gand.games, music and github
+- [About](https://arda.tr/#record): Systems Architect at Veltra, Keio University, languages and stack
 - [Contact](https://arda.tr/#contact): Email and social links
 
 ## Sites
@@ -19,18 +19,21 @@
 
 - [Gand](https://gand.tr/): Independent software studio
 - [Gand Games](https://gand.games/): Games label of Gand
+- [Gand Games on Steam](https://store.steampowered.com/search/?developer=gand-tr): The studio's games on Steam
+- [Gand Games on itch.io](https://coze.itch.io/): The studio's games on itch.io
 - [G Copy](https://g-copy.gand.games/): Floppy-disk copying business game after X-Copy, playable in the browser
 - [King](https://king.arda.tr/): Turkish trick-taking card game, 20 hands of penalties and trumps against three computer players, in the browser
 - [Gage](https://gage.coze.org/): Chess on X with no Twitter API, via a browser extension
-- [Skriv.ist](https://skriv.ist/): Multiplatform ebook reader
-- [Skrivist Books](https://books.skriv.ist/): Local-only EPUB and PDF reader with OPDS and an offline PWA, no accounts
+- [Skriv.ist](https://skriv.ist/): Calm readers for your own EPUB, PDF and comic files, with no account or tracking
 - [Armarium](https://armarium.skriv.ist/): Small self-hosted library server for comics and ebooks, with OPDS, a JSON API and a web reader
-- [Fablespun](https://fable.tr/): Illustrated fables for kids, generated with AI
-- [Vigil Today](https://vigil.today/): Reminder widget PWA for recurring tasks
+- [Fablespun](https://fable.tr/): Illustrated fables for kids, generated with AI (discontinued)
+- [Vigil](https://vigil.center/): The vigil family behind one sign-in: reminders, notes, goals, a public page and local AI
 - [SUDONE](https://sudone.jp/): Scan a shelf barcode in a shop and check whether the price beats online
 - [dergi.coze.org](https://dergi.coze.org/): Turkish Commodore 64 and Amiga magazines from 1985 on, every issue page by page and every article searchable
 - [RETRO](https://retro.coze.org/): Monthly Turkish magazine on games, metal, hardware and AI, written by AI in the voice of a 90s print magazine
 - [Pagan](https://pagan.tr/): Turkish black metal band, official site
+- [The Seventh Shadow](https://the7th-shadow.arda.tr/): Industrial gothic doom from Tokyo
+- [cozy-studio](https://studio.tracker.coze.org/): A tracker studio in the browser
 - [Reliquary](https://github.com/c0ze/reliquary): Self-hosted AI memory server (MCP)
 - [tincan](https://github.com/c0ze/tincan): Message passing between AI coding agents through a spool on disk
 - [tenioha](https://c0ze.github.io/tenioha/): Experimental functional language with Japanese particles in function signatures

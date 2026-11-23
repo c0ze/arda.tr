@@ -3,7 +3,7 @@
 @react.component
 let make = () =>
   <section className="hero" ariaLabelledby="who">
-    <h1 id="who" className="ix-display">
+    <h1 id="who" className="ix-display ix-emerge">
       {HeroContent.nameLines
       ->Array.mapWithIndex((line, i) =>
         <React.Fragment key={Int.toString(i)}>

@@ -3,6 +3,7 @@ import { Theme } from "@astryxdesign/core/theme";
 import { defaultThemeSlug, themes } from "./astryx-themes";
 import { landOnHash } from "@/lib/deepLink";
 import { SCHEME_EVENT, readScheme, type Scheme } from "../brand/scheme.js";
+import { startSmoke } from "../brand/smoke.js";
 import * as RescriptApp from "./App.res.mjs";
 
 const LandingPage = RescriptApp.make;
@@ -50,6 +51,10 @@ const App = () => {
     openTargetCategory();
     return landOnHash();
   }, []);
+
+  // The plume and the wisp move (brand/smoke.js): after hydration, so the
+  // canvas it adds never disagrees with the prerendered markup.
+  useEffect(() => startSmoke(), []);
 
   return (
     <Theme theme={themes[defaultThemeSlug]} mode={mode}>

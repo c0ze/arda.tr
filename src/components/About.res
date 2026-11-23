@@ -11,7 +11,7 @@ let make = () => {
 
   <section id="record" className="ix-wrap" ariaLabelledby="record-heading">
     <div className="ix-section about">
-      <div className="about__words">
+      <div className="about__words ix-reveal">
         <p className="ix-label ix-label--ember"> {AboutContent.title->React.string} </p>
         <Astryx.Heading level=2 id="record-heading">
           {AboutContent.surname->React.string}
@@ -35,14 +35,21 @@ let make = () => {
           ->React.array}
         </div>
       </div>
-      <dl className="ix-kv about__facts">
+      <dl className="ix-kv about__facts ix-reveal">
         {AboutContent.facts->Array.map(f => row(f.label, f.value))->React.array}
         {row(AboutContent.languagesLabel, AboutContent.recordLanguages)}
         {row(AboutContent.stackLabel, AboutContent.tech->Array.join(" · "))}
       </dl>
-      <img
-        className="ix-art about__wisp" src="/art/wisp.webp" alt="" width="400" height="840" loading=#lazy
-      />
+      <span className="about__wisp ix-smoke">
+        <img
+          className="ix-art ix-art--drift"
+          src="/art/wisp.webp"
+          alt=""
+          width="400"
+          height="840"
+          loading=#lazy
+        />
+      </span>
     </div>
   </section>
 }
