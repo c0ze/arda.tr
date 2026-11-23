@@ -63,6 +63,24 @@ describe("smoke film", () => {
     expect(wrap.querySelector("video")).toBeNull();
   });
 
+  // A scroll can queue "left" and "entered" together: the film must follow the last.
+  it("goes by the latest of several visibility changes delivered at once", () => {
+    browser(false, false);
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        constructor(private seen: (entries: { isIntersecting: boolean }[]) => void) {}
+        observe() {
+          this.seen([{ isIntersecting: false }, { isIntersecting: true }]);
+        }
+        disconnect() {}
+      },
+    );
+    const wrap = page();
+    startSmoke();
+    expect(wrap.querySelector("video")).not.toBeNull();
+  });
+
   it("plays the film muted over the image, and shows it only once it plays", () => {
     browser(false, true);
     const wrap = page();

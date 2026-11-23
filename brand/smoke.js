@@ -52,8 +52,10 @@ export function smoke(img) {
   const onError = () => stop();
 
   const seen = new IntersectionObserver(
-    ([entry]) => {
+    (entries) => {
       if (stopped) return;
+      // Several changes can arrive at once: only the latest is true now.
+      const entry = entries[entries.length - 1];
       if (!entry.isIntersecting) {
         video.pause();
         return;

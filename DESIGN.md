@@ -115,6 +115,7 @@ The page is alive, quietly (`brand/brand.css`, "Motion"; `brand/smoke.js`):
   on the original engraving at each turn. It loads when the plume nears the
   screen, pauses off screen, and is not fetched below 960px (where the plume is
   a band) or for a visitor who asked to save data.
+- **The wisp** in About curls the same way (`public/art/wisp-smoke.mp4`, 114 KB).
 - **Embers** rise through the plume (`Embers.res`, nine sparks, CSS only).
 - **The name forms out of smoke** when the page opens (`.ix-emerge`).
 - **Blocks rise into place** as they scroll into view (`.ix-reveal`, a

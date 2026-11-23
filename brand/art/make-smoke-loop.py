@@ -8,8 +8,9 @@ points, so each cycle comes to rest on the original engraving and nothing
 ever jumps or cross-fades.
 
 Usage:
-  python3 make-smoke-loop.py <source.mp4> <workdir> <out-basename>
-Writes <out-basename>.webm and <out-basename>.mp4. Needs ffmpeg and ImageMagick.
+  python3 make-smoke-loop.py <source.mp4> <workdir> <out.mp4> [width height] [filter]
+The plume is 560x858 (the default); the wisp is 240x504. An optional ffmpeg
+filter runs before the scaling (a crop, say). Needs ffmpeg and ImageMagick.
 """
 import math
 import subprocess
@@ -51,11 +52,13 @@ def positions(count):
 
 def main():
     source, work, out = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+    width, height = (int(sys.argv[4]), int(sys.argv[5])) if len(sys.argv) > 5 else (WIDTH, HEIGHT)
+    before = sys.argv[6] + "," if len(sys.argv) > 6 else ""
     src, fwd = work / "src", work / "fwd"
     for d in (src, fwd):
         d.mkdir(parents=True, exist_ok=True)
     run("ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(source),
-        "-vf", f"scale={WIDTH}:{HEIGHT}:flags=lanczos,{BONE}", str(src / "%04d.png"))
+        "-vf", f"{before}scale={width}:{height}:flags=lanczos,{BONE}", str(src / "%04d.png"))
     count = len(list(src.glob("*.png")))
 
     for i, pos in enumerate(positions(count)):
@@ -75,8 +78,7 @@ def main():
     common = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", str(FPS),
               "-i", str(fwd / "%04d.png"), "-filter_complex", graph, "-map", "[out]", "-an",
               "-pix_fmt", "yuv420p"]
-    run(*common, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "45", "-row-mt", "1", f"{out}.webm")
-    run(*common, "-c:v", "libx264", "-preset", "slow", "-crf", "29", "-movflags", "+faststart", f"{out}.mp4")
+    run(*common, "-c:v", "libx264", "-preset", "slow", "-crf", "29", "-movflags", "+faststart", out)
 
 
 if __name__ == "__main__":

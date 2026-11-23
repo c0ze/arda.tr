@@ -41,14 +41,18 @@ let make = () => {
         {row(AboutContent.stackLabel, AboutContent.tech->Array.join(" · "))}
       </dl>
       <span className="about__wisp ix-smoke">
-        <img
-          className="ix-art ix-art--drift"
-          src="/art/wisp.webp"
-          alt=""
-          width="400"
-          height="840"
-          loading=#lazy
-        />
+        // data-smoke-video names the film brand/smoke.js plays over the image.
+        {React.cloneElement(
+          <img
+            className="ix-art ix-art--drift"
+            src="/art/wisp.webp"
+            alt=""
+            width="400"
+            height="840"
+            loading=#lazy
+          />,
+          {"data-smoke-video": "/art/wisp-smoke.mp4"},
+        )}
       </span>
     </div>
   </section>
