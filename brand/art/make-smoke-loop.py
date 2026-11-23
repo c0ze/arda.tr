@@ -1,75 +1,83 @@
-"""Writes bake.html: one frame (?f=N) of a seamless smoke loop, drawn with the
-shader of arda.tr/brand/smoke.js. Usage: make_bake.py <smoke.js> <out.html>"""
-import re
-import sys
+"""Turns a generated film of the plume into the seamless loop the site plays.
 
-src = open(sys.argv[1], encoding="utf-8").read()
-frag = re.search(r"const FRAG = `(.*?)`;", src, re.S).group(1)
-vert = re.search(r"const VERT = `(.*?)`;", src, re.S).group(1)
+The source (output/smoke/plume-smoke-2.mp4 in the workspace: MiniMax Hailuo
+2.3, image-to-video from brand/art/plume.webp on black) starts on the still
+engraving and ends somewhere else, so it cannot simply repeat. The loop plays
+it forward and then backward, and eases to a standstill at both turning
+points, so each cycle comes to rest on the original engraving and nothing
+ever jumps or cross-fades.
 
-main = frag[frag.index("void main() {"):]
-loop_main = """uniform float period;
-vec2 field(vec2 q, float tt) {
-  float n1 = snoise(q * 2.6 + vec2(0.0, tt * 0.11));
-  float n2 = snoise(q * 5.3 + vec2(4.7, tt * 0.17));
-  float n3 = snoise(q * 2.1 + vec2(9.3, tt * 0.09));
-  return vec2(n1 + 0.45 * n2, 0.7 * n3);
-}
-void main() {
-  float rise = smoothstep(0.08, 0.7, 1.0 - uv.y);
-  vec2 q = vec2(uv.x, uv.y * aspect);
-  float k = t / period;
-  // A seamless loop: blend the field at t with the field one period earlier.
-  vec2 f = mix(field(q, t), field(q, t - period), k);
-  // Mixing two fields lowers the amplitude mid-loop: keep it even.
-  f /= sqrt(k * k + (1.0 - k) * (1.0 - k));
-  gl_FragColor = texture2D(tex, uv + f * 0.011 * rise);
-}"""
-frag = frag.replace(main, loop_main)
-
-html = """<!doctype html><meta charset=utf-8>
-<style>html,body{margin:0;background:#000}canvas{display:block}</style>
-<canvas id=c width=720 height=1102></canvas>
-<script>
-const VERT = `__VERT__`;
-const FRAG = `__FRAG__`;
-const N = 192, FPS = 24, SPEED = 6.0;
-const PERIOD = N / FPS * SPEED;
-const f = +new URLSearchParams(location.search).get("f") || 0;
-const img = new Image();
-img.onload = () => {
-  const c = document.getElementById("c");
-  const gl = c.getContext("webgl", { preserveDrawingBuffer: true });
-  const mk = (type, s) => {
-    const sh = gl.createShader(type);
-    gl.shaderSource(sh, s);
-    gl.compileShader(sh);
-    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) document.title = "ERR " + gl.getShaderInfoLog(sh);
-    return sh;
-  };
-  const p = gl.createProgram();
-  gl.attachShader(p, mk(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(p, mk(gl.FRAGMENT_SHADER, FRAG));
-  gl.linkProgram(p);
-  gl.useProgram(p);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  const a = gl.getAttribLocation(p, "p");
-  gl.enableVertexAttribArray(a);
-  gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
-  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.uniform1f(gl.getUniformLocation(p, "aspect"), 1102 / 720);
-  gl.uniform1f(gl.getUniformLocation(p, "period"), PERIOD);
-  gl.uniform1f(gl.getUniformLocation(p, "t"), (f / N) * PERIOD);
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  document.title = "done";
-};
-img.src = "plume.png";
-</script>
+Usage:
+  python3 make-smoke-loop.py <source.mp4> <workdir> <out-basename>
+Writes <out-basename>.webm and <out-basename>.mp4. Needs ffmpeg and ImageMagick.
 """
-open(sys.argv[2], "w", encoding="utf-8").write(html.replace("__VERT__", vert).replace("__FRAG__", frag))
+import math
+import subprocess
+import sys
+from pathlib import Path
+
+WIDTH, HEIGHT = 560, 858  # the plume's 1280:1960 proportion
+# The film comes back near-white with a faint colour cast: make it grey, then
+# the brand's bone (#E8E0CE), so its lines are the still engraving's colour.
+BONE = "format=gray,format=gbrp,colorchannelmixer=rr=0.910:gg=0.878:bb=0.808"
+FPS = 24
+EASE_IN = 2.0  # seconds to reach full speed from the still engraving
+EASE_OUT = 1.0  # seconds to come to rest at the far end
+
+
+def run(*args):
+    subprocess.run(args, check=True)
+
+
+def positions(count):
+    """Source position (fractional frame index) for every frame of the forward pass."""
+    ramp_in, ramp_out = EASE_IN * FPS, EASE_OUT * FPS
+    last = count - 1
+    # A ramp of r output frames covers r/2 source frames.
+    total = round(last + ramp_in / 2 + ramp_out / 2)
+    out, pos = [], 0.0
+    for i in range(total + 1):
+        out.append(min(pos, last))
+        if i < ramp_in:
+            speed = (i + 0.5) / ramp_in
+        elif i > total - ramp_out:
+            speed = max((total - i - 0.5) / ramp_out, 0.0)
+        else:
+            speed = 1.0
+        pos += speed
+    out[-1] = last
+    return out
+
+
+def main():
+    source, work, out = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+    src, fwd = work / "src", work / "fwd"
+    for d in (src, fwd):
+        d.mkdir(parents=True, exist_ok=True)
+    run("ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(source),
+        "-vf", f"scale={WIDTH}:{HEIGHT}:flags=lanczos,{BONE}", str(src / "%04d.png"))
+    count = len(list(src.glob("*.png")))
+
+    for i, pos in enumerate(positions(count)):
+        lo = math.floor(pos)
+        frac = pos - lo
+        a = src / f"{lo + 1:04d}.png"
+        target = fwd / f"{i:04d}.png"
+        if frac < 0.02 or lo + 1 >= count:
+            run("cp", str(a), str(target))
+        else:
+            b = src / f"{lo + 2:04d}.png"
+            run("magick", str(a), str(b), "-define", f"compose:args={frac * 100:.1f}",
+                "-compose", "blend", "-composite", str(target))
+
+    # Forward, then the same frames backward.
+    graph = "[0:v]split[a][b];[b]reverse[r];[a][r]concat=n=2:v=1[out]"
+    common = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", str(FPS),
+              "-i", str(fwd / "%04d.png"), "-filter_complex", graph, "-map", "[out]", "-an",
+              "-pix_fmt", "yuv420p"]
+    run(*common, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "45", "-row-mt", "1", f"{out}.webm")
+    run(*common, "-c:v", "libx264", "-preset", "slow", "-crf", "29", "-movflags", "+faststart", f"{out}.mp4")
+
+
+if __name__ == "__main__":
+    main()

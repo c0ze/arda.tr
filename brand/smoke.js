@@ -1,15 +1,17 @@
 /**
  * Kara Duman: the smoke moves.
  *
- * startSmoke() finds every <img data-smoke-video="/art/plume-smoke"> inside an
- * .ix-smoke wrapper and plays a looping film of the same artwork over it:
- * <base>.webm, else <base>.mp4. The film is the artwork on black, so
- * brand.css lays it down with mix-blend-mode: lighten and only its lines show.
+ * startSmoke() finds every <img data-smoke-video="/art/plume-smoke.mp4">
+ * inside an .ix-smoke wrapper and plays that looping film of the same artwork
+ * over it. The film is the artwork on black, so brand.css lays it down with
+ * mix-blend-mode: lighten and only its lines show.
  *
  * The image stays in the page. It keeps the layout, it is what shows until
  * the film can play, and it is all there is without script, when printing,
  * and under reduced motion. The film is fetched only when the artwork comes
- * near the screen, and pauses while it is off screen.
+ * near the screen, and pauses while it is off screen. It is not fetched at all
+ * for a visitor who asked their browser to save data, or while the image's
+ * data-smoke-media query (say "(min-width: 60rem)") does not match.
  */
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -17,8 +19,10 @@ const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 /** Plays the film over one image. Returns a function that stops it and restores the image. */
 export function smoke(img) {
   const wrap = img.closest(".ix-smoke");
-  const base = img.dataset.smokeVideo;
-  if (!wrap || !base || wrap.dataset.smoke) return () => {};
+  const film = img.dataset.smokeVideo;
+  if (!wrap || !film || wrap.dataset.smoke) return () => {};
+  if (navigator.connection?.saveData) return () => {};
+  if (img.dataset.smokeMedia && !matchMedia(img.dataset.smokeMedia).matches) return () => {};
   wrap.dataset.smoke = "pending";
 
   const video = document.createElement("video");
@@ -30,15 +34,7 @@ export function smoke(img) {
   video.disablePictureInPicture = true;
   video.setAttribute("aria-hidden", "true");
   video.tabIndex = -1;
-  for (const [ext, type] of [
-    ["webm", "video/webm"],
-    ["mp4", "video/mp4"],
-  ]) {
-    const source = document.createElement("source");
-    source.src = `${base}.${ext}`;
-    source.type = type;
-    video.append(source);
-  }
+  video.src = film;
 
   let attached = false;
   let stopped = false;
@@ -80,13 +76,14 @@ export function smoke(img) {
     seen.disconnect();
     resized.disconnect();
     video.removeEventListener("playing", onPlaying);
+    video.removeEventListener("error", onError);
     video.pause();
     video.remove();
     delete wrap.dataset.smoke;
   }
 
   video.addEventListener("playing", onPlaying);
-  video.lastElementChild.addEventListener("error", onError);
+  video.addEventListener("error", onError);
   seen.observe(wrap);
   resized.observe(img);
   return stop;

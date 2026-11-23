@@ -20,7 +20,7 @@ let make = () =>
               width="1280"
               height="1960"
             />,
-            {"data-smoke-video": "/art/plume-smoke"},
+            {"data-smoke-video": "/art/plume-smoke.mp4", "data-smoke-media": "(min-width: 60rem)"},
           )}
           <Embers />
         </div>

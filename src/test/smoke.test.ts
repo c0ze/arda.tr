@@ -5,7 +5,7 @@ import { startSmoke } from "../../brand/smoke.js";
 // where it cannot run, or the visitor asked for less motion, the image stays.
 const page = () => {
   document.body.innerHTML =
-    '<div class="ix-smoke"><img data-smoke-video="/art/plume-smoke" src="/art/plume.webp" alt=""></div>';
+    '<div class="ix-smoke"><img data-smoke-video="/art/plume-smoke.mp4" src="/art/plume.webp" alt=""></div>';
   return document.querySelector(".ix-smoke") as HTMLElement;
 };
 
@@ -46,6 +46,16 @@ describe("smoke film", () => {
     expect(wrap.querySelector("video")).toBeNull();
   });
 
+  // A phone shows the plume as a narrow band: not worth megabytes of film.
+  it("does not fetch the film while the image's media query does not match", () => {
+    browser(false, true);
+    const wrap = page();
+    wrap.querySelector("img")!.dataset.smokeMedia = "(min-width: 60rem)";
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+    startSmoke();
+    expect(wrap.querySelector("video")).toBeNull();
+  });
+
   it("waits until the artwork is near the screen before fetching the film", () => {
     browser(false, false);
     const wrap = page();
@@ -60,10 +70,7 @@ describe("smoke film", () => {
     const video = wrap.querySelector("video")!;
     expect(video.muted).toBe(true);
     expect(video.loop).toBe(true);
-    expect([...video.querySelectorAll("source")].map((s) => s.getAttribute("src"))).toEqual([
-      "/art/plume-smoke.webm",
-      "/art/plume-smoke.mp4",
-    ]);
+    expect(video.getAttribute("src")).toBe("/art/plume-smoke.mp4");
     expect(wrap.dataset.smoke).toBe("pending");
     video.dispatchEvent(new Event("playing"));
     expect(wrap.dataset.smoke).toBe("on");

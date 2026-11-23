@@ -107,10 +107,14 @@ the toggle group, for when a section needs them). The family's patterns are the
 
 The page is alive, quietly (`brand/brand.css`, "Motion"; `brand/smoke.js`):
 
-- **The plume swirls.** A looping film of the engraving (`public/art/plume-smoke.webm`
-  and `.mp4`, the artwork on black) plays over the still image with
+- **The plume swirls.** A looping film of the engraving (`public/art/plume-smoke.mp4`,
+  the artwork on black, 2.8 MB) plays over the still image with
   `mix-blend-mode: lighten`, and the whole column sways from its base. The film
-  loads when the plume nears the screen and pauses off screen.
+  was generated from the still by MiniMax Hailuo 2.3 (image-to-video) and made
+  into a loop by `brand/art/make-smoke-loop.py`: forward, then backward, at rest
+  on the original engraving at each turn. It loads when the plume nears the
+  screen, pauses off screen, and is not fetched below 960px (where the plume is
+  a band) or for a visitor who asked to save data.
 - **Embers** rise through the plume (`Embers.res`, nine sparks, CSS only).
 - **The name forms out of smoke** when the page opens (`.ix-emerge`).
 - **Blocks rise into place** as they scroll into view (`.ix-reveal`, a
