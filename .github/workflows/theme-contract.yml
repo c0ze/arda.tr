@@ -5,7 +5,7 @@ name: Theme contract freshness
 # (blog, résumé, ai) via raw.githubusercontent.com to check their copies.
 # This check fails when the committed contract or brand/'s copy of the built
 # theme is stale relative to themes/arda/ and brand/. It is a separate workflow
-# on purpose: a stale contract must never block Pages deploys.
+# on purpose: a stale contract must never block the build check.
 
 on:
   push:

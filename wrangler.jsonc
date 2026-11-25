@@ -1,0 +1,23 @@
+// Cloudflare Worker serving the static site: static assets, plus
+// worker/ranges.js for byte ranges on media files (static assets ignore Range).
+// Deploy by hand: tools/deploy_cloudflare.sh (npm run deploy).
+// Hosting moved here from GitHub Pages on 2026-11-25: GitHub could not renew
+// its certificates behind the Cloudflare proxy, and its sites broke (526).
+{
+  "name": "arda-tr",
+  "account_id": "d0feb402fe8057e9050fce7450d85049", // personal
+  "main": "worker/ranges.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "arda.tr", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Media paths run the script first; it adds byte ranges and passes
+    // anything else through unchanged.
+    "run_worker_first": ["/*.mp4"],
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

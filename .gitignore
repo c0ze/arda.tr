@@ -43,3 +43,6 @@ themes/arda/sheet*.html
 themes/arda/arda.pictures.json
 themes/arda/sheet*.png
 themes/arda/preview*.png
+
+# Wrangler state (local deploys)
+.wrangler/

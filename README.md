@@ -102,7 +102,25 @@ themes/    the Astryx `arda` theme's source
 
 ## Deployment
 
-GitHub Actions builds and deploys the site to GitHub Pages on pushes to `main`.
+Hosted on a Cloudflare Worker with static assets (`arda-tr`, personal account),
+deployed **by hand**:
+
+```bash
+npm run deploy   # tools/deploy_cloudflare.sh
+```
+
+It clones the **committed** `HEAD` (commit first) into a temporary directory, runs
+`npm ci`, `npm run verify` and `npm run build` there, and uploads `dist/` with
+`wrangler deploy`, using your local wrangler login ([`wrangler.jsonc`](wrangler.jsonc)
+holds the custom domain). The [build check](.github/workflows/build.yml) runs the same
+verify and build on every push.
+
+`worker/ranges.js` is the only script: static assets ignore `Range`, so the media paths
+(`*.mp4`) run it first to get byte ranges, which Safari needs to play video and the
+browser needs to seek.
+
+Until 2026-11-25 this was GitHub Pages; GitHub could not renew its certificates behind
+the Cloudflare proxy, and its sites broke (526).
 
 ## License
 

@@ -24,7 +24,8 @@ function escapeXml(value) {
 /**
  * The date (YYYY-MM-DD) of the last commit that touched the page's content.
  * File mtimes won't do: the build regenerates files under src/, so they always
- * say "today". Needs full history (deploy.yml checks out with fetch-depth: 0);
+ * say "today". Needs full history (build.yml checks out with fetch-depth: 0, and
+ * tools/deploy_cloudflare.sh builds in a full clone);
  * without git, or with no matching commit, it falls back to today.
  */
 export function lastModified(cwd = projectRoot) {
