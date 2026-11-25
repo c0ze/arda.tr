@@ -76,3 +76,13 @@ describe("index.html pre-mount takeover", () => {
     expect(document.documentElement.dataset.takeover).toBe("1");
   });
 });
+
+// arda.tr is dark unless the visitor pins light. The head script applies the
+// pin; without script the markup itself must already say dark, or a light
+// system would get the light page.
+describe("index.html without script", () => {
+  it("is dark: the scheme is in the markup, not only in the head script", () => {
+    expect(html).toMatch(/<html lang="en" data-astryx-theme="arda" data-theme="dark">/);
+    expect(html).toContain('<meta name="color-scheme" content="dark" />');
+  });
+});

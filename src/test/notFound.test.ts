@@ -25,7 +25,9 @@ describe("404 page", () => {
     // The same snippet as index.html: a visitor who pinned light on the site
     // must not land on a dark 404, and everyone else gets the site's dark.
     expect(script).toBe(bootSnippet("theme", "dark"));
-    expect(html).toContain('<meta name="color-scheme" content="light dark" />');
+    // Without script the markup itself says dark.
+    expect(html).toContain('<html lang="en" data-theme="dark">');
+    expect(html).toContain('<meta name="color-scheme" content="dark" />');
     expect(html).toContain(':root[data-theme="dark"] { color-scheme: dark; }');
 
     run();
