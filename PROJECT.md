@@ -87,6 +87,22 @@ Use the user's current toolchain via mise when verifying locally:
 mise exec node@24.14.0 -- npm run verify
 ```
 
+## Deploy
+
+Deploying is manual. Pushing to GitHub does **not** deploy (the workflow is only a build
+check), and nothing deploys on its own. To publish:
+
+1. Commit the change. The script builds the committed `HEAD` in a temporary clone (`npm ci`, `npm run verify`, `npm run build`), so uncommitted work is not deployed.
+2. Run `npm run deploy` on a machine with the owner's wrangler login (`npx wrangler whoami`
+   shows the personal account). Never create or store a Cloudflare API token for this.
+3. Check the live site: `curl -sI https://arda.tr/` should return 200.
+
+`worker/ranges.js` serves byte ranges for `*.mp4` (static assets ignore `Range`; Safari needs it for video). Keep media paths listed in `assets.run_worker_first`.
+
+The Worker is `arda-tr` (personal Cloudflare account), custom domain `arda.tr`, both in
+[wrangler.jsonc](wrangler.jsonc). README "Deployment" has the details. Until 2026-11-25
+this was GitHub Pages, which could not renew its certificate behind the Cloudflare proxy.
+
 ## Repo Shape
 
 - `config/` holds build, lint, TypeScript, and site metadata config.
